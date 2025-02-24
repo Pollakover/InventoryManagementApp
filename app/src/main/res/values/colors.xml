@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="primary_50">#E8F1FD</color>
+    <color name="primary_100">#B6D3FA</color>
+    <color name="primary_200">#93BDF8</color>
+    <color name="primary_300">#629FF4</color>
+    <color name="primary_400">#448DF2</color>
+    <color name="primary_500">#1570EF</color>
+    <color name="primary_600">#1366D9</color>
+    <color name="primary_700">#0F50AA</color>
+    <color name="primary_800">#0C3E83</color>
+    <color name="primary_900">#092F64</color>
+
+    <color name="gray_50">#F0F1F3</color>
+    <color name="gray_100">#D0D3D9</color>
+    <color name="gray_200">#B9BDC7</color>
+    <color name="gray_300">#989FAD</color>
+    <color name="gray_400">#858D9D</color>
+    <color name="gray_500">#667085</color>
+    <color name="gray_600">#5D6679</color>
+    <color name="gray_700">#48505E</color>
+    <color name="gray_800">#383E49</color>
+    <color name="gray_900">#2B2F38</color>
+
+    <color name="success_50">#E7F8F0</color>
+    <color name="success_100">#B6E9D1</color>
+    <color name="success_200">#92DEBA</color>
+    <color name="success_300">#60CF9B</color>
+    <color name="success_400">#41C588</color>
+    <color name="success_500">#12B76A</color>
+    <color name="success_600">#10A760</color>
+    <color name="success_700">#0D824B</color>
+    <color name="success_800">#0A653A</color>
+    <color name="success_900">#084D2D</color>
+
+    <color name="warning_50">#FEF4E6</color>
+    <color name="warning_100">#FDDDB3</color>
+    <color name="warning_200">#FBCC8E</color>
+    <color name="warning_300">#FAB55A</color>
+    <color name="warning_400">#F9A63A</color>
+    <color name="warning_500">#F79009</color>
+    <color name="warning_600">#E18308</color>
+    <color name="warning_700">#AF6606</color>
+    <color name="warning_800">#884F05</color>
+    <color name="warning_900">#683C04</color>
+
+    <color name="error_50">#FEECEB</color>
+    <color name="error_100">#FAC5C1</color>
+    <color name="error_200">#F8A9A3</color>
+    <color name="error_300">#F5827A</color>
+    <color name="error_400">#F36960</color>
+    <color name="error_500">#F04438</color>
+    <color name="error_600">#DA3E33</color>
+    <color name="error_700">#AA3028</color>
+    <color name="error_800">#84251F</color>
+    <color name="error_900">#651D18</color>
+
+</resources>
