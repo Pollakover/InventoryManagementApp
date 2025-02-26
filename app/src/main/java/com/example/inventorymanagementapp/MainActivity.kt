@@ -20,16 +20,20 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -58,6 +62,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppScaffold() {
     ModalNavigationDrawer(
@@ -157,14 +162,31 @@ fun AppScaffold() {
 
             }
         },
-        //modifier = TODO(),
-        //gesturesEnabled = TODO(),
-        //scrimColor = TODO()
-    ) { }
+    ) {
+        Scaffold(
+            topBar = {
+                TopAppBar(
+                    modifier = Modifier.background(color = colorResource(R.color.white)),
+                    title = { Text("Приборная панель")},
+                    navigationIcon = { Icon(Icons.Default.Menu, contentDescription = "menu")}
+                )
+            }
+        ) { innerPadding ->  Text("D", modifier = Modifier.padding(innerPadding))}
+    }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Preview(showBackground = true)
 @Composable
 fun PreviewMain() {
-    AppScaffold()
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                modifier = Modifier.background(color = colorResource(R.color.white)),
+                title = { Text("Приборная панель", style = CustomTextStyles.sub_heading_medium, color = colorResource(R.color.gray_800))},
+                navigationIcon = { Icon(Icons.Default.Menu, contentDescription = "menu")}
+            )
+        }
+    ) { innerPadding ->  Text("D", modifier = Modifier.padding(innerPadding))}
+    //AppScaffold()
 }
