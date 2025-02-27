@@ -8,6 +8,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -46,6 +47,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -59,9 +61,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.example.inventorymanagementapp.ui.theme.CustomTextStyles
 import com.example.inventorymanagementapp.ui.theme.InventoryManagementAppTheme
-//import de.jensklingenberg.jetpackcomposeplayground.mysamples.github.foundation.basictextfield.BasicTextFieldDemo
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
@@ -79,8 +83,12 @@ class MainActivity : ComponentActivity() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppScaffold() {
+    val navController = rememberNavController()
+    val drawerState = rememberDrawerState(initialValue = DrawerValue.Open)
+    val scope = rememberCoroutineScope()
+
     ModalNavigationDrawer(
-        drawerState = rememberDrawerState(initialValue = DrawerValue.Open),
+        drawerState = drawerState,
         drawerContent = {
             ModalDrawerSheet {
                 Column(modifier = Modifier.fillMaxWidth().fillMaxHeight().background(color = colorResource(R.color.white))) {
@@ -99,9 +107,20 @@ fun AppScaffold() {
                                 Text("revokalloppollakover@gmail.com", color = colorResource(R.color.gray_400), fontSize = 12.sp, fontWeight = FontWeight.Medium, letterSpacing = 0.5.sp)
                             }
                         }
-                        Column(modifier = Modifier.padding(24.dp, 0.dp, 24.dp, 0.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                        Column(modifier = Modifier.padding(24.dp, 0.dp, 24.dp, 0.dp).fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(10.dp)) {
 
-                            Row(modifier = Modifier.padding(0.dp, 16.dp, 0.dp, 16.dp), verticalAlignment = Alignment.CenterVertically,horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+                            Row(modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable {
+                                    navController.navigate("dashboard") {
+                                        popUpTo(navController.graph.startDestinationId)
+                                        launchSingleTop = true
+                                    }
+                                    scope.launch { drawerState.close() }
+                                },
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(16.dp)
+                            ) {
 
                                 Icon(
                                     painter = painterResource(id = R.drawable.home_icon),
@@ -109,10 +128,21 @@ fun AppScaffold() {
                                     tint = colorResource(R.color.primary_500),
                                 )
 
-                                Text(text="Приборная панель", style = CustomTextStyles.body1_medium, color = colorResource(R.color.primary_500))
+                                Text(modifier = Modifier.padding(0.dp, 16.dp, 0.dp, 16.dp),text="Приборная панель", style = CustomTextStyles.body1_medium, color = colorResource(R.color.primary_500))
                             }
 
-                            Row(modifier = Modifier.padding(0.dp, 16.dp, 0.dp, 16.dp),verticalAlignment = Alignment.CenterVertically,horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+                            Row(modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable {
+                                    navController.navigate("inventory") {
+                                        popUpTo(navController.graph.startDestinationId)
+                                        launchSingleTop = true
+                                    }
+                                    scope.launch { drawerState.close() }
+                                },
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(16.dp)
+                            ) {
 
                                 Icon(
                                     painter = painterResource(id = R.drawable.inventory_icon),
@@ -120,10 +150,21 @@ fun AppScaffold() {
                                     tint = colorResource(R.color.gray_600),
                                 )
 
-                                Text(text="Инвентарь", style = CustomTextStyles.body1_medium, color = colorResource(R.color.gray_600))
+                                Text(modifier = Modifier.padding(0.dp, 16.dp, 0.dp, 16.dp), text="Инвентарь", style = CustomTextStyles.body1_medium, color = colorResource(R.color.gray_600))
                             }
 
-                            Row(modifier = Modifier.padding(0.dp, 16.dp, 0.dp, 16.dp), verticalAlignment = Alignment.CenterVertically,horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+                            Row(modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable {
+                                    navController.navigate("suppliers") {
+                                        popUpTo(navController.graph.startDestinationId)
+                                        launchSingleTop = true
+                                    }
+                                    scope.launch { drawerState.close() }
+                                },
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(16.dp)
+                            ) {
 
                                 Icon(
                                     painter = painterResource(id = R.drawable.suppliers_icon),
@@ -131,10 +172,21 @@ fun AppScaffold() {
                                     tint = colorResource(R.color.gray_600),
                                 )
 
-                                Text(text="Поставщики", style = CustomTextStyles.body1_medium, color = colorResource(R.color.gray_600))
+                                Text(modifier = Modifier.padding(0.dp, 16.dp, 0.dp, 16.dp), text="Поставщики", style = CustomTextStyles.body1_medium, color = colorResource(R.color.gray_600))
                             }
 
-                            Row(modifier = Modifier.padding(0.dp, 16.dp, 0.dp, 16.dp), verticalAlignment = Alignment.CenterVertically,horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+                            Row(modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable {
+                                    navController.navigate("orders") {
+                                        popUpTo(navController.graph.startDestinationId)
+                                        launchSingleTop = true
+                                    }
+                                    scope.launch { drawerState.close() }
+                                },
+                                    verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(16.dp)
+                            ) {
 
                                 Icon(
                                     painter = painterResource(id = R.drawable.orders_icon),
@@ -142,10 +194,21 @@ fun AppScaffold() {
                                     tint = colorResource(R.color.gray_600),
                                 )
 
-                                Text(text="Заказы", style = CustomTextStyles.body1_medium, color = colorResource(R.color.gray_600))
+                                Text(modifier = Modifier.padding(0.dp, 16.dp, 0.dp, 16.dp), text="Заказы", style = CustomTextStyles.body1_medium, color = colorResource(R.color.gray_600))
                             }
 
-                            Row(modifier = Modifier.padding(0.dp, 16.dp, 0.dp, 16.dp), verticalAlignment = Alignment.CenterVertically,horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+                            Row(modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable {
+                                    navController.navigate("warehouses") {
+                                        popUpTo(navController.graph.startDestinationId)
+                                        launchSingleTop = true
+                                    }
+                                    scope.launch { drawerState.close() }
+                                },
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(16.dp)
+                            ) {
 
                                 Icon(
                                     painter = painterResource(id = R.drawable.warehouses_icon),
@@ -153,15 +216,28 @@ fun AppScaffold() {
                                     tint = colorResource(R.color.gray_600),
                                 )
 
-                                Text(text="Склады", style = CustomTextStyles.body1_medium, color = colorResource(R.color.gray_600))
+                                Text(modifier = Modifier.padding(0.dp, 16.dp, 0.dp, 16.dp), text="Склады", style = CustomTextStyles.body1_medium, color = colorResource(R.color.gray_600))
                             }
 
                         }
                     }
                     Spacer(modifier = Modifier.weight(1f))
-                    Column(modifier = Modifier.padding(24.dp, 0.dp, 48.dp, 0.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                    Column(modifier = Modifier.padding(24.dp, 0.dp, 24.dp, 32.dp).fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(12.dp)) {
 
-                        Row(modifier = Modifier.padding(0.dp, 16.dp, 0.dp, 48.dp), verticalAlignment = Alignment.CenterVertically,horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable {
+                                    navController.navigate("") {
+                                        popUpTo(navController.graph.startDestinationId)
+                                        launchSingleTop = true
+                                    }
+                                    scope.launch { drawerState.close() }
+                                },
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(16.dp)
+                        ){
 
                             Icon(
                                 painter = painterResource(id = R.drawable.logout_icon),
@@ -169,8 +245,10 @@ fun AppScaffold() {
                                 tint = colorResource(R.color.gray_600),
                             )
 
-                            Text(text="Выйти", style = CustomTextStyles.body1_medium, color = colorResource(R.color.gray_600))
+                            Text(modifier = Modifier.padding(0.dp, 16.dp, 0.dp, 16.dp), text="Выйти", style = CustomTextStyles.body1_medium, color = colorResource(R.color.gray_600))
                         }
+
+
                     }
                 }
 
@@ -198,12 +276,26 @@ fun AppScaffold() {
                     }
                 )
             },
-        ) {innerPadding -> Column(modifier = Modifier.padding(innerPadding)) { NewWarehouseScreen() } }
+        ) {
+            innerPadding ->
+            NavHost(
+                navController = navController,
+                startDestination = "dashboard",
+                modifier = Modifier.padding(innerPadding)
+            ){
+                composable("test") { Demo_ExposedDropdownMenuBox() }
+                composable("dashboard") { DashboardScreen() }
+                composable("inventory") { InventoryScreen() }
+                composable("suppliers") { SuppliersScreen() }
+                composable("orders") { OrdersScreen() }
+                composable("warehouses") { WarehousesScreen() }
+            }
+        }
     }
 }
 
 @Preview(showBackground = true)
 @Composable
 fun PreviewMain() {
-    SingleChoiceSegmentedButton(modifier = Modifier)
+    AppScaffold()
 }

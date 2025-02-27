@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -21,6 +22,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Divider
@@ -59,6 +61,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import com.example.inventorymanagementapp.ui.theme.CustomTextStyles
 import java.util.Locale.Category
 
@@ -70,6 +73,16 @@ fun Demo_ExposedDropdownMenuBox() {
     var expanded by remember { mutableStateOf(false) }
     var selectedText by remember { mutableStateOf(categories[0]) }
 
+    val openDialog = remember { mutableStateOf(true) }
+    //val dialogWidth = 200.dp
+    //val dialogHeight = 50.dp
+
+    Dialog(onDismissRequest = { openDialog.value = false }) {
+        // Draw a rectangle shape with rounded corners inside the dialog
+        Box(Modifier.padding(0.dp, 20.dp, 0.dp, 20.dp).clip(RoundedCornerShape(8.dp))){
+            NewOrderScreen()
+        }
+    }
     Box(
         modifier = Modifier.fillMaxWidth()
     ) {

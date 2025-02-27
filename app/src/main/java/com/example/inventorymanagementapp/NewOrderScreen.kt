@@ -62,15 +62,15 @@ fun NewOrderScreen() {
 
     Column(
         modifier = Modifier
-            .fillMaxSize()
-            .background(
+            .fillMaxWidth()
+            /*.background(
                 color = colorResource(R.color.gray_50)
-            )
+            )*/
     ) {
         Column(
             modifier = Modifier
                 .padding(22.dp)
-                .fillMaxSize()
+                .fillMaxWidth()
                 .clip(RoundedCornerShape(8.dp))
                 .background(color = colorResource(R.color.white))
                 .verticalScroll(rememberScrollState())
