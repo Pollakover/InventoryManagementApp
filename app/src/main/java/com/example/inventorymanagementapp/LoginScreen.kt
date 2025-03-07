@@ -1,6 +1,5 @@
 package com.example.inventorymanagementapp
 
-import android.provider.ContactsContract.CommonDataKinds.Email
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -26,14 +25,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.inventorymanagementapp.ui.theme.CustomTextStyles
+import com.example.inventorymanagementapp.ui.theme.*
 
 @Composable
 fun LoginScreen() {
@@ -44,7 +40,7 @@ fun LoginScreen() {
         modifier = Modifier
             .fillMaxWidth()
             .fillMaxHeight()
-            .background(color = colorResource(R.color.white))
+            .background(color = white)
     ) {
         Column(
             modifier = Modifier
@@ -72,12 +68,12 @@ fun LoginScreen() {
 
                 Text(
                     text = "Войдите в аккаунт",
-                    color = colorResource(R.color.gray_900),
+                    color = gray_900,
                     style = CustomTextStyles.heading1_semi_bold
                 )
                 Text(
                     text = "Заполните поля для входа в систему.",
-                    color = colorResource(R.color.gray_500),
+                    color = gray_500,
                     style = CustomTextStyles.body1_regular
                 )
 
@@ -97,7 +93,7 @@ fun LoginScreen() {
                 ) {
                     Text(
                         text = "Email",
-                        color = colorResource(R.color.gray_700),
+                        color = gray_700,
                         style = CustomTextStyles.body2_medium
                     )
                     BasicTextField(
@@ -108,7 +104,7 @@ fun LoginScreen() {
                             .clip(RoundedCornerShape(8.dp))
                             .border(
                                 1.dp,
-                                color = colorResource(R.color.gray_100),
+                                color = gray_100,
                                 RoundedCornerShape(8.dp)
                             )
                             .padding(14.dp, 10.dp, 14.dp, 10.dp),
@@ -117,7 +113,7 @@ fun LoginScreen() {
                             if (email.text.isEmpty()) {
                                 Text(
                                     text = "Введите Email",
-                                    color = colorResource(R.color.gray_500),
+                                    color = gray_500,
                                     style = CustomTextStyles.body1_regular
                                 )
                             }
@@ -132,7 +128,7 @@ fun LoginScreen() {
                 ) {
                     Text(
                         text = "Пароль",
-                        color = colorResource(R.color.gray_700),
+                        color = gray_700,
                         style = CustomTextStyles.body2_medium
                     )
                     BasicTextField(
@@ -143,14 +139,14 @@ fun LoginScreen() {
                             .clip(RoundedCornerShape(8.dp))
                             .border(
                                 1.dp,
-                                color = colorResource(R.color.gray_100),
+                                color = gray_100,
                                 RoundedCornerShape(8.dp)
                             )
                             .padding(14.dp, 10.dp, 14.dp, 10.dp),
                         decorationBox = {
                             Text(
                                 text = "Введите пароль",
-                                color = colorResource(R.color.gray_500),
+                                color = gray_500,
                                 style = CustomTextStyles.body1_regular
                             )
                         }
@@ -163,13 +159,13 @@ fun LoginScreen() {
                     modifier = Modifier
                         .fillMaxWidth(),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = colorResource(R.color.primary_500),
-                        contentColor = colorResource(R.color.white)
+                        containerColor = primary_500,
+                        contentColor = white
                     )
                 ) {
                     Text(
                         "Войти",
-                        color = colorResource(R.color.white),
+                        color = white,
                         style = CustomTextStyles.body1_medium,
                         modifier = Modifier
                             .padding(5.dp)
@@ -179,12 +175,12 @@ fun LoginScreen() {
                 Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
                     Text(
                         text = "У вас нет аккаунта?",
-                        color = colorResource(R.color.gray_500),
+                        color = gray_500,
                         style = CustomTextStyles.body2_regular
                     )
                     Text(
                         text = "Зарегистрируйтесь",
-                        color = colorResource(R.color.primary_600),
+                        color = primary_600,
                         style = CustomTextStyles.body2_medium
                     )
                 }

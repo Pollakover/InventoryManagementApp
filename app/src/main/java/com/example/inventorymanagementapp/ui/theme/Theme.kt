@@ -149,15 +149,30 @@ object CustomTextStyles {
 }
 
 private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
-    secondary = PurpleGrey80,
-    tertiary = Pink80
+    primary = gray_900,
+    secondary = gray_800,
+    tertiary = gray_700,
+    background = gray_600,
+    surface = gray_500,
+    onPrimary = gray_400,
+    onSecondary = gray_300,
+    onTertiary = gray_200,
+    onBackground = gray_100,
+    onSurface = gray_50
+
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
-    secondary = PurpleGrey40,
-    tertiary = Pink40
+    primary = gray_50,
+    secondary = gray_100,
+    tertiary = gray_200,
+    background = gray_300,
+    surface = gray_400,
+    onPrimary = gray_500,
+    onSecondary = gray_600,
+    onTertiary = gray_700,
+    onBackground = gray_800,
+    onSurface = gray_900
 
     /* Other default colors to override
     background = Color(0xFFFFFBFE),
@@ -173,7 +188,6 @@ private val LightColorScheme = lightColorScheme(
 @Composable
 fun InventoryManagementAppTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+
     dynamicColor: Boolean = true,
     content: @Composable () -> Unit
 ) {

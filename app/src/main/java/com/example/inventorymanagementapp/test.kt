@@ -22,6 +22,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -49,21 +50,24 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.Blue
+import androidx.compose.ui.graphics.Color.Companion.Transparent
+import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
-import com.example.inventorymanagementapp.ui.theme.CustomTextStyles
-import java.util.Locale.Category
+import com.example.inventorymanagementapp.ui.theme.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -77,76 +81,179 @@ fun Demo_ExposedDropdownMenuBox() {
     //val dialogWidth = 200.dp
     //val dialogHeight = 50.dp
 
-    Dialog(onDismissRequest = { openDialog.value = false }) {
-        // Draw a rectangle shape with rounded corners inside the dialog
-        Box(Modifier.padding(0.dp, 20.dp, 0.dp, 20.dp).clip(RoundedCornerShape(8.dp))){
-            NewOrderScreen()
-        }
-    }
-    Box(
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        ExposedDropdownMenuBox(
-            expanded = expanded,
-            onExpandedChange = { expanded = !expanded },
+    Column(modifier = Modifier.fillMaxSize(),Arrangement.spacedBy(20.dp)) {
+
+        var text1 by remember { mutableStateOf("") }
+       // val maxChar = 5
+
+        TextField(
+            value = text1,
+            onValueChange = {
+                text1 = it
+            },
             modifier = Modifier
                 .fillMaxWidth()
-                .background(Color.Transparent) // Убираем фон у самой коробки
-        ) {
-            TextField(
-                value = selectedText,
-                onValueChange = {},
-                readOnly = true,
-                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-                modifier = Modifier
-                    .menuAnchor()
-                    .fillMaxWidth()
-                    .clip(RoundedCornerShape(8.dp))
-                    .background(colorResource(R.color.warning_400)) // Цвет фона TextField
-                    .padding(8.dp),
-                textStyle = TextStyle(
-                    color = Color.White, // Цвет текста
-                    fontSize = 16.sp // Размер шрифта
-                ),
-                colors = TextFieldDefaults.colors(
-                    focusedContainerColor = colorResource(R.color.warning_400), // Фон при фокусе
-                    unfocusedContainerColor = colorResource(R.color.warning_400),
-                    disabledContainerColor = colorResource(R.color.warning_400),
-                    focusedTextColor = Color.White,
-                    unfocusedTextColor = Color.White
-                )
-            )
+                .height(55.dp)
+                .padding(vertical = 4.dp)
+                .border(1.dp, color = gray_100, RoundedCornerShape(8.dp)),
+            shape = RoundedCornerShape(8.dp),
+            leadingIcon = {
+                Icon(Icons.Filled.Search, "Floating action button.", tint = gray_400)
+            },
+            colors = TextFieldDefaults.colors(
+                focusedContainerColor = gray_50, // Фон при фокусе
+                unfocusedContainerColor = white,
+                disabledContainerColor = white,
+                focusedTextColor = gray_800, // Цвет текста
+                unfocusedTextColor = gray_800, // Цвет текста
+                cursorColor = gray_800, // Цвет курсора
+                focusedIndicatorColor = transparent,
+                unfocusedIndicatorColor = transparent,
+                disabledIndicatorColor = transparent
+            ),
+            textStyle = CustomTextStyles.body2_regular,
+            placeholder = {
+                Text("Поиск…", style = CustomTextStyles.body2_regular, color = gray_400, modifier = Modifier.fillMaxSize())
+            },
+        )
+        
 
-            ExposedDropdownMenu(
+        Box(
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            ExposedDropdownMenuBox(
                 expanded = expanded,
-                onDismissRequest = { expanded = false },
+                onExpandedChange = { expanded = !expanded },
                 modifier = Modifier
-                    .background(colorResource(R.color.warning_500)) // Фон выпадающего списка
-                    .clip(RoundedCornerShape(8.dp))
+                    .fillMaxWidth()
+                    .background(Color.Transparent) // Убираем фон у самой коробки
+                    .height(80.dp)
+                    .border(1.dp, color = gray_100, RoundedCornerShape(8.dp))
             ) {
-                categories.forEach { item ->
-                    DropdownMenuItem(
-                        text = {
-                            Text(
-                                text = item,
-                                color = Color.White, // Цвет текста
-                                fontSize = 14.sp,
-                                modifier = Modifier.padding(0.dp) // Внутренние отступы
-                            )
-                        },
-                        onClick = {
-                            selectedText = item
-                            expanded = false
-                            Toast.makeText(context, item, Toast.LENGTH_SHORT).show()
-                        },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(colorResource(R.color.warning_500)) // Цвет фона каждого элемента
-                    )
+                TextField(
+                    value = selectedText,
+                    onValueChange = {},
+                    readOnly = true,
+                    trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+                    modifier = Modifier
+                        .menuAnchor()
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(8.dp))
+                        .padding(8.dp),
+                    textStyle = TextStyle(
+                        color = gray_600, // Цвет текста исправлен
+                        fontSize = 14.sp
+                    ),
+                    colors = TextFieldDefaults.colors(
+                        focusedContainerColor = transparent, // Фон при фокусе
+                        unfocusedContainerColor = transparent,
+                        disabledContainerColor = transparent,
+                        focusedTextColor = gray_600, // Цвет текста исправлен
+                        unfocusedTextColor = gray_600, // Цвет текста исправлен
+                        cursorColor = gray_600, // Цвет курсора
+                        focusedIndicatorColor = transparent, // Убираем черную линию
+                        unfocusedIndicatorColor = transparent, // Убираем черную линию
+                        disabledIndicatorColor = transparent // Убираем черную линию
+                    ),
+                    placeholder = {
+                        Text(
+                            "Поиск…",
+                            style = CustomTextStyles.body2_regular,
+                            color = gray_400
+                        )
+                    },
+                )
+
+                ExposedDropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = { expanded = false },
+                    modifier = Modifier
+                        .background(white) // Фон выпадающего списка
+                        .clip(RoundedCornerShape(8.dp))
+                        .fillMaxWidth()
+                ) {
+                    categories.forEach { item ->
+                        DropdownMenuItem(
+                            text = {
+                                Text(
+                                    text = item,
+                                    color = gray_600, // Цвет текста
+                                    fontSize = 14.sp,
+                                    modifier = Modifier.padding(8.dp)
+                                )
+                            },
+                            onClick = {
+                                selectedText = item
+                                expanded = false
+                                Toast.makeText(context, item, Toast.LENGTH_SHORT).show()
+                            },
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    }
                 }
             }
         }
+
+        val rainbowColors : List<Color> = listOf(Color(0xFF817AF3), Color(0xFF74B0FA), Color(0xFF79D0F1), Color(0xFF46A46C), Color(0xFF51CC5D), Color(0xFF57DA65))
+        var text by remember { mutableStateOf("") }
+        val brush = remember {
+            Brush.linearGradient(
+                colors = rainbowColors
+            )
+        }
+        TextField(
+            modifier = Modifier.fillMaxWidth(),
+            value = text,
+            onValueChange = { text = it },
+            textStyle = TextStyle(brush = brush, fontSize = 14.sp, lineHeight = 20.sp, fontWeight = FontWeight.Bold,),
+            colors = TextFieldDefaults.colors(
+                focusedContainerColor = gray_50, // Фон при фокусе
+                unfocusedContainerColor = white,
+                disabledContainerColor = white,
+                //focusedTextColor = gray_800, // Цвет текста
+                //unfocusedTextColor = gray_800, // Цвет текста
+                cursorColor = gray_800, // Цвет курсора
+                focusedIndicatorColor = gray_500,
+                unfocusedIndicatorColor = gray_500,
+                disabledIndicatorColor = gray_500
+            ),
+            placeholder = {
+                Text("Поиск…", style = CustomTextStyles.body2_regular, color = gray_400)
+            },
+        )
     }
+}
+
+@Composable
+fun TestSearchBar(){
+    val rainbowColors : List<Color> = listOf(primary_500, success_500)
+    var text by remember { mutableStateOf("") }
+    val brush = remember {
+        Brush.linearGradient(
+            colors = rainbowColors
+        )
+    }
+    TextField(
+        singleLine = true,
+        modifier = Modifier.fillMaxWidth(),
+        value = text,
+        onValueChange = { text = it },
+        textStyle = TextStyle(brush = brush, fontSize = 14.sp, lineHeight = 20.sp, fontWeight = FontWeight.Bold,),
+        colors = TextFieldDefaults.colors(
+            focusedContainerColor = transparent, // Фон при фокусе
+            unfocusedContainerColor = transparent,
+            disabledContainerColor = transparent,
+            focusedTextColor = gray_800, // Цвет текста
+            unfocusedTextColor = gray_800, // Цвет текста
+            cursorColor = gray_800, // Цвет курсора
+            focusedIndicatorColor = gray_100,
+            unfocusedIndicatorColor = gray_100,
+            disabledIndicatorColor = gray_100
+        ),
+        placeholder = {
+            Text("Поиск…", style = CustomTextStyles.body2_regular, color = gray_400)
+        },
+    )
 }
 
 

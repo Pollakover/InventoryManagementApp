@@ -39,7 +39,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.inventorymanagementapp.ui.theme.CustomTextStyles
+import com.example.inventorymanagementapp.ui.theme.*
 
 @Composable
 fun ClickOnItemScreen() {
@@ -52,7 +52,7 @@ fun ClickOnItemScreen() {
         modifier = Modifier
             .fillMaxSize()
             .background(
-                color = colorResource(R.color.gray_50)
+                color = gray_50
             )
     ) {
         Column(
@@ -60,7 +60,7 @@ fun ClickOnItemScreen() {
                 .padding(22.dp)
                 .fillMaxSize()
                 .clip(RoundedCornerShape(8.dp))
-                .background(color = colorResource(R.color.white))
+                .background(color = white)
         ) {
             Column(
                 verticalArrangement = Arrangement.spacedBy(20.dp),
@@ -73,9 +73,8 @@ fun ClickOnItemScreen() {
                     contentAlignment = Alignment.Center,
                     modifier = Modifier
                         .size(100.dp)
-                        //.border(1.dp, colorResource(R.color.gray_100), RoundedCornerShape(8.dp))
                         .drawBehind {
-                            drawRoundRect(color = Color.Gray, style = stroke, cornerRadius = CornerRadius(10.dp.toPx()))
+                            drawRoundRect(color = gray_200, style = stroke, cornerRadius = CornerRadius(10.dp.toPx()))
                         }
                 )
                 {
@@ -86,66 +85,66 @@ fun ClickOnItemScreen() {
                     )
                 }
 
-                HorizontalDivider(modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 0.dp), color = colorResource(R.color.gray_50))
+                HorizontalDivider(modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 0.dp), color = gray_50)
 
                     Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                        Text("Основная информация", style = CustomTextStyles.body1_semi_bold, color = colorResource(R.color.gray_700))
+                        Text("Основная информация", style = CustomTextStyles.body1_semi_bold, color = gray_700)
                         Row {
-                            Text("Название", modifier = Modifier.weight(1f), style = CustomTextStyles.body2_medium, color = colorResource(R.color.gray_400))
-                            Text("Название продукта", modifier = Modifier.weight(1f), textAlign = TextAlign.End, style = CustomTextStyles.body2_medium, color = colorResource(R.color.gray_600))
+                            Text("Название", modifier = Modifier.weight(1f), style = CustomTextStyles.body2_medium, color = gray_400)
+                            Text("Название продукта", modifier = Modifier.weight(1f), textAlign = TextAlign.End, style = CustomTextStyles.body2_medium, color = gray_600)
                         }
                         Row {
-                            Text("ID продукта", modifier = Modifier.weight(1f), style = CustomTextStyles.body2_medium, color = colorResource(R.color.gray_400))
-                            Text("8245930", modifier = Modifier.weight(1f), textAlign = TextAlign.End, style = CustomTextStyles.body2_medium, color = colorResource(R.color.gray_600))
+                            Text("ID продукта", modifier = Modifier.weight(1f), style = CustomTextStyles.body2_medium, color = gray_400)
+                            Text("8245930", modifier = Modifier.weight(1f), textAlign = TextAlign.End, style = CustomTextStyles.body2_medium, color = gray_600)
                         }
                         Row {
-                            Text("Категория продукта", modifier = Modifier.weight(1f), style = CustomTextStyles.body2_medium, color = colorResource(R.color.gray_400))
-                            Text("Бытовая химия", modifier = Modifier.weight(1f), textAlign = TextAlign.End, style = CustomTextStyles.body2_medium, color = colorResource(R.color.gray_600))
+                            Text("Категория продукта", modifier = Modifier.weight(1f), style = CustomTextStyles.body2_medium, color = gray_400)
+                            Text("Бытовая химия", modifier = Modifier.weight(1f), textAlign = TextAlign.End, style = CustomTextStyles.body2_medium, color = gray_600)
                         }
                         Row {
-                            Text("Срок годности", modifier = Modifier.weight(1f), style = CustomTextStyles.body2_medium, color = colorResource(R.color.gray_400))
-                            Text("11.12.25", modifier = Modifier.weight(1f), textAlign = TextAlign.End, style = CustomTextStyles.body2_medium, color = colorResource(R.color.gray_600))
+                            Text("Срок годности", modifier = Modifier.weight(1f), style = CustomTextStyles.body2_medium, color = gray_400)
+                            Text("11.12.25", modifier = Modifier.weight(1f), textAlign = TextAlign.End, style = CustomTextStyles.body2_medium, color = gray_600)
                         }
                         Row {
-                            Text("Цена", modifier = Modifier.weight(1f), style = CustomTextStyles.body2_medium, color = colorResource(R.color.gray_400))
-                            Text("119.99 ₽", modifier = Modifier.weight(1f), textAlign = TextAlign.End, style = CustomTextStyles.body2_medium, color = colorResource(R.color.gray_600))
+                            Text("Цена", modifier = Modifier.weight(1f), style = CustomTextStyles.body2_medium, color = gray_400)
+                            Text("119.99 ₽", modifier = Modifier.weight(1f), textAlign = TextAlign.End, style = CustomTextStyles.body2_medium, color = gray_600)
                         }
                     }
 
-                HorizontalDivider(modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 0.dp), color = colorResource(R.color.gray_50))
+                HorizontalDivider(modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 0.dp), color = gray_50)
 
                 Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Text("Информация о поставщике", style = CustomTextStyles.body1_semi_bold, color = colorResource(R.color.gray_700))
+                    Text("Информация о поставщике", style = CustomTextStyles.body1_semi_bold, color = gray_700)
                     Row {
-                        Text("Имя поставщика", modifier = Modifier.weight(1f), style = CustomTextStyles.body2_medium, color = colorResource(R.color.gray_400))
-                        Text("Ronald Martin", modifier = Modifier.weight(1f), textAlign = TextAlign.End, style = CustomTextStyles.body2_medium, color = colorResource(R.color.gray_600))
+                        Text("Имя поставщика", modifier = Modifier.weight(1f), style = CustomTextStyles.body2_medium, color = gray_400)
+                        Text("Ronald Martin", modifier = Modifier.weight(1f), textAlign = TextAlign.End, style = CustomTextStyles.body2_medium, color = gray_600)
                     }
                     Row {
-                        Text("Номер телефона", modifier = Modifier.weight(1f), style = CustomTextStyles.body2_medium, color = colorResource(R.color.gray_400))
-                        Text("98789 86757", modifier = Modifier.weight(1f), textAlign = TextAlign.End, style = CustomTextStyles.body2_medium, color = colorResource(R.color.gray_600))
+                        Text("Номер телефона", modifier = Modifier.weight(1f), style = CustomTextStyles.body2_medium, color = gray_400)
+                        Text("98789 86757", modifier = Modifier.weight(1f), textAlign = TextAlign.End, style = CustomTextStyles.body2_medium, color = gray_600)
                     }
                 }
 
-                HorizontalDivider(modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 0.dp), color = colorResource(R.color.gray_50))
+                HorizontalDivider(modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 0.dp), color = gray_50)
 
                 Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Text("Запасы на складах", style = CustomTextStyles.body1_semi_bold, color = colorResource(R.color.gray_700))
+                    Text("Запасы на складах", style = CustomTextStyles.body1_semi_bold, color = gray_700)
                     Column {
                         Row(
-                            modifier = Modifier.clip(RoundedCornerShape(8.dp)).background(color = colorResource(R.color.gray_50)).padding(12.dp)
+                            modifier = Modifier.clip(RoundedCornerShape(8.dp)).background(color = gray_50).padding(12.dp)
                         ){
-                            Text("Склад", modifier = Modifier.weight(1f), style = CustomTextStyles.body2_semi_bold, color = colorResource(R.color.gray_500))
-                            Text("Кол-во на складе", modifier = Modifier.weight(1f), textAlign = TextAlign.End, style = CustomTextStyles.body2_semi_bold, color = colorResource(R.color.gray_500))
+                            Text("Склад", modifier = Modifier.weight(1f), style = CustomTextStyles.body2_semi_bold, color = gray_500)
+                            Text("Кол-во на складе", modifier = Modifier.weight(1f), textAlign = TextAlign.End, style = CustomTextStyles.body2_semi_bold, color = gray_500)
                         }
                         LazyColumn(modifier = Modifier.fillMaxWidth()) {
                             items(4){
                                 Column {
                                     Row(modifier = Modifier.padding(12.dp)){
-                                        Text("Sulur Branch", modifier = Modifier.weight(1f), style = CustomTextStyles.body2_medium, color = colorResource(R.color.gray_400))
-                                        Text("24", modifier = Modifier.weight(1f), textAlign = TextAlign.End, style = CustomTextStyles.body2_medium, color = colorResource(R.color.primary_600))
+                                        Text("Sulur Branch", modifier = Modifier.weight(1f), style = CustomTextStyles.body2_medium, color = gray_400)
+                                        Text("24", modifier = Modifier.weight(1f), textAlign = TextAlign.End, style = CustomTextStyles.body2_medium, color = primary_600)
                                     }
                                 }
-                                HorizontalDivider(modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 0.dp), color = colorResource(R.color.gray_100))
+                                HorizontalDivider(modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 0.dp), color = gray_100)
                             }
                         }
                     }

@@ -3,7 +3,6 @@ package com.example.inventorymanagementapp
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -11,40 +10,28 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.SegmentedButton
-import androidx.compose.material3.SegmentedButtonDefaults
-import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.geometry.CornerRadius
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.inventorymanagementapp.ui.theme.CustomTextStyles
+import com.example.inventorymanagementapp.ui.theme.*
 
 
 @Composable
@@ -64,7 +51,7 @@ fun NewOrderScreen() {
         modifier = Modifier
             .fillMaxWidth()
             /*.background(
-                color = colorResource(R.color.gray_50)
+                color = gray_50
             )*/
     ) {
         Column(
@@ -72,7 +59,7 @@ fun NewOrderScreen() {
                 .padding(22.dp)
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(8.dp))
-                .background(color = colorResource(R.color.white))
+                .background(color = white)
                 .verticalScroll(rememberScrollState())
         ) {
             Column(
@@ -88,7 +75,7 @@ fun NewOrderScreen() {
                 ) {
                     Text(
                         text = "Название продукта",
-                        color = colorResource(R.color.gray_700),
+                        color = gray_700,
                         style = CustomTextStyles.body2_medium
                     )
                     BasicTextField(
@@ -99,7 +86,7 @@ fun NewOrderScreen() {
                             .clip(RoundedCornerShape(8.dp))
                             .border(
                                 1.dp,
-                                color = colorResource(R.color.gray_100),
+                                color = gray_100,
                                 RoundedCornerShape(8.dp)
                             )
                             .padding(14.dp, 10.dp, 14.dp, 10.dp),
@@ -108,7 +95,7 @@ fun NewOrderScreen() {
                             if (productName.text.isEmpty()) {
                                 Text(
                                     text = "Введите название продукта",
-                                    color = colorResource(R.color.gray_500),
+                                    color = gray_500,
                                     style = CustomTextStyles.body1_regular
                                 )
                             }
@@ -123,7 +110,7 @@ fun NewOrderScreen() {
                 ) {
                     Text(
                         text = "Количество",
-                        color = colorResource(R.color.gray_700),
+                        color = gray_700,
                         style = CustomTextStyles.body2_medium
                     )
                     BasicTextField(
@@ -134,7 +121,7 @@ fun NewOrderScreen() {
                             .clip(RoundedCornerShape(8.dp))
                             .border(
                                 1.dp,
-                                color = colorResource(R.color.gray_100),
+                                color = gray_100,
                                 RoundedCornerShape(8.dp)
                             )
                             .padding(14.dp, 10.dp, 14.dp, 10.dp),
@@ -143,7 +130,7 @@ fun NewOrderScreen() {
                             if (productName.text.isEmpty()) {
                                 Text(
                                     text = "Введиите количество",
-                                    color = colorResource(R.color.gray_500),
+                                    color = gray_500,
                                     style = CustomTextStyles.body1_regular
                                 )
                             }
@@ -158,7 +145,7 @@ fun NewOrderScreen() {
                 ) {
                     Text(
                         text = "Цена",
-                        color = colorResource(R.color.gray_700),
+                        color = gray_700,
                         style = CustomTextStyles.body2_medium
                     )
                     BasicTextField(
@@ -169,7 +156,7 @@ fun NewOrderScreen() {
                             .clip(RoundedCornerShape(8.dp))
                             .border(
                                 1.dp,
-                                color = colorResource(R.color.gray_100),
+                                color = gray_100,
                                 RoundedCornerShape(8.dp)
                             )
                             .padding(14.dp, 10.dp, 14.dp, 10.dp),
@@ -178,7 +165,7 @@ fun NewOrderScreen() {
                             if (productName.text.isEmpty()) {
                                 Text(
                                     text = "Введиите цену",
-                                    color = colorResource(R.color.gray_500),
+                                    color = gray_500,
                                     style = CustomTextStyles.body1_regular
                                 )
                             }
@@ -193,7 +180,7 @@ fun NewOrderScreen() {
                 ) {
                     Text(
                         text = "Дата доставки",
-                        color = colorResource(R.color.gray_700),
+                        color = gray_700,
                         style = CustomTextStyles.body2_medium
                     )
                     BasicTextField(
@@ -204,7 +191,7 @@ fun NewOrderScreen() {
                             .clip(RoundedCornerShape(8.dp))
                             .border(
                                 1.dp,
-                                color = colorResource(R.color.gray_100),
+                                color = gray_100,
                                 RoundedCornerShape(8.dp)
                             )
                             .padding(14.dp, 10.dp, 14.dp, 10.dp),
@@ -213,7 +200,7 @@ fun NewOrderScreen() {
                             if (productName.text.isEmpty()) {
                                 Text(
                                     text = "Введиите дату",
-                                    color = colorResource(R.color.gray_500),
+                                    color = gray_500,
                                     style = CustomTextStyles.body1_regular
                                 )
                             }
@@ -228,7 +215,7 @@ fun NewOrderScreen() {
                 ) {
                     Text(
                         text = "Статус",
-                        color = colorResource(R.color.gray_700),
+                        color = gray_700,
                         style = CustomTextStyles.body2_medium
                     )
                     BasicTextField(
@@ -239,7 +226,7 @@ fun NewOrderScreen() {
                             .clip(RoundedCornerShape(8.dp))
                             .border(
                                 1.dp,
-                                color = colorResource(R.color.gray_100),
+                                color = gray_100,
                                 RoundedCornerShape(8.dp)
                             )
                             .padding(14.dp, 10.dp, 14.dp, 10.dp),
@@ -248,7 +235,7 @@ fun NewOrderScreen() {
                             if (productName.text.isEmpty()) {
                                 Text(
                                     text = "Выберите статус",
-                                    color = colorResource(R.color.gray_500),
+                                    color = gray_500,
                                     style = CustomTextStyles.body1_regular
                                 )
                             }
@@ -265,8 +252,8 @@ fun NewOrderScreen() {
                         shape = RoundedCornerShape(8.dp),
                         onClick = { },
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = colorResource(R.color.white),
-                            contentColor = colorResource(R.color.gray_500)
+                            containerColor = white,
+                            contentColor = gray_500
                         ),
                         contentPadding = PaddingValues(10.dp)
                     ) {
@@ -276,8 +263,8 @@ fun NewOrderScreen() {
                         modifier = Modifier.clip(RoundedCornerShape(8.dp)),
                         shape = RoundedCornerShape(8.dp),
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = colorResource(R.color.primary_600),
-                            contentColor = colorResource(R.color.white)
+                            containerColor = primary_600,
+                            contentColor = white
                         ),
                         contentPadding = PaddingValues(10.dp)
                     ) {

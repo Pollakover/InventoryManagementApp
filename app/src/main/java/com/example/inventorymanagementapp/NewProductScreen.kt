@@ -1,6 +1,5 @@
 package com.example.inventorymanagementapp
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -11,22 +10,14 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
@@ -43,14 +34,11 @@ import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.example.inventorymanagementapp.ui.theme.CustomTextStyles
+import com.example.inventorymanagementapp.ui.theme.*
 
 @Composable
 fun NewProductScreen() {
@@ -69,7 +57,7 @@ fun NewProductScreen() {
         modifier = Modifier
             .fillMaxSize()
             .background(
-                color = colorResource(R.color.gray_50)
+                color = gray_50
             )
     ) {
         Column(
@@ -77,7 +65,7 @@ fun NewProductScreen() {
                 .padding(22.dp)
                 .fillMaxSize()
                 .clip(RoundedCornerShape(8.dp))
-                .background(color = colorResource(R.color.white))
+                .background(color = white)
                 .verticalScroll(rememberScrollState())
         ) {
             Column(
@@ -91,13 +79,13 @@ fun NewProductScreen() {
                     contentAlignment = Alignment.Center,
                     modifier = Modifier
                         .size(100.dp)
-                        //.border(1.dp, colorResource(R.color.gray_100), RoundedCornerShape(8.dp))
+                        //.border(1.dp, gray_100, RoundedCornerShape(8.dp))
                         .drawBehind {
                             drawRoundRect(color = Color.Gray, style = stroke, cornerRadius = CornerRadius(10.dp.toPx()))
                         }
                 )
                 {
-                    Icon(painter = painterResource(R.drawable.upload_file_icon), contentDescription = "Menu", tint = colorResource(R.color.gray_400), modifier = Modifier.size(80.dp))
+                    Icon(painter = painterResource(R.drawable.upload_file_icon), contentDescription = "Menu", tint = gray_400, modifier = Modifier.size(80.dp))
                 }
                 Column(
                     modifier = Modifier.fillMaxWidth(),
@@ -105,7 +93,7 @@ fun NewProductScreen() {
                 ) {
                     Text(
                         text = "Название",
-                        color = colorResource(R.color.gray_700),
+                        color = gray_700,
                         style = CustomTextStyles.body2_medium
                     )
                     BasicTextField(
@@ -116,7 +104,7 @@ fun NewProductScreen() {
                             .clip(RoundedCornerShape(8.dp))
                             .border(
                                 1.dp,
-                                color = colorResource(R.color.gray_100),
+                                color = gray_100,
                                 RoundedCornerShape(8.dp)
                             )
                             .padding(14.dp, 10.dp, 14.dp, 10.dp),
@@ -125,7 +113,7 @@ fun NewProductScreen() {
                             if (productName.text.isEmpty()) {
                                 Text(
                                     text = "Введите название продукта",
-                                    color = colorResource(R.color.gray_500),
+                                    color = gray_500,
                                     style = CustomTextStyles.body1_regular
                                 )
                             }
@@ -140,7 +128,7 @@ fun NewProductScreen() {
                 ) {
                     Text(
                         text = "Категория",
-                        color = colorResource(R.color.gray_700),
+                        color = gray_700,
                         style = CustomTextStyles.body2_medium
                     )
                     BasicTextField(
@@ -151,7 +139,7 @@ fun NewProductScreen() {
                             .clip(RoundedCornerShape(8.dp))
                             .border(
                                 1.dp,
-                                color = colorResource(R.color.gray_100),
+                                color = gray_100,
                                 RoundedCornerShape(8.dp)
                             )
                             .padding(14.dp, 10.dp, 14.dp, 10.dp),
@@ -160,7 +148,7 @@ fun NewProductScreen() {
                             if (productName.text.isEmpty()) {
                                 Text(
                                     text = "Выберите категорию",
-                                    color = colorResource(R.color.gray_500),
+                                    color = gray_500,
                                     style = CustomTextStyles.body1_regular
                                 )
                             }
@@ -175,7 +163,7 @@ fun NewProductScreen() {
                 ) {
                     Text(
                         text = "Цена",
-                        color = colorResource(R.color.gray_700),
+                        color = gray_700,
                         style = CustomTextStyles.body2_medium
                     )
                     BasicTextField(
@@ -186,7 +174,7 @@ fun NewProductScreen() {
                             .clip(RoundedCornerShape(8.dp))
                             .border(
                                 1.dp,
-                                color = colorResource(R.color.gray_100),
+                                color = gray_100,
                                 RoundedCornerShape(8.dp)
                             )
                             .padding(14.dp, 10.dp, 14.dp, 10.dp),
@@ -195,7 +183,7 @@ fun NewProductScreen() {
                             if (productName.text.isEmpty()) {
                                 Text(
                                     text = "Введите цену",
-                                    color = colorResource(R.color.gray_500),
+                                    color = gray_500,
                                     style = CustomTextStyles.body1_regular
                                 )
                             }
@@ -210,7 +198,7 @@ fun NewProductScreen() {
                 ) {
                     Text(
                         text = "Количество",
-                        color = colorResource(R.color.gray_700),
+                        color = gray_700,
                         style = CustomTextStyles.body2_medium
                     )
                     BasicTextField(
@@ -221,7 +209,7 @@ fun NewProductScreen() {
                             .clip(RoundedCornerShape(8.dp))
                             .border(
                                 1.dp,
-                                color = colorResource(R.color.gray_100),
+                                color = gray_100,
                                 RoundedCornerShape(8.dp)
                             )
                             .padding(14.dp, 10.dp, 14.dp, 10.dp),
@@ -230,7 +218,7 @@ fun NewProductScreen() {
                             if (productName.text.isEmpty()) {
                                 Text(
                                     text = "Введите количество",
-                                    color = colorResource(R.color.gray_500),
+                                    color = gray_500,
                                     style = CustomTextStyles.body1_regular
                                 )
                             }
@@ -245,7 +233,7 @@ fun NewProductScreen() {
                 ) {
                     Text(
                         text = "Срок годности",
-                        color = colorResource(R.color.gray_700),
+                        color = gray_700,
                         style = CustomTextStyles.body2_medium
                     )
                     BasicTextField(
@@ -256,7 +244,7 @@ fun NewProductScreen() {
                             .clip(RoundedCornerShape(8.dp))
                             .border(
                                 1.dp,
-                                color = colorResource(R.color.gray_100),
+                                color = gray_100,
                                 RoundedCornerShape(8.dp)
                             )
                             .padding(14.dp, 10.dp, 14.dp, 10.dp),
@@ -265,7 +253,7 @@ fun NewProductScreen() {
                             if (productName.text.isEmpty()) {
                                 Text(
                                     text = "Введите срок годности",
-                                    color = colorResource(R.color.gray_500),
+                                    color = gray_500,
                                     style = CustomTextStyles.body1_regular
                                 )
                             }
@@ -280,7 +268,7 @@ fun NewProductScreen() {
                 ) {
                     Text(
                         text = "Поставщик",
-                        color = colorResource(R.color.gray_700),
+                        color = gray_700,
                         style = CustomTextStyles.body2_medium
                     )
                     BasicTextField(
@@ -291,7 +279,7 @@ fun NewProductScreen() {
                             .clip(RoundedCornerShape(8.dp))
                             .border(
                                 1.dp,
-                                color = colorResource(R.color.gray_100),
+                                color = gray_100,
                                 RoundedCornerShape(8.dp)
                             )
                             .padding(14.dp, 10.dp, 14.dp, 10.dp),
@@ -300,7 +288,7 @@ fun NewProductScreen() {
                             if (productName.text.isEmpty()) {
                                 Text(
                                     text = "Выберите поставщика",
-                                    color = colorResource(R.color.gray_500),
+                                    color = gray_500,
                                     style = CustomTextStyles.body1_regular
                                 )
                             }
@@ -315,7 +303,7 @@ fun NewProductScreen() {
                 ) {
                     Text(
                         text = "Склад",
-                        color = colorResource(R.color.gray_700),
+                        color = gray_700,
                         style = CustomTextStyles.body2_medium
                     )
                     BasicTextField(
@@ -326,7 +314,7 @@ fun NewProductScreen() {
                             .clip(RoundedCornerShape(8.dp))
                             .border(
                                 1.dp,
-                                color = colorResource(R.color.gray_100),
+                                color = gray_100,
                                 RoundedCornerShape(8.dp)
                             )
                             .padding(14.dp, 10.dp, 14.dp, 10.dp),
@@ -335,7 +323,7 @@ fun NewProductScreen() {
                             if (productName.text.isEmpty()) {
                                 Text(
                                     text = "Выберите склад",
-                                    color = colorResource(R.color.gray_500),
+                                    color = gray_500,
                                     style = CustomTextStyles.body1_regular
                                 )
                             }
@@ -351,8 +339,8 @@ fun NewProductScreen() {
                         shape = RoundedCornerShape(8.dp),
                         onClick = { },
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = colorResource(R.color.white),
-                            contentColor = colorResource(R.color.gray_500)
+                            containerColor = white,
+                            contentColor = gray_500
                         ),
                         contentPadding = PaddingValues(10.dp)
                     ) {
@@ -362,8 +350,8 @@ fun NewProductScreen() {
                             modifier = Modifier.clip(RoundedCornerShape(8.dp)),
                             shape = RoundedCornerShape(8.dp),
                             colors = ButtonDefaults.buttonColors(
-                                containerColor = colorResource(R.color.primary_600),
-                                contentColor = colorResource(R.color.white)
+                                containerColor = primary_600,
+                                contentColor = white
                             ),
                             contentPadding = PaddingValues(10.dp)
                         ) {
