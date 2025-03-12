@@ -1,5 +1,6 @@
 package com.example.inventorymanagementapp
 
+import android.graphics.Bitmap
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -13,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
@@ -35,7 +37,9 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.inventorymanagementapp.data.models.Product
 import com.example.inventorymanagementapp.ui.theme.*
+import java.sql.Date
 
 @Composable
 fun InventoryScreen() {
@@ -86,7 +90,7 @@ fun InventoryScreen() {
                     ) {
                         Icon(painter = painterResource(id = R.drawable.filters_icon), "Floating action button.")
                     }
-
+/*
                     BasicTextField(
                         value = search,
                         onValueChange = { search = it },
@@ -119,64 +123,99 @@ fun InventoryScreen() {
                             }
                             innerTextField()
                         }
-                    )
+                    )*/
                 }
+                val productsList = listOf(testProduct, testProduct1, testProduct2)
 
                 LazyColumn(
                     verticalArrangement = Arrangement.spacedBy(10.dp),
                     modifier = Modifier
                         .fillMaxWidth()
                 ) {
-                    items(10) {
-                        Column(){
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.spacedBy(22.dp),
-                                modifier = Modifier
-                                    .fillMaxWidth()
+                    items(productsList) { product ->
+                        ProductRow(product)
 
-                            ) {
-                                Row(
-                                    modifier = Modifier.width(100.dp).height(100.dp),
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    horizontalArrangement = Arrangement.Center
-                                ) {
-                                    Image(
-                                        painter = painterResource(R.drawable.test),
-                                        modifier = Modifier.size(80.dp),
-                                        contentDescription = "Logo"
-                                    )
-                                }
-                                Column(
-                                    verticalArrangement = Arrangement.spacedBy(4.dp),
-                                    modifier = Modifier.weight(1f)
-                                ) {
-                                    Text("Название продукта", style = CustomTextStyles.body1_semi_bold, color = gray_800)
-                                    Row {
-                                        Text("Цена: ", style = CustomTextStyles.body2_regular, color = gray_400)
-                                        Text("119.99 ₽", style = CustomTextStyles.body2_regular, color = gray_600)
-                                    }
-                                    Row {
-                                        Text("Всего: ", style = CustomTextStyles.body2_regular, color = gray_400)
-                                        Text("43 пакета", style = CustomTextStyles.body2_regular, color = gray_600)
-                                    }
-                                    Row {
-                                        Text("Срок годности: ", style = CustomTextStyles.body2_regular, color = gray_400)
-                                        Text("11.12.25", style = CustomTextStyles.body2_regular, color = gray_600)
-                                    }
-                                    Text("В наличии", style = CustomTextStyles.body2_regular, color = success_500)
-                                    //Text("Заканчивается", style = CustomTextStyles.body2_regular, color = warning_500)
-                                    //Text("Нет в наличии", style = CustomTextStyles.body2_regular, color = error_500)
-                                }
-                            }
-                            HorizontalDivider(modifier = Modifier.padding(0.dp, 10.dp, 0.dp, 0.dp), color = gray_50)
-                        }
                     }
                 }
             }
         }
     }
 }
+
+@Composable
+fun ProductRow(product: Product) {
+    Column(){
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(22.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+
+        ) {
+            Row(
+                modifier = Modifier.width(100.dp).height(100.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Image(
+                    painter = painterResource(product.image),
+                    modifier = Modifier.size(80.dp),
+                    contentDescription = "Logo"
+                )
+            }
+            Column(
+                verticalArrangement = Arrangement.spacedBy(4.dp),
+                modifier = Modifier.weight(1f)
+            ) {
+                Text(product.name, style = CustomTextStyles.body1_semi_bold, color = gray_800)
+                Row {
+                    Text("Цена: ", style = CustomTextStyles.body2_regular, color = gray_400)
+                    Text("${product.price} ₽", style = CustomTextStyles.body2_regular, color = gray_600)
+                }
+                Row {
+                    Text("Всего на складах: ", style = CustomTextStyles.body2_regular, color = gray_400)
+                    Text("${product.amount}", style = CustomTextStyles.body2_regular, color = gray_600)
+                }
+                Row {
+                    Text("Срок годности: ", style = CustomTextStyles.body2_regular, color = gray_400)
+                    Text(product.expiryDate, style = CustomTextStyles.body2_regular, color = gray_600)
+                }
+                if (product.amount == 0) Text("Нет в наличии", style = CustomTextStyles.body2_regular, color = error_500)
+                else
+                    if (product.amount <= 10) Text("Заканчивается", style = CustomTextStyles.body2_regular, color = warning_500)
+                    else Text("В наличии", style = CustomTextStyles.body2_regular, color = success_500)
+                }
+            }
+        }
+        HorizontalDivider(modifier = Modifier.padding(0.dp, 10.dp, 0.dp, 0.dp), color = gray_50)
+}
+
+val testProduct = Product(
+    name = "Кофе Нескафе Gold растворимый 190г",
+    price = 649.99,
+    amount = 5,
+    expiryDate = "10.09.25",
+    amountSold = 123,
+    image = R.drawable.test
+)
+
+val testProduct1 = Product(
+    name = "Яйцо куриное Окское",
+    price = 119.99,
+    amount = 22,
+    expiryDate = "10.09.25",
+    amountSold = 43,
+    image = R.drawable.icon
+)
+
+val testProduct2 = Product(
+    name = "Шампунь Шаума Men",
+    price = 249.99,
+    amount = 0,
+    expiryDate = "11.12.25",
+    amountSold = 123,
+    image = R.drawable.profile_placeholder
+)
 
 
 @Preview(showBackground = true)

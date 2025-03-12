@@ -7,6 +7,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -17,7 +18,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Menu
@@ -76,8 +79,6 @@ class MainActivity : ComponentActivity() {
                     //Demo_ExposedDropdownMenuBox()
                     AppScaffold()
                 }
-
-                //Demo_ExposedDropdownMenuBox()
             }
         }
     }
@@ -99,7 +100,9 @@ fun AppScaffold() {
         drawerState = drawerState,
         drawerContent = {
             ModalDrawerSheet {
-                Column(modifier = Modifier.fillMaxWidth().fillMaxHeight().background(color = white)) {
+                Column(modifier = Modifier.fillMaxWidth().fillMaxHeight().background(color = white).verticalScroll(
+                    rememberScrollState()
+                )) {
                     Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(20.dp)) {
                         Column(modifier = Modifier.background(color = gray_50).padding(24.dp).fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(10.dp)) {
                             Image(
