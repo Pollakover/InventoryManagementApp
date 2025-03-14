@@ -3,6 +3,7 @@ package com.example.inventorymanagementapp
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -28,6 +29,7 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -39,33 +41,46 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.inventorymanagementapp.ui.theme.*
+import com.example.inventorymanagementapp.viewModels.MainViewModel
+//import com.example.inventorymanagementapp.viewModels.MainViewModel
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
+    //val mainViewModel by viewModels<MainViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //enableEdgeToEdge()
@@ -87,14 +102,13 @@ class MainActivity : ComponentActivity() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppScaffold() {
+    val mainViewModel = viewModel<MainViewModel>()
     val navController = rememberNavController()
     var drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     var colors = arrayOf(gray_600, gray_600, gray_600, gray_600, gray_600)
     val currentBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = currentBackStackEntry?.destination?.route
-    val openDialog = remember { mutableStateOf(true) }
-
 
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -287,10 +301,14 @@ fun AppScaffold() {
             }
         },
     ) {
+        if (drawerState.currentValue == DrawerValue.Open) {
+            if (mainViewModel.searchButtonState) {
+                mainViewModel.changeButtonState()
+            }
+        }
         Scaffold(
             containerColor = gray_50,
             topBar = {
-                val searchButton  = remember { mutableStateOf(false) }
                 TopAppBar(
                     colors = topAppBarColors(
                         containerColor = white,
@@ -304,9 +322,10 @@ fun AppScaffold() {
                             "warehouses" -> "Склады"
                             else -> ""
                         }
-                        if(searchButton.value) {
-                            TestSearchBar()
+                        if(mainViewModel.searchButtonState) {
+                            TestSearchBar(mainViewModel)
                         }
+
                         else{
                             Text(
                                 text = topBarText,
@@ -320,15 +339,26 @@ fun AppScaffold() {
 
                     },
                     navigationIcon = {
-                        IconButton(onClick = { scope.launch { drawerState.open() } }) {
+                        IconButton(onClick = {
+                            scope.launch { drawerState.open() }
+                            if(mainViewModel.searchButtonState) {
+                                mainViewModel.changeButtonState()
+                            }
+                        }
+                        ) {
                             Icon(Icons.Default.Menu, contentDescription = "Menu", tint = gray_800)
                         }
                     },
                     actions = {
                         if(currentRoute != "dashboard" && currentRoute != "warehouses"){
-                            IconButton(onClick = { searchButton.value = !searchButton.value }) {
+                            IconButton(onClick = {
+                                mainViewModel.changeButtonState()
+//                                if(!mainViewModel.searchButtonState) {
+//                                    mainViewModel.testTExt = TextFieldValue("")
+//                                }
+                            }) {
                                 Icon(
-                                    imageVector = if (searchButton.value) Icons.Filled.Close else Icons.Filled.Search,
+                                    imageVector = if (mainViewModel.searchButtonState) Icons.Filled.Close else Icons.Filled.Search,
                                     contentDescription = "Search",
                                     tint = gray_800
                                 )
@@ -410,6 +440,48 @@ fun ExitDialog(state : MutableState<Boolean>) {
                 }
             }
     }
+}
+
+@Composable
+fun TestSearchBar(viewModel: MainViewModel){
+    var isInitialized = remember { mutableStateOf(false) }
+    val rainbowColors : List<Color> = listOf(primary_500, success_500)
+    val brush = remember {
+        Brush.linearGradient(
+            colors = rainbowColors
+        )
+    }
+
+    LaunchedEffect(isInitialized) {
+        if(!isInitialized.value){
+            viewModel.requestSearchFocus()
+            isInitialized.value = true
+        }
+    }
+
+    TextField(
+        singleLine = true,
+        modifier = Modifier
+            .fillMaxWidth()
+            .focusRequester(viewModel.focusRequester),
+        value = viewModel.searchFieldText,
+        onValueChange = { viewModel.searchFieldText = it},
+        textStyle = TextStyle(brush = brush, fontSize = 14.sp, lineHeight = 20.sp, fontWeight = FontWeight.Bold,),
+        colors = TextFieldDefaults.colors(
+            focusedContainerColor = transparent, // Фон при фокусе
+            unfocusedContainerColor = transparent,
+            disabledContainerColor = transparent,
+            focusedTextColor = gray_800, // Цвет текста
+            unfocusedTextColor = gray_800, // Цвет текста
+            cursorColor = gray_800, // Цвет курсора
+            focusedIndicatorColor = gray_100,
+            unfocusedIndicatorColor = gray_100,
+            disabledIndicatorColor = gray_100
+        ),
+        placeholder = {
+            Text("Поиск…", style = CustomTextStyles.body2_regular, color = gray_400)
+        },
+    )
 }
 
 @Preview(showBackground = true)

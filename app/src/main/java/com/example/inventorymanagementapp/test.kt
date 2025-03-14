@@ -224,38 +224,6 @@ fun Demo_ExposedDropdownMenuBox() {
     }
 }
 
-@Composable
-fun TestSearchBar(){
-    val rainbowColors : List<Color> = listOf(primary_500, success_500)
-    var text by remember { mutableStateOf("") }
-    val brush = remember {
-        Brush.linearGradient(
-            colors = rainbowColors
-        )
-    }
-    TextField(
-        singleLine = true,
-        modifier = Modifier.fillMaxWidth(),
-        value = text,
-        onValueChange = { text = it },
-        textStyle = TextStyle(brush = brush, fontSize = 14.sp, lineHeight = 20.sp, fontWeight = FontWeight.Bold,),
-        colors = TextFieldDefaults.colors(
-            focusedContainerColor = transparent, // Фон при фокусе
-            unfocusedContainerColor = transparent,
-            disabledContainerColor = transparent,
-            focusedTextColor = gray_800, // Цвет текста
-            unfocusedTextColor = gray_800, // Цвет текста
-            cursorColor = gray_800, // Цвет курсора
-            focusedIndicatorColor = gray_100,
-            unfocusedIndicatorColor = gray_100,
-            disabledIndicatorColor = gray_100
-        ),
-        placeholder = {
-            Text("Поиск…", style = CustomTextStyles.body2_regular, color = gray_400)
-        },
-    )
-}
-
 
 @Preview(showBackground = true)
 @Composable
