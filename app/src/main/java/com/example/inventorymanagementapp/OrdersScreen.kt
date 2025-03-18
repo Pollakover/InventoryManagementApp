@@ -69,7 +69,7 @@ fun OrdersScreen() {
 
                     FloatingActionButton(
                         onClick = {  },
-                        modifier = Modifier.size(51.dp),
+                        modifier = Modifier.size(33.dp),
                         containerColor = primary_600,
                         contentColor = white,
                         shape = RoundedCornerShape(8.dp)
@@ -79,46 +79,13 @@ fun OrdersScreen() {
 
                     FloatingActionButton(
                         onClick = {  },
-                        modifier = Modifier.border(1.dp, color = gray_100, RoundedCornerShape(8.dp)).size(51.dp),
+                        modifier = Modifier.border(1.dp, color = gray_100, RoundedCornerShape(8.dp)).size(33.dp),
                         containerColor = white,
                         contentColor = gray_600,
                         shape = RoundedCornerShape(8.dp),
                     ) {
                         Icon(painter = painterResource(id = R.drawable.filters_icon), "Floating action button.")
                     }
-
-                    var text1 by remember { mutableStateOf("") }
-
-                    TextField(
-                        value = text1,
-                        onValueChange = {
-                            text1 = it
-                        },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .fillMaxHeight()
-                            .padding(vertical = 4.dp)
-                            .border(1.dp, color = gray_100, RoundedCornerShape(8.dp)),
-                        shape = RoundedCornerShape(8.dp),
-                        leadingIcon = {
-                            Icon(Icons.Filled.Search, "Floating action button.", tint = gray_400)
-                        },
-                        colors = TextFieldDefaults.colors(
-                            focusedContainerColor = gray_50, // Фон при фокусе
-                            unfocusedContainerColor = white,
-                            disabledContainerColor = white,
-                            focusedTextColor = gray_800, // Цвет текста
-                            unfocusedTextColor = gray_800, // Цвет текста
-                            cursorColor = gray_800, // Цвет курсора
-                            focusedIndicatorColor = transparent,
-                            unfocusedIndicatorColor = transparent,
-                            disabledIndicatorColor = transparent
-                        ),
-                        textStyle = CustomTextStyles.body2_regular,
-                        placeholder = {
-                            Text("Поиск…", style = CustomTextStyles.body2_regular, color = gray_400, modifier = Modifier.fillMaxSize())
-                        },
-                    )
                 }
 
                 LazyColumn(

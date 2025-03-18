@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.inventorymanagementapp.R
 import com.example.inventorymanagementapp.data.models.Product
+import com.example.inventorymanagementapp.data.models.Supplier
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
@@ -51,6 +52,23 @@ class MainViewModel : ViewModel() {
             _products.value
         )
 
+    private val _suppliers = MutableStateFlow(allSuppliers)
+    val suppliers = searchText
+        .combine(_suppliers) { text, suppliers ->
+            if (text.text.isBlank()) {
+                suppliers
+            } else {
+                suppliers.filter {
+                    it.doesMatchSearchQuery(text.text)
+                }
+            }
+        }
+        .stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(5000),
+            _suppliers.value
+        )
+
     fun onSearchTextChange(text: TextFieldValue) {
         _searchText.value = text
     }
@@ -84,3 +102,68 @@ val testProduct2 = Product(
 )
 
 private val allProducts = listOf(testProduct, testProduct1, testProduct2)
+
+val supplier1 = Supplier(
+    name = "Ronald Martin",
+    phoneNumber = "7687764556",
+    type = "Принимает возврат",
+    suppliedProducts = allProducts
+)
+
+val supplier2 = Supplier(
+    name = "Tom Homan",
+    phoneNumber = "9867545368",
+    type = "Не принимает возврат",
+    suppliedProducts = listOf(
+        Product(
+            name = "Maaza",
+            price = 143.123,
+            amount = 123,
+            expiryDate = "12.10.2025",
+            amountSold = 23,
+            image = R.drawable.container_icon,
+        )
+    )
+)
+
+val supplier3 = Supplier(
+    name = "Fainden Juke",
+    phoneNumber = "9567545769",
+    type = "Принимает возврат",
+    suppliedProducts = listOf(
+        Product(
+            name = "Marie Gold",
+            price = 143.123,
+            amount = 123,
+            expiryDate = "12.10.2025",
+            amountSold = 23,
+            image = R.drawable.container_icon,
+        )
+    )
+)
+
+val supplier4 = Supplier(
+    name = "Dender Luke",
+    phoneNumber = "9567545769",
+    type = "Принимает возврат",
+    suppliedProducts = listOf(
+        Product(
+            name = "Saffola",
+            price = 143.123,
+            amount = 123,
+            expiryDate = "12.10.2025",
+            amountSold = 23,
+            image = R.drawable.container_icon,
+        ),
+        Product(
+            name = "Dairy Milk",
+            price = 143.123,
+            amount = 123,
+            expiryDate = "12.10.2025",
+            amountSold = 23,
+            image = R.drawable.container_icon,
+        )
+    )
+)
+
+private val allSuppliers = listOf(supplier1, supplier2, supplier3, supplier4)

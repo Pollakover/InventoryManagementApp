@@ -372,7 +372,7 @@ fun AppScaffold() {
                 composable("test") { Demo_ExposedDropdownMenuBox() }
                 composable("dashboard") { DashboardScreen() }
                 composable("inventory") { InventoryScreen(mainViewModel) }
-                composable("suppliers") { SuppliersScreen() }
+                composable("suppliers") { SuppliersScreen(mainViewModel) }
                 composable("orders") { OrdersScreen() }
                 composable("warehouses") { WarehousesScreen() }
             }

@@ -46,7 +46,6 @@ import java.sql.Date
 
 @Composable
 fun InventoryScreen(viewModel: MainViewModel) {
-    var search by remember { mutableStateOf(TextFieldValue("")) }
     val products by viewModel.products.collectAsState()
 
     Column(
