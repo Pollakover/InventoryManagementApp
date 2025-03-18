@@ -25,6 +25,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -37,13 +38,16 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.inventorymanagementapp.data.models.Product
 import com.example.inventorymanagementapp.ui.theme.*
+import com.example.inventorymanagementapp.viewModels.MainViewModel
 import java.sql.Date
 
 @Composable
-fun InventoryScreen() {
+fun InventoryScreen(viewModel: MainViewModel) {
     var search by remember { mutableStateOf(TextFieldValue("")) }
+    val products by viewModel.products.collectAsState()
 
     Column(
         modifier = Modifier
@@ -90,49 +94,14 @@ fun InventoryScreen() {
                     ) {
                         Icon(painter = painterResource(id = R.drawable.filters_icon), "Floating action button.")
                     }
-/*
-                    BasicTextField(
-                        value = search,
-                        onValueChange = { search = it },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(33.dp)
-                            .clip(RoundedCornerShape(8.dp))
-                            .border(
-                                1.dp,
-                                color = gray_100,
-                                RoundedCornerShape(8.dp)
-                            )
-                            .padding(14.dp, 10.dp, 14.dp, 10.dp),
-                        textStyle = CustomTextStyles.body1_regular,
-                        decorationBox = { innerTextField ->
-                            if (search.text.isEmpty()) {
-                                Row(modifier = Modifier.fillMaxWidth()) {
-                                    Text(
-                                        text = "Поиск...",
-                                        color = gray_400,
-                                        style = CustomTextStyles.body2_regular,
-                                        fontSize = 12.sp
-                                    )
-                                    Column(modifier = Modifier.weight(1f), horizontalAlignment = Alignment.End){
-                                        Icon(Icons.Filled.Search, "Floating action button.", tint = gray_400)
-
-                                    }
-                                }
-
-                            }
-                            innerTextField()
-                        }
-                    )*/
                 }
-                val productsList = listOf(testProduct, testProduct1, testProduct2)
 
                 LazyColumn(
                     verticalArrangement = Arrangement.spacedBy(10.dp),
                     modifier = Modifier
                         .fillMaxWidth()
                 ) {
-                    items(productsList) { product ->
+                    items(products) { product ->
                         ProductRow(product)
 
                     }
@@ -190,36 +159,9 @@ fun ProductRow(product: Product) {
         HorizontalDivider(modifier = Modifier.padding(0.dp, 10.dp, 0.dp, 0.dp), color = gray_50)
 }
 
-val testProduct = Product(
-    name = "Кофе Нескафе Gold растворимый 190г",
-    price = 649.99,
-    amount = 5,
-    expiryDate = "10.09.25",
-    amountSold = 123,
-    image = R.drawable.test
-)
-
-val testProduct1 = Product(
-    name = "Яйцо куриное Окское",
-    price = 119.99,
-    amount = 22,
-    expiryDate = "10.09.25",
-    amountSold = 43,
-    image = R.drawable.icon
-)
-
-val testProduct2 = Product(
-    name = "Шампунь Шаума Men",
-    price = 249.99,
-    amount = 0,
-    expiryDate = "11.12.25",
-    amountSold = 123,
-    image = R.drawable.profile_placeholder
-)
-
-
 @Preview(showBackground = true)
 @Composable
 fun PreviewInventory() {
-    InventoryScreen()
+    val mainViewModel = viewModel<MainViewModel>()
+    InventoryScreen(mainViewModel)
 }

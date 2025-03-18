@@ -49,6 +49,7 @@ import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -80,10 +81,8 @@ import com.example.inventorymanagementapp.viewModels.MainViewModel
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
-    //val mainViewModel by viewModels<MainViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //enableEdgeToEdge()
         setContent {
             InventoryManagementAppTheme {
                 Surface(
@@ -333,10 +332,6 @@ fun AppScaffold() {
                                 color = gray_800
                             )
                         }
-
-
-
-
                     },
                     navigationIcon = {
                         IconButton(onClick = {
@@ -376,7 +371,7 @@ fun AppScaffold() {
             ){
                 composable("test") { Demo_ExposedDropdownMenuBox() }
                 composable("dashboard") { DashboardScreen() }
-                composable("inventory") { InventoryScreen() }
+                composable("inventory") { InventoryScreen(mainViewModel) }
                 composable("suppliers") { SuppliersScreen() }
                 composable("orders") { OrdersScreen() }
                 composable("warehouses") { WarehousesScreen() }
@@ -389,7 +384,6 @@ fun AppScaffold() {
 
 @Composable
 fun ExitDialog(state : MutableState<Boolean>) {
-    //val openDialog = remember { mutableStateOf(state.value) }
     if(state.value){
             Dialog(onDismissRequest = { state.value = false }) {
                 Card(
@@ -444,8 +438,10 @@ fun ExitDialog(state : MutableState<Boolean>) {
 
 @Composable
 fun TestSearchBar(viewModel: MainViewModel){
+    val searchText by viewModel.searchText.collectAsState()
+    val products by viewModel.products.collectAsState()
     var isInitialized = remember { mutableStateOf(false) }
-    val rainbowColors : List<Color> = listOf(primary_500, success_500)
+    val rainbowColors: List<Color> = listOf(primary_500, success_500)
     val brush = remember {
         Brush.linearGradient(
             colors = rainbowColors
@@ -461,12 +457,13 @@ fun TestSearchBar(viewModel: MainViewModel){
 
     TextField(
         singleLine = true,
-        modifier = Modifier
-            .fillMaxWidth()
-            .focusRequester(viewModel.focusRequester),
-        value = viewModel.searchFieldText,
-        onValueChange = { viewModel.searchFieldText = it},
-        textStyle = TextStyle(brush = brush, fontSize = 14.sp, lineHeight = 20.sp, fontWeight = FontWeight.Bold,),
+        value = searchText,
+        textStyle = TextStyle(
+            brush = brush,
+            fontSize = 14.sp,
+            lineHeight = 20.sp,
+            fontWeight = FontWeight.Bold,
+        ),
         colors = TextFieldDefaults.colors(
             focusedContainerColor = transparent, // Фон при фокусе
             unfocusedContainerColor = transparent,
@@ -478,8 +475,16 @@ fun TestSearchBar(viewModel: MainViewModel){
             unfocusedIndicatorColor = gray_100,
             disabledIndicatorColor = gray_100
         ),
+        onValueChange = viewModel::onSearchTextChange,
+        modifier = Modifier
+            .fillMaxWidth()
+            .focusRequester(viewModel.focusRequester),
         placeholder = {
-            Text("Поиск…", style = CustomTextStyles.body2_regular, color = gray_400)
+            Text(
+                "Поиск…",
+                style = CustomTextStyles.body2_regular,
+                color = gray_400
+            )
         },
     )
 }
