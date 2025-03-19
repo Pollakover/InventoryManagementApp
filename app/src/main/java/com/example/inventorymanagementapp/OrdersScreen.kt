@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -23,22 +24,27 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.inventorymanagementapp.data.models.Order
 import com.example.inventorymanagementapp.ui.theme.*
+import com.example.inventorymanagementapp.viewModels.MainViewModel
 
 @Composable
-fun OrdersScreen() {
-    var search by remember { mutableStateOf(TextFieldValue("")) }
+fun OrdersScreen(viewModel: MainViewModel) {
+    val orders by viewModel.orders.collectAsState()
 
     Column(
         modifier = Modifier
@@ -55,7 +61,7 @@ fun OrdersScreen() {
                 .background(color = white)
         ) {
             Column(
-                verticalArrangement = Arrangement.spacedBy(10.dp),
+                verticalArrangement = Arrangement.spacedBy(15.dp),
                 modifier = Modifier
                     .padding(20.dp)
                     .fillMaxSize()
@@ -64,7 +70,6 @@ fun OrdersScreen() {
                     horizontalArrangement = Arrangement.spacedBy(10.dp),
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(55.dp)
                 ) {
 
                     FloatingActionButton(
@@ -79,7 +84,9 @@ fun OrdersScreen() {
 
                     FloatingActionButton(
                         onClick = {  },
-                        modifier = Modifier.border(1.dp, color = gray_100, RoundedCornerShape(8.dp)).size(33.dp),
+                        modifier = Modifier
+                            .border(1.dp, color = gray_100, RoundedCornerShape(8.dp))
+                            .size(33.dp),
                         containerColor = white,
                         contentColor = gray_600,
                         shape = RoundedCornerShape(8.dp),
@@ -93,31 +100,8 @@ fun OrdersScreen() {
                     modifier = Modifier
                         .fillMaxWidth()
                 ) {
-                    items(10) {
-                        Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                            Text("№ 38762682-0174", style = CustomTextStyles.body1_semi_bold, color = gray_800)
-                            Row {
-                                Text("Продукт:", modifier = Modifier.weight(1f), style = CustomTextStyles.body2_medium, color = gray_600)
-                                Text("Magi", modifier = Modifier.weight(1f), textAlign = TextAlign.End, style = CustomTextStyles.body2_medium, color = gray_400)
-                            }
-                            Row {
-                                Text("Количество:", modifier = Modifier.weight(1f), style = CustomTextStyles.body2_medium, color = gray_600)
-                                Text("43", modifier = Modifier.weight(1f), textAlign = TextAlign.End, style = CustomTextStyles.body2_medium, color = gray_400)
-                            }
-                            Row {
-                                Text("Цена:", modifier = Modifier.weight(1f), style = CustomTextStyles.body2_medium, color = gray_600)
-                                Text("2149.57 ₽", modifier = Modifier.weight(1f), textAlign = TextAlign.End, style = CustomTextStyles.body2_medium, color = gray_400)
-                            }
-                            Row {
-                                Text("Ожидаемая дата доставки:", modifier = Modifier.weight(1f), style = CustomTextStyles.body2_medium, color = gray_600)
-                                Text("12.03.25", modifier = Modifier.weight(1f), textAlign = TextAlign.End, style = CustomTextStyles.body2_medium, color = gray_400)
-                            }
-                            Row {
-                                Text("Статус:", modifier = Modifier.weight(1f), style = CustomTextStyles.body2_medium, color = gray_600)
-                                Text("Получен", modifier = Modifier.weight(1f), textAlign = TextAlign.End, style = CustomTextStyles.body2_medium, color = success_600)
-                            }
-                        }
-                        HorizontalDivider(modifier = Modifier.padding(0.dp, 20.dp, 0.dp, 0.dp), color = gray_50)
+                    items(orders) { order ->
+                        OrderRow(order)
                     }
                 }
             }
@@ -125,9 +109,38 @@ fun OrdersScreen() {
     }
 }
 
+@Composable
+fun OrderRow (order : Order) {
+    Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+        Text(order.name, style = CustomTextStyles.body1_semi_bold, color = gray_800)
+        Row {
+            Text("Продукты:", modifier = Modifier.weight(1f), style = CustomTextStyles.body2_medium, color = gray_600)
+            Text(order.allProducts(), modifier = Modifier.weight(1f), textAlign = TextAlign.End, style = CustomTextStyles.body2_medium, color = gray_400)
+        }
+        Row {
+            Text("Количество:", modifier = Modifier.weight(1f), style = CustomTextStyles.body2_medium, color = gray_600)
+            Text(order.calculateAmount(), modifier = Modifier.weight(1f), textAlign = TextAlign.End, style = CustomTextStyles.body2_medium, color = gray_400)
+        }
+        Row {
+            Text("Цена:", modifier = Modifier.weight(1f), style = CustomTextStyles.body2_medium, color = gray_600)
+            Text("${order.calculatePrice()} ₽", modifier = Modifier.weight(1f), textAlign = TextAlign.End, style = CustomTextStyles.body2_medium, color = gray_400)
+        }
+        Row {
+            Text("Ожидаемая дата доставки:", modifier = Modifier.weight(1f), style = CustomTextStyles.body2_medium, color = gray_600)
+            Text(order.deliveryDate, modifier = Modifier.weight(1f), textAlign = TextAlign.End, style = CustomTextStyles.body2_medium, color = gray_400)
+        }
+        Row {
+            Text("Статус:", modifier = Modifier.weight(1f), style = CustomTextStyles.body2_medium, color = gray_600)
+            Text(order.status.text, modifier = Modifier.weight(1f), textAlign = TextAlign.End, style = CustomTextStyles.body2_medium, color = order.status.color)
+        }
+    }
+    HorizontalDivider(modifier = Modifier.padding(0.dp, 20.dp, 0.dp, 0.dp), color = gray_50)
+}
+
 
 @Preview(showBackground = true)
 @Composable
 fun PreviewOrders() {
-    OrdersScreen()
+    val mainViewModel = viewModel<MainViewModel>()
+    OrdersScreen(mainViewModel)
 }

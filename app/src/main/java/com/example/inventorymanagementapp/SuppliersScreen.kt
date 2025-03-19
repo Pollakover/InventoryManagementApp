@@ -60,7 +60,7 @@ fun SuppliersScreen(viewModel: MainViewModel) {
                 .background(color = white)
         ) {
             Column(
-                verticalArrangement = Arrangement.spacedBy(10.dp),
+                verticalArrangement = Arrangement.spacedBy(15.dp),
                 modifier = Modifier
                     .padding(20.dp)
                     .fillMaxSize()

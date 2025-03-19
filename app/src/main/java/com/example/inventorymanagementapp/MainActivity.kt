@@ -373,8 +373,8 @@ fun AppScaffold() {
                 composable("dashboard") { DashboardScreen() }
                 composable("inventory") { InventoryScreen(mainViewModel) }
                 composable("suppliers") { SuppliersScreen(mainViewModel) }
-                composable("orders") { OrdersScreen() }
-                composable("warehouses") { WarehousesScreen() }
+                composable("orders") { OrdersScreen(mainViewModel) }
+                composable("warehouses") { WarehousesScreen(mainViewModel) }
             }
         }
 
