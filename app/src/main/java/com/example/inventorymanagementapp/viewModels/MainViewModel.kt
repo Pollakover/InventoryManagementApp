@@ -38,10 +38,10 @@ class MainViewModel : ViewModel() {
         focusRequester.requestFocus()
     }
 
-    //Products
     private val _searchText = MutableStateFlow(TextFieldValue(""))
     val searchText = _searchText.asStateFlow()
 
+    //Products
     private val _products = MutableStateFlow(allProducts)
     val products = searchText
         .combine(_products) { query, products ->
@@ -95,6 +95,7 @@ class MainViewModel : ViewModel() {
             _orders.value
         )
 
+    //Warehoses
     private val _warehouses = MutableStateFlow(allWarehouses)
     val warehouses = searchText
         .combine(_warehouses) { _, warehouses ->

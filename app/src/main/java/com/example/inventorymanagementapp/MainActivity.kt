@@ -26,6 +26,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -493,7 +494,7 @@ fun TestSearchBar(viewModel: MainViewModel){
 @Composable
 fun PreviewMain() {
     AppScaffold()
-    val openDialog = remember { mutableStateOf(true) }
+    //val openDialog = remember { mutableStateOf(true) }
     //ExitDialog(openDialog)
 
 }
