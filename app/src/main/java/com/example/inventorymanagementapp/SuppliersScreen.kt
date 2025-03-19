@@ -92,13 +92,23 @@ fun SuppliersScreen(viewModel: MainViewModel) {
                     }
                 }
 
-                LazyColumn(
-                    verticalArrangement = Arrangement.spacedBy(20.dp),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                ) {
-                    items(suppliers) { supplier ->
-                        SupplierRow(supplier)
+                if(viewModel.error) {
+                    QueryError(viewModel)
+                }
+                else {
+                    if(suppliers.isEmpty()){
+                        NoResults()
+                    }
+                    else {
+                        LazyColumn(
+                            verticalArrangement = Arrangement.spacedBy(20.dp),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                        ) {
+                            items(suppliers) { supplier ->
+                                SupplierRow(supplier)
+                            }
+                        }
                     }
                 }
             }

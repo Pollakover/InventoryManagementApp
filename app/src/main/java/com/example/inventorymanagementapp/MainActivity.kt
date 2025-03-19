@@ -3,12 +3,10 @@ package com.example.inventorymanagementapp
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.viewModels
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -24,13 +22,12 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -55,30 +52,28 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.media3.common.util.Log
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.inventorymanagementapp.ui.theme.*
 import com.example.inventorymanagementapp.viewModels.MainViewModel
-//import com.example.inventorymanagementapp.viewModels.MainViewModel
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
@@ -104,9 +99,9 @@ class MainActivity : ComponentActivity() {
 fun AppScaffold() {
     val mainViewModel = viewModel<MainViewModel>()
     val navController = rememberNavController()
-    var drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
-    var colors = arrayOf(gray_600, gray_600, gray_600, gray_600, gray_600)
+    val colors = arrayOf(gray_600, gray_600, gray_600, gray_600, gray_600)
     val currentBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = currentBackStackEntry?.destination?.route
 
@@ -114,14 +109,24 @@ fun AppScaffold() {
         drawerState = drawerState,
         drawerContent = {
             ModalDrawerSheet {
-                Column(modifier = Modifier.fillMaxWidth().fillMaxHeight().background(color = white).verticalScroll(
-                    rememberScrollState()
-                )) {
+                Column(modifier = Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight()
+                    .background(color = white)
+                    .verticalScroll(
+                        rememberScrollState()
+                    )) {
                     Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(20.dp)) {
-                        Column(modifier = Modifier.background(color = gray_50).padding(24.dp).fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                        Column(modifier = Modifier
+                            .background(color = gray_50)
+                            .padding(24.dp)
+                            .fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(10.dp)) {
                             Image(
                                 painter = painterResource(R.drawable.profile_placeholder),
-                                modifier = Modifier.size(80.dp).clip(RoundedCornerShape(50)).border(1.dp, color = gray_100, RoundedCornerShape(50)),
+                                modifier = Modifier
+                                    .size(80.dp)
+                                    .clip(RoundedCornerShape(50))
+                                    .border(1.dp, color = gray_100, RoundedCornerShape(50)),
                                 contentDescription = "Logo"
                             )
 
@@ -132,12 +137,13 @@ fun AppScaffold() {
                                 Text("revokalloppollakover@gmail.com", color = gray_400, fontSize = 12.sp, fontWeight = FontWeight.Medium, letterSpacing = 0.5.sp)
                             }
                         }
-                        Column(modifier = Modifier.padding(24.dp, 0.dp, 24.dp, 0.dp).fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                        Column(modifier = Modifier
+                            .padding(24.dp, 0.dp, 24.dp, 0.dp)
+                            .fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(10.dp)) {
 
                             Row(modifier = Modifier
                                 .fillMaxWidth()
                                 .clickable {
-                                    var state = true
                                     navController.navigate("dashboard") {
                                         popUpTo(navController.graph.startDestinationId)
                                         launchSingleTop = true
@@ -163,8 +169,6 @@ fun AppScaffold() {
                             Row(modifier = Modifier
                                 .fillMaxWidth()
                                 .clickable {
-                                    var state = false
-
                                     navController.navigate("inventory") {
                                         popUpTo(navController.graph.startDestinationId)
                                         launchSingleTop = true
@@ -216,7 +220,6 @@ fun AppScaffold() {
                             Row(modifier = Modifier
                                 .fillMaxWidth()
                                 .clickable {
-                                    var state = false
                                     navController.navigate("orders") {
                                         popUpTo(navController.graph.startDestinationId)
                                         launchSingleTop = true
@@ -269,7 +272,9 @@ fun AppScaffold() {
                         }
                     }
                     Spacer(modifier = Modifier.weight(1f))
-                    Column(modifier = Modifier.padding(24.dp, 0.dp, 24.dp, 32.dp).fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                    Column(modifier = Modifier
+                        .padding(24.dp, 0.dp, 24.dp, 32.dp)
+                        .fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(12.dp)) {
 
 
                         val logoutDialogState = remember { mutableStateOf(false) }
@@ -277,7 +282,7 @@ fun AppScaffold() {
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .clickable {logoutDialogState.value = true},
+                                .clickable { logoutDialogState.value = true },
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.spacedBy(16.dp)
                         ){
@@ -314,7 +319,7 @@ fun AppScaffold() {
                         containerColor = white,
                     ),
                     title = {
-                        var topBarText = when (currentRoute){
+                        val topBarText = when (currentRoute){
                             "dashboard" -> "Панель управления"
                             "inventory" -> "Инвентарь"
                             "suppliers" -> "Поставщики"
@@ -395,7 +400,9 @@ fun ExitDialog(state : MutableState<Boolean>) {
                         containerColor = white
                     ),
                 ) {
-                    Column(modifier = Modifier.fillMaxWidth().padding(20.dp) , verticalArrangement = Arrangement.spacedBy(20.dp)) {
+                    Column(modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(20.dp) , verticalArrangement = Arrangement.spacedBy(20.dp)) {
                         Row(horizontalArrangement = Arrangement.spacedBy(20.dp), verticalAlignment = Alignment.CenterVertically) {
                             Icon(
                                 painter = painterResource(id = R.drawable.logout_icon),
@@ -440,9 +447,9 @@ fun ExitDialog(state : MutableState<Boolean>) {
 @Composable
 fun TestSearchBar(viewModel: MainViewModel){
     val searchText by viewModel.searchText.collectAsState()
-    val products by viewModel.products.collectAsState()
-    var isInitialized = remember { mutableStateOf(false) }
+    val isInitialized = remember { mutableStateOf(false) }
     val rainbowColors: List<Color> = listOf(primary_500, success_500)
+    val focusManager = LocalFocusManager.current
     val brush = remember {
         Brush.linearGradient(
             colors = rainbowColors
@@ -465,6 +472,21 @@ fun TestSearchBar(viewModel: MainViewModel){
             lineHeight = 20.sp,
             fontWeight = FontWeight.Bold,
         ),
+        trailingIcon = {
+            if (searchText.text.isNotBlank()) {
+                Icon(
+                    imageVector = Icons.Filled.Delete,
+                    contentDescription = "Очистить поиск",
+                    tint = gray_800,
+                    modifier = Modifier.clickable {
+                        viewModel.clearSearch()
+                        focusManager.clearFocus()
+                        //viewModel.clearSearchFocus()
+                    }
+                )
+            }
+
+        },
         colors = TextFieldDefaults.colors(
             focusedContainerColor = transparent, // Фон при фокусе
             unfocusedContainerColor = transparent,
@@ -486,7 +508,7 @@ fun TestSearchBar(viewModel: MainViewModel){
                 style = CustomTextStyles.body2_regular,
                 color = gray_400
             )
-        },
+        }
     )
 }
 

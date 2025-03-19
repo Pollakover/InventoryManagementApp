@@ -19,9 +19,11 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
+import kotlin.random.Random
 
 
 class MainViewModel : ViewModel() {
+
     var searchButtonState by mutableStateOf(false)
         private set
 
@@ -36,6 +38,11 @@ class MainViewModel : ViewModel() {
     
     fun requestSearchFocus() {
         focusRequester.requestFocus()
+    }
+
+    // Сбрасывает фокус
+    fun clearSearchFocus() {
+        focusRequester.freeFocus()
     }
 
     private val _searchText = MutableStateFlow(TextFieldValue(""))
@@ -107,8 +114,20 @@ class MainViewModel : ViewModel() {
             _warehouses.value
         )
 
+    var error by mutableStateOf(false)
+
     fun onSearchTextChange(text: TextFieldValue) {
         _searchText.value = text
+
+        //Случайный вызов ошибки.
+
+        if(Random.nextInt(0, 10) == 1 && _searchText.value.text.isNotBlank()) {
+            error = true
+        }
+    }
+
+    fun clearSearch() {
+        _searchText.value = TextFieldValue("")
     }
 }
 

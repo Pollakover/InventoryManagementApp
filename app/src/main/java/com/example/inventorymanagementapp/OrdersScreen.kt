@@ -95,13 +95,23 @@ fun OrdersScreen(viewModel: MainViewModel) {
                     }
                 }
 
-                LazyColumn(
-                    verticalArrangement = Arrangement.spacedBy(20.dp),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                ) {
-                    items(orders) { order ->
-                        OrderRow(order)
+                if(viewModel.error) {
+                    QueryError(viewModel)
+                }
+                else {
+                    if(orders.isEmpty()){
+                        NoResults()
+                    }
+                    else {
+                        LazyColumn(
+                            verticalArrangement = Arrangement.spacedBy(20.dp),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                        ) {
+                            items(orders) { order ->
+                                OrderRow(order)
+                            }
+                        }
                     }
                 }
             }
