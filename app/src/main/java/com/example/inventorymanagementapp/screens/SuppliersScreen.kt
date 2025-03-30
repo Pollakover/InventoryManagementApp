@@ -17,6 +17,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -43,7 +44,7 @@ fun SuppliersScreen(viewModel: MainViewModel) {
         modifier = Modifier
             .fillMaxSize()
             .background(
-                color = gray_50
+                color = MaterialTheme.colorScheme.background
             )
     ) {
         Column(
@@ -51,7 +52,7 @@ fun SuppliersScreen(viewModel: MainViewModel) {
                 .padding(22.dp)
                 .fillMaxSize()
                 .clip(RoundedCornerShape(8.dp))
-                .background(color = white)
+                .background(color = MaterialTheme.colorScheme.surface)
         ) {
             Column(
                 verticalArrangement = Arrangement.spacedBy(15.dp),
@@ -68,7 +69,7 @@ fun SuppliersScreen(viewModel: MainViewModel) {
                     FloatingActionButton(
                         onClick = {  },
                         modifier = Modifier.size(33.dp),
-                        containerColor = primary_600,
+                        containerColor = primary_500,
                         contentColor = white,
                         shape = RoundedCornerShape(8.dp)
                     ) {
@@ -77,9 +78,9 @@ fun SuppliersScreen(viewModel: MainViewModel) {
 
                     FloatingActionButton(
                         onClick = {  },
-                        modifier = Modifier.border(1.dp, color = gray_100, RoundedCornerShape(8.dp)).size(33.dp),
-                        containerColor = white,
-                        contentColor = gray_600,
+                        modifier = Modifier.border(1.dp, color = MaterialTheme.colorScheme.primary, RoundedCornerShape(8.dp)).size(33.dp),
+                        containerColor = MaterialTheme.colorScheme.surface,
+                        contentColor = MaterialTheme.colorScheme.onTertiary,
                         shape = RoundedCornerShape(8.dp),
                     ) {
                         Icon(painter = painterResource(id = R.drawable.filters_icon), "Floating action button.")
@@ -113,21 +114,21 @@ fun SuppliersScreen(viewModel: MainViewModel) {
 @Composable
 fun SupplierRow(supplier: Supplier){
     Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(10.dp)) {
-        Text(supplier.name, style = CustomTextStyles.body1_semi_bold, color = gray_800)
+        Text(supplier.name, style = CustomTextStyles.body1_semi_bold, color = MaterialTheme.colorScheme.onSurface)
         Row {
-            Text("Номер телефона:", modifier = Modifier.weight(1f), style = CustomTextStyles.body2_medium, color = gray_600)
-            Text(supplier.phoneNumber, modifier = Modifier.weight(1f), textAlign = TextAlign.End, style = CustomTextStyles.body2_medium, color = gray_400)
+            Text("Номер телефона:", modifier = Modifier.weight(1f), style = CustomTextStyles.body2_medium, color = MaterialTheme.colorScheme.onTertiary)
+            Text(supplier.phoneNumber, modifier = Modifier.weight(1f), textAlign = TextAlign.End, style = CustomTextStyles.body2_medium, color = MaterialTheme.colorScheme.onPrimary)
         }
         Row {
-            Text("Тип:", modifier = Modifier.weight(1f), style = CustomTextStyles.body2_medium, color = gray_600)
-            Text(supplier.type, modifier = Modifier.weight(1f), textAlign = TextAlign.End, style = CustomTextStyles.body2_medium, color = if (supplier.type == "Принимает возврат") success_600 else error_500)
+            Text("Тип:", modifier = Modifier.weight(1f), style = CustomTextStyles.body2_medium, color = MaterialTheme.colorScheme.onTertiary)
+            Text(supplier.type, modifier = Modifier.weight(1f), textAlign = TextAlign.End, style = CustomTextStyles.body2_medium, color = if (supplier.type == "Принимает возврат") success_500 else error_500)
         }
         Row {
-            Text("Поставляемые продукты:", modifier = Modifier.weight(1f), style = CustomTextStyles.body2_medium, color = gray_600)
-            Text(supplier.allProducts(), modifier = Modifier.weight(1f), textAlign = TextAlign.End, style = CustomTextStyles.body2_medium, color = gray_400)
+            Text("Поставляемые продукты:", modifier = Modifier.weight(1f), style = CustomTextStyles.body2_medium, color = MaterialTheme.colorScheme.onTertiary)
+            Text(supplier.allProducts(), modifier = Modifier.weight(1f), textAlign = TextAlign.End, style = CustomTextStyles.body2_medium, color = MaterialTheme.colorScheme.onPrimary)
         }
     }
-    HorizontalDivider(modifier = Modifier.padding(0.dp, 20.dp, 0.dp, 0.dp), color = gray_50)
+    HorizontalDivider(modifier = Modifier.padding(0.dp, 20.dp, 0.dp, 0.dp), color = MaterialTheme.colorScheme.background)
 }
 
 

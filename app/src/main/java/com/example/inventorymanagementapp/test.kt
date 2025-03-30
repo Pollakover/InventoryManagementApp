@@ -18,6 +18,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -37,14 +38,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.inventorymanagementapp.ui.theme.CustomTextStyles
-import com.example.inventorymanagementapp.ui.theme.gray_100
-import com.example.inventorymanagementapp.ui.theme.gray_400
-import com.example.inventorymanagementapp.ui.theme.gray_50
-import com.example.inventorymanagementapp.ui.theme.gray_500
-import com.example.inventorymanagementapp.ui.theme.gray_600
-import com.example.inventorymanagementapp.ui.theme.gray_800
-import com.example.inventorymanagementapp.ui.theme.transparent
-import com.example.inventorymanagementapp.ui.theme.white
+import com.example.inventorymanagementapp.ui.theme.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -72,18 +66,18 @@ fun Demo_ExposedDropdownMenuBox() {
                 .fillMaxWidth()
                 .height(55.dp)
                 .padding(vertical = 4.dp)
-                .border(1.dp, color = gray_100, RoundedCornerShape(8.dp)),
+                .border(1.dp, color = MaterialTheme.colorScheme.primary, RoundedCornerShape(8.dp)),
             shape = RoundedCornerShape(8.dp),
             leadingIcon = {
-                Icon(Icons.Filled.Search, "Floating action button.", tint = gray_400)
+                Icon(Icons.Filled.Search, "Floating action button.", tint = MaterialTheme.colorScheme.onPrimary)
             },
             colors = TextFieldDefaults.colors(
-                focusedContainerColor = gray_50, // Фон при фокусе
+                focusedContainerColor = MaterialTheme.colorScheme.background, // Фон при фокусе
                 unfocusedContainerColor = white,
                 disabledContainerColor = white,
-                focusedTextColor = gray_800, // Цвет текста
-                unfocusedTextColor = gray_800, // Цвет текста
-                cursorColor = gray_800, // Цвет курсора
+                focusedTextColor = MaterialTheme.colorScheme.onSecondary, // Цвет текста
+                unfocusedTextColor = MaterialTheme.colorScheme.onSecondary, // Цвет текста
+                cursorColor = MaterialTheme.colorScheme.onSecondary, // Цвет курсора
                 focusedIndicatorColor = transparent,
                 unfocusedIndicatorColor = transparent,
                 disabledIndicatorColor = transparent
@@ -93,7 +87,7 @@ fun Demo_ExposedDropdownMenuBox() {
                 Text(
                     "Поиск…",
                     style = CustomTextStyles.body2_regular,
-                    color = gray_400,
+                    color = MaterialTheme.colorScheme.onPrimary,
                     modifier = Modifier.fillMaxSize()
                 )
             },
@@ -110,7 +104,7 @@ fun Demo_ExposedDropdownMenuBox() {
                     .fillMaxWidth()
                     .background(Color.Transparent) // Убираем фон у самой коробки
                     .height(80.dp)
-                    .border(1.dp, color = gray_100, RoundedCornerShape(8.dp))
+                    .border(1.dp, color = MaterialTheme.colorScheme.primary, RoundedCornerShape(8.dp))
             ) {
                 TextField(
                     value = selectedText,
@@ -123,16 +117,16 @@ fun Demo_ExposedDropdownMenuBox() {
                         .clip(RoundedCornerShape(8.dp))
                         .padding(8.dp),
                     textStyle = TextStyle(
-                        color = gray_600, // Цвет текста исправлен
+                        color = MaterialTheme.colorScheme.onTertiary, // Цвет текста исправлен
                         fontSize = 14.sp
                     ),
                     colors = TextFieldDefaults.colors(
                         focusedContainerColor = transparent, // Фон при фокусе
                         unfocusedContainerColor = transparent,
                         disabledContainerColor = transparent,
-                        focusedTextColor = gray_600, // Цвет текста исправлен
-                        unfocusedTextColor = gray_600, // Цвет текста исправлен
-                        cursorColor = gray_600, // Цвет курсора
+                        focusedTextColor = MaterialTheme.colorScheme.onTertiary, // Цвет текста исправлен
+                        unfocusedTextColor = MaterialTheme.colorScheme.onTertiary, // Цвет текста исправлен
+                        cursorColor = MaterialTheme.colorScheme.onTertiary, // Цвет курсора
                         focusedIndicatorColor = transparent, // Убираем черную линию
                         unfocusedIndicatorColor = transparent, // Убираем черную линию
                         disabledIndicatorColor = transparent // Убираем черную линию
@@ -141,7 +135,7 @@ fun Demo_ExposedDropdownMenuBox() {
                         Text(
                             "Поиск…",
                             style = CustomTextStyles.body2_regular,
-                            color = gray_400
+                            color = MaterialTheme.colorScheme.onPrimary
                         )
                     },
                 )
@@ -159,7 +153,7 @@ fun Demo_ExposedDropdownMenuBox() {
                             text = {
                                 Text(
                                     text = item,
-                                    color = gray_600, // Цвет текста
+                                    color = MaterialTheme.colorScheme.onTertiary, // Цвет текста
                                     fontSize = 14.sp,
                                     modifier = Modifier.padding(8.dp)
                                 )
@@ -201,18 +195,18 @@ fun Demo_ExposedDropdownMenuBox() {
                 fontWeight = FontWeight.Bold,
             ),
             colors = TextFieldDefaults.colors(
-                focusedContainerColor = gray_50, // Фон при фокусе
+                focusedContainerColor = MaterialTheme.colorScheme.background, // Фон при фокусе
                 unfocusedContainerColor = white,
                 disabledContainerColor = white,
-                //focusedTextColor = gray_800, // Цвет текста
-                //unfocusedTextColor = gray_800, // Цвет текста
-                cursorColor = gray_800, // Цвет курсора
-                focusedIndicatorColor = gray_500,
-                unfocusedIndicatorColor = gray_500,
-                disabledIndicatorColor = gray_500
+                //focusedTextColor = MaterialTheme.colorScheme.onSecondary, // Цвет текста
+                //unfocusedTextColor = MaterialTheme.colorScheme.onSecondary, // Цвет текста
+                cursorColor = MaterialTheme.colorScheme.onSecondary, // Цвет курсора
+                focusedIndicatorColor = MaterialTheme.colorScheme.onSecondary,
+                unfocusedIndicatorColor = MaterialTheme.colorScheme.onSecondary,
+                disabledIndicatorColor = MaterialTheme.colorScheme.onSecondary
             ),
             placeholder = {
-                Text("Поиск…", style = CustomTextStyles.body2_regular, color = gray_400)
+                Text("Поиск…", style = CustomTextStyles.body2_regular, color = MaterialTheme.colorScheme.onPrimary)
             },
         )
     }

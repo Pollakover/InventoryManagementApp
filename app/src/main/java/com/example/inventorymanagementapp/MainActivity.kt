@@ -3,12 +3,15 @@ package com.example.inventorymanagementapp
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -25,6 +28,8 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material.icons.rounded.ShoppingCart
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -85,15 +90,17 @@ import kotlinx.coroutines.launch
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        //enableEdgeToEdge()
         setContent {
-            InventoryManagementAppTheme {
+            val mainViewModel = viewModel<MainViewModel>()
+            InventoryManagementAppTheme(darkTheme = mainViewModel.isDarkModeOn) {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.primary
                 )
                 {
                     //Demo_ExposedDropdownMenuBox()
-                    MainScreen()
+                    MainScreen(mainViewModel)
                 }
             }
         }
@@ -102,58 +109,67 @@ class MainActivity : ComponentActivity() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen() {
-    val mainViewModel = viewModel<MainViewModel>()
+fun MainScreen(mainViewModel: MainViewModel) {
     val navController = rememberNavController()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
-    val colors = arrayOf(gray_600, gray_600, gray_600, gray_600, gray_600)
+    val colors = arrayOf(MaterialTheme.colorScheme.onTertiary, MaterialTheme.colorScheme.onTertiary, MaterialTheme.colorScheme.onTertiary, MaterialTheme.colorScheme.onTertiary, MaterialTheme.colorScheme.onTertiary)
     val currentBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = currentBackStackEntry?.destination?.route
 
     ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {
-            ModalDrawerSheet {
+            ModalDrawerSheet{
                 Column(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .fillMaxHeight()
-                        .background(color = white)
-                        .verticalScroll(
-                            rememberScrollState()
-                        )
+                        .fillMaxSize()
+                        .verticalScroll(rememberScrollState())
                 ) {
                     Column(
-                        modifier = Modifier.fillMaxWidth(),
                         verticalArrangement = Arrangement.spacedBy(20.dp)
                     ) {
                         Column(
                             modifier = Modifier
-                                .background(color = gray_50)
+                                .background(color = MaterialTheme.colorScheme.background)
                                 .padding(24.dp)
                                 .fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(10.dp)
                         ) {
-                            Image(
-                                painter = painterResource(R.drawable.profile_placeholder),
-                                modifier = Modifier
-                                    .size(80.dp)
-                                    .clip(RoundedCornerShape(50))
-                                    .border(1.dp, color = gray_100, RoundedCornerShape(50)),
-                                contentDescription = "Logo"
-                            )
+                            Row(modifier = Modifier.fillMaxWidth()) {
+                                Image(
+                                    painter = painterResource(R.drawable.profile_placeholder),
+                                    modifier = Modifier
+                                        .size(80.dp)
+                                        .clip(RoundedCornerShape(50))
+                                        .border(1.dp, color = MaterialTheme.colorScheme.primary, RoundedCornerShape(50)),
+                                    contentDescription = "Logo"
+                                )
+                                Spacer(modifier = Modifier.weight(1f))
+
+                                //Переключатель темы
+                                IconButton(
+                                    onClick = { mainViewModel.changeTheme() },
+                                    modifier = Modifier.size(35.dp)
+                                ) {
+                                    Icon(
+                                        if (mainViewModel.isDarkModeOn) painterResource(id = R.drawable.light_mode_icon) else painterResource(id = R.drawable.dark_mode_icon),
+                                        contentDescription = "Light / Dark mode",
+                                        tint = MaterialTheme.colorScheme.onTertiary
+                                    )
+                                }
+                            }
 
                             //Имя и почта
                             Column(verticalArrangement = Arrangement.spacedBy(5.dp))
                             {
                                 Text(
                                     "Алексей Поляков",
-                                    color = gray_600,
+                                    color = MaterialTheme.colorScheme.onTertiary,
                                     style = CustomTextStyles.body1_bold
                                 )
                                 Text(
                                     "revokalloppollakover@gmail.com",
-                                    color = gray_400,
+                                    color = MaterialTheme.colorScheme.onPrimary,
                                     fontSize = 12.sp,
                                     fontWeight = FontWeight.Medium,
                                     letterSpacing = 0.5.sp
@@ -163,183 +179,212 @@ fun MainScreen() {
                         Column(
                             modifier = Modifier
                                 .padding(24.dp, 0.dp, 24.dp, 0.dp)
-                                .fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(10.dp)
+                                .fillMaxSize(),
+                            verticalArrangement = Arrangement.spacedBy(10.dp)
                         ) {
-
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .clickable {
-                                        navController.navigate("dashboard") {
-                                            popUpTo(navController.graph.startDestinationId)
-                                            launchSingleTop = true
-                                        }
-                                        scope.launch { drawerState.close() }
-                                    },
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.spacedBy(16.dp)
-                            ) {
-                                if (currentRoute == "dashboard") {
-                                    changeColors(colors, 0)
+                            TextButton(
+                                shape = RoundedCornerShape(8.dp),
+                                modifier = Modifier.fillMaxWidth(),
+                                contentPadding = PaddingValues(5.dp, 0.dp, 0.dp, 0.dp),
+                                onClick = {
+                                    navController.navigate("dashboard") {
+                                        popUpTo(navController.graph.startDestinationId)
+                                        launchSingleTop = true
+                                    }
+                                    scope.launch { drawerState.close() }
                                 }
+                            ) {
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth(),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                                ) {
+                                    if (currentRoute == "dashboard") {
+                                        changeColors(colors, 0)
+                                    }
 
-                                Icon(
-                                    painter = painterResource(id = R.drawable.home_icon),
-                                    contentDescription = "",
-                                    tint = colors[0],
-                                )
+                                    Icon(
+                                        painter = painterResource(id = R.drawable.home_icon),
+                                        contentDescription = "",
+                                        tint = colors[0],
+                                    )
 
-                                Text(
-                                    modifier = Modifier.padding(0.dp, 16.dp, 0.dp, 16.dp),
-                                    text = "Приборная панель",
-                                    style = CustomTextStyles.body1_medium,
-                                    color = colors[0]
-                                )
+                                    Text(
+                                        modifier = Modifier.padding(0.dp, 16.dp, 0.dp, 16.dp),
+                                        text = "Приборная панель",
+                                        style = CustomTextStyles.body1_medium,
+                                        color = colors[0]
+                                    )
+                                }
                             }
 
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .clickable {
-                                        navController.navigate("inventory") {
-                                            popUpTo(navController.graph.startDestinationId)
-                                            launchSingleTop = true
-                                        }
-                                        scope.launch { drawerState.close() }
-                                    },
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.spacedBy(16.dp)
-                            ) {
-                                if (currentRoute == "inventory") {
-                                    changeColors(colors, 1)
+                            TextButton(
+                                shape = RoundedCornerShape(8.dp),
+                                modifier = Modifier.fillMaxWidth(),
+                                contentPadding = PaddingValues(5.dp, 0.dp, 0.dp, 0.dp),
+                                onClick = {
+                                    navController.navigate("inventory") {
+                                        popUpTo(navController.graph.startDestinationId)
+                                        launchSingleTop = true
+                                    }
+                                    scope.launch { drawerState.close() }
                                 }
+                            ) {
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth(),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                                ) {
+                                    if (currentRoute == "inventory") {
+                                        changeColors(colors, 1)
+                                    }
 
-                                Icon(
-                                    painter = painterResource(id = R.drawable.inventory_icon),
-                                    contentDescription = "",
-                                    tint = colors[1],
-                                )
+                                    Icon(
+                                        painter = painterResource(id = R.drawable.inventory_icon),
+                                        contentDescription = "",
+                                        tint = colors[1],
+                                    )
 
-                                Text(
-                                    modifier = Modifier.padding(0.dp, 16.dp, 0.dp, 16.dp),
-                                    text = "Инвентарь",
-                                    style = CustomTextStyles.body1_medium,
-                                    color = colors[1]
-                                )
+                                    Text(
+                                        modifier = Modifier.padding(0.dp, 16.dp, 0.dp, 16.dp),
+                                        text = "Инвентарь",
+                                        style = CustomTextStyles.body1_medium,
+                                        color = colors[1]
+                                    )
+                                }
                             }
 
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .clickable {
-                                        navController.navigate("suppliers") {
-                                            popUpTo(navController.graph.startDestinationId)
-                                            launchSingleTop = true
-                                        }
-                                        scope.launch { drawerState.close() }
-                                    },
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.spacedBy(16.dp)
-                            ) {
-
-                                if (currentRoute == "suppliers") {
-                                    changeColors(colors, 2)
+                            TextButton(
+                                shape = RoundedCornerShape(8.dp),
+                                modifier = Modifier.fillMaxWidth(),
+                                contentPadding = PaddingValues(5.dp, 0.dp, 0.dp, 0.dp),
+                                onClick = {
+                                    navController.navigate("suppliers") {
+                                        popUpTo(navController.graph.startDestinationId)
+                                        launchSingleTop = true
+                                    }
+                                    scope.launch { drawerState.close() }
                                 }
+                            ) {
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth(),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                                ) {
+                                    if (currentRoute == "suppliers") {
+                                        changeColors(colors, 2)
+                                    }
 
-                                Icon(
-                                    painter = painterResource(id = R.drawable.suppliers_icon),
-                                    contentDescription = "",
-                                    tint = colors[2],
-                                )
+                                    Icon(
+                                        painter = painterResource(id = R.drawable.suppliers_icon),
+                                        contentDescription = "",
+                                        tint = colors[2],
+                                    )
 
-                                Text(
-                                    modifier = Modifier.padding(0.dp, 16.dp, 0.dp, 16.dp),
-                                    text = "Поставщики",
-                                    style = CustomTextStyles.body1_medium,
-                                    color = colors[2]
-                                )
+                                    Text(
+                                        modifier = Modifier.padding(0.dp, 16.dp, 0.dp, 16.dp),
+                                        text = "Поставщики",
+                                        style = CustomTextStyles.body1_medium,
+                                        color = colors[2]
+                                    )
+                                }
                             }
 
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .clickable {
-                                        navController.navigate("orders") {
-                                            popUpTo(navController.graph.startDestinationId)
-                                            launchSingleTop = true
-                                        }
-                                        scope.launch { drawerState.close() }
-                                    },
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.spacedBy(16.dp)
-                            ) {
-
-                                if (currentRoute == "orders") {
-                                    changeColors(colors, 3)
+                            TextButton(
+                                shape = RoundedCornerShape(8.dp),
+                                modifier = Modifier.fillMaxWidth(),
+                                contentPadding = PaddingValues(5.dp, 0.dp, 0.dp, 0.dp),
+                                onClick = {
+                                    navController.navigate("orders") {
+                                        popUpTo(navController.graph.startDestinationId)
+                                        launchSingleTop = true
+                                    }
+                                    scope.launch { drawerState.close() }
                                 }
+                            ) {
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth(),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                                ) {
+                                    if (currentRoute == "orders") {
+                                        changeColors(colors, 3)
+                                    }
 
-                                Icon(
-                                    painter = painterResource(id = R.drawable.orders_icon),
-                                    contentDescription = "",
-                                    tint = colors[3],
-                                )
+                                    Icon(
+                                        painter = painterResource(id = R.drawable.orders_icon),
+                                        contentDescription = "",
+                                        tint = colors[3],
+                                    )
 
-                                Text(
-                                    modifier = Modifier.padding(0.dp, 16.dp, 0.dp, 16.dp),
-                                    text = "Заказы",
-                                    style = CustomTextStyles.body1_medium,
-                                    color = colors[3]
-                                )
+                                    Text(
+                                        modifier = Modifier.padding(0.dp, 16.dp, 0.dp, 16.dp),
+                                        text = "Заказы",
+                                        style = CustomTextStyles.body1_medium,
+                                        color = colors[3]
+                                    )
+                                }
                             }
 
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .clickable {
-                                        navController.navigate("warehouses") {
-                                            popUpTo(navController.graph.startDestinationId)
-                                            launchSingleTop = true
-                                        }
-                                        scope.launch { drawerState.close() }
-                                    },
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.spacedBy(16.dp)
-                            ) {
-
-                                if (currentRoute == "warehouses") {
-                                    changeColors(colors, 4)
+                            TextButton(
+                                shape = RoundedCornerShape(8.dp),
+                                modifier = Modifier.fillMaxWidth(),
+                                contentPadding = PaddingValues(5.dp, 0.dp, 0.dp, 0.dp),
+                                onClick = {
+                                    navController.navigate("warehouses") {
+                                        popUpTo(navController.graph.startDestinationId)
+                                        launchSingleTop = true
+                                    }
+                                    scope.launch { drawerState.close() }
                                 }
+                            ) {
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth(),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                                ) {
+                                    if (currentRoute == "warehouses") {
+                                        changeColors(colors, 4)
+                                    }
 
-                                Icon(
-                                    painter = painterResource(id = R.drawable.warehouses_icon),
-                                    contentDescription = "",
-                                    tint = colors[4],
-                                )
-                                Text(
-                                    modifier = Modifier.padding(0.dp, 16.dp, 0.dp, 16.dp),
-                                    text = "Склады",
-                                    style = CustomTextStyles.body1_medium,
-                                    color = colors[4]
-                                )
+                                    Icon(
+                                        painter = painterResource(id = R.drawable.warehouses_icon),
+                                        contentDescription = "",
+                                        tint = colors[4],
+                                    )
+                                    Text(
+                                        modifier = Modifier.padding(0.dp, 16.dp, 0.dp, 16.dp),
+                                        text = "Склады",
+                                        style = CustomTextStyles.body1_medium,
+                                        color = colors[4]
+                                    )
+                                }
                             }
-
                         }
                     }
+
                     Spacer(
                         modifier = Modifier.weight(1f)
                     )
-                    Column(
-                        modifier = Modifier
-                            .padding(24.dp, 0.dp, 24.dp, 32.dp)
-                            .fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(12.dp)
-                    )
-                    {
-                        val logoutDialogState = remember { mutableStateOf(false) }
 
+                    val logoutDialogState = remember { mutableStateOf(false) }
+
+                    TextButton(
+                        shape = RoundedCornerShape(8.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(24.dp, 0.dp, 24.dp, 32.dp),
+                        contentPadding = PaddingValues(5.dp, 0.dp, 0.dp, 0.dp),
+                        onClick = { logoutDialogState.value = true }
+                    ) {
                         Row(
                             modifier = Modifier
-                                .fillMaxWidth()
-                                .clickable { logoutDialogState.value = true },
+                                .fillMaxWidth(),
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.spacedBy(16.dp)
                         ) {
@@ -351,17 +396,14 @@ fun MainScreen() {
                             Icon(
                                 painter = painterResource(id = R.drawable.logout_icon),
                                 contentDescription = "",
-                                tint = gray_600,
+                                tint = MaterialTheme.colorScheme.onTertiary,
                             )
-
-                            if (currentRoute != null) {
-                                Text(
-                                    modifier = Modifier.padding(0.dp, 16.dp, 0.dp, 16.dp),
-                                    text = "Выйти",
-                                    style = CustomTextStyles.body1_medium,
-                                    color = gray_600
-                                )
-                            }
+                            Text(
+                                modifier = Modifier.padding(0.dp, 16.dp, 0.dp, 16.dp),
+                                text = "Выйти",
+                                style = CustomTextStyles.body1_medium,
+                                color = MaterialTheme.colorScheme.onTertiary
+                            )
                         }
                     }
                 }
@@ -374,11 +416,11 @@ fun MainScreen() {
             }
         }
         Scaffold(
-            containerColor = gray_50,
+            containerColor = MaterialTheme.colorScheme.background,
             topBar = {
                 TopAppBar(
                     colors = topAppBarColors(
-                        containerColor = white,
+                        containerColor = MaterialTheme.colorScheme.surface,
                     ),
                     title = {
                         val topBarText = when (currentRoute) {
@@ -395,7 +437,7 @@ fun MainScreen() {
                             Text(
                                 text = topBarText,
                                 style = CustomTextStyles.sub_heading_medium,
-                                color = gray_800
+                                color = MaterialTheme.colorScheme.onSurface
                             )
                         }
                     },
@@ -407,7 +449,7 @@ fun MainScreen() {
                             }
                         }
                         ) {
-                            Icon(Icons.Default.Menu, contentDescription = "Menu", tint = gray_800)
+                            Icon(Icons.Default.Menu, contentDescription = "Menu", tint = MaterialTheme.colorScheme.onSurface)
                         }
                     },
                     actions = {
@@ -418,7 +460,7 @@ fun MainScreen() {
                                 Icon(
                                     imageVector = if (mainViewModel.searchButtonState) Icons.Filled.Close else Icons.Filled.Search,
                                     contentDescription = "Search",
-                                    tint = gray_800
+                                    tint = MaterialTheme.colorScheme.onSurface
                                 )
                             }
                         }
@@ -431,7 +473,7 @@ fun MainScreen() {
                 startDestination = "dashboard",
                 modifier = Modifier.padding(innerPadding)
             ) {
-                composable("test") { Demo_ExposedDropdownMenuBox() }
+                composable("black") { Demo_ExposedDropdownMenuBox() }
                 composable("dashboard") { DashboardScreen() }
                 composable("inventory") { InventoryScreen(mainViewModel) }
                 composable("suppliers") { SuppliersScreen(mainViewModel) }
@@ -451,7 +493,7 @@ fun ExitDialog(state: MutableState<Boolean>) {
                     .width(320.dp),
                 shape = RoundedCornerShape(8.dp),
                 colors = CardDefaults.cardColors(
-                    containerColor = white
+                    containerColor = MaterialTheme.colorScheme.surface
                 ),
             ) {
                 Column(
@@ -474,7 +516,7 @@ fun ExitDialog(state: MutableState<Boolean>) {
                             "Вы уверены, что хотите выйти из своей учетной записи?",
                             modifier = Modifier.fillMaxWidth(),
                             style = CustomTextStyles.body2_regular,
-                            color = gray_800
+                            color = MaterialTheme.colorScheme.onSurface
                         )
                     }
                     Row(
@@ -489,7 +531,7 @@ fun ExitDialog(state: MutableState<Boolean>) {
                                 shape = RoundedCornerShape(8.dp),
                                 colors = ButtonDefaults.buttonColors(
                                     contentColor = primary_500,
-                                    containerColor = primary_50
+                                    containerColor = MaterialTheme.colorScheme.surface
                                 )
                             ) {
                                 Text("Да")
@@ -500,7 +542,7 @@ fun ExitDialog(state: MutableState<Boolean>) {
                                 shape = RoundedCornerShape(8.dp),
                                 colors = ButtonDefaults.buttonColors(
                                     contentColor = primary_500,
-                                    containerColor = primary_50
+                                    containerColor = MaterialTheme.colorScheme.surface
                                 )
                             ) {
                                 Text("Нет")
@@ -544,9 +586,9 @@ fun TopSearchBar(viewModel: MainViewModel) {
         trailingIcon = {
             if (searchText.text.isNotBlank()) {
                 Icon(
-                    imageVector = Icons.Filled.Delete,
+                    imageVector = Icons.Outlined.Delete,
                     contentDescription = "Очистить поиск",
-                    tint = gray_800,
+                    tint = MaterialTheme.colorScheme.onSurface,
                     modifier = Modifier.clickable {
                         viewModel.clearSearch()
                         focusManager.clearFocus()
@@ -559,12 +601,12 @@ fun TopSearchBar(viewModel: MainViewModel) {
             focusedContainerColor = transparent, // Фон при фокусе
             unfocusedContainerColor = transparent,
             disabledContainerColor = transparent,
-            focusedTextColor = gray_800, // Цвет текста
-            unfocusedTextColor = gray_800, // Цвет текста
-            cursorColor = gray_800, // Цвет курсора
-            focusedIndicatorColor = gray_100,
-            unfocusedIndicatorColor = gray_100,
-            disabledIndicatorColor = gray_100
+            focusedTextColor = MaterialTheme.colorScheme.onSurface, // Цвет текста
+            unfocusedTextColor = MaterialTheme.colorScheme.onSurface, // Цвет текста
+            cursorColor = MaterialTheme.colorScheme.onSurface, // Цвет курсора
+            focusedIndicatorColor = MaterialTheme.colorScheme.primary,
+            unfocusedIndicatorColor = MaterialTheme.colorScheme.primary,
+            disabledIndicatorColor = MaterialTheme.colorScheme.primary
         ),
         onValueChange = viewModel::onSearchTextChange,
         modifier = Modifier
@@ -574,7 +616,7 @@ fun TopSearchBar(viewModel: MainViewModel) {
             Text(
                 "Поиск…",
                 style = CustomTextStyles.body2_regular,
-                color = gray_400
+                color = MaterialTheme.colorScheme.onPrimary
             )
         }
     )
@@ -583,7 +625,8 @@ fun TopSearchBar(viewModel: MainViewModel) {
 @Preview(showBackground = true)
 @Composable
 fun PreviewMain() {
-    MainScreen()
+    val mainViewModel = viewModel<MainViewModel>()
+    MainScreen(mainViewModel)
 }
 
 fun changeColors(array: Array<Color>, index: Int) {

@@ -16,6 +16,7 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -51,7 +52,7 @@ fun NewOrderScreen() {
         modifier = Modifier
             .fillMaxWidth()
             /*.background(
-                color = gray_50
+                color = MaterialTheme.colorScheme.background
             )*/
     ) {
         Column(
@@ -59,7 +60,7 @@ fun NewOrderScreen() {
                 .padding(22.dp)
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(8.dp))
-                .background(color = white)
+                .background(color = MaterialTheme.colorScheme.surface)
                 .verticalScroll(rememberScrollState())
         ) {
             Column(
@@ -75,7 +76,7 @@ fun NewOrderScreen() {
                 ) {
                     Text(
                         text = "Название продукта",
-                        color = gray_700,
+                        color = MaterialTheme.colorScheme.onBackground,
                         style = CustomTextStyles.body2_medium
                     )
                     BasicTextField(
@@ -86,7 +87,7 @@ fun NewOrderScreen() {
                             .clip(RoundedCornerShape(8.dp))
                             .border(
                                 1.dp,
-                                color = gray_100,
+                                color = MaterialTheme.colorScheme.primary,
                                 RoundedCornerShape(8.dp)
                             )
                             .padding(14.dp, 10.dp, 14.dp, 10.dp),
@@ -95,7 +96,7 @@ fun NewOrderScreen() {
                             if (productName.text.isEmpty()) {
                                 Text(
                                     text = "Введите название продукта",
-                                    color = gray_500,
+                                    color = MaterialTheme.colorScheme.onSecondary,
                                     style = CustomTextStyles.body1_regular
                                 )
                             }
@@ -110,7 +111,7 @@ fun NewOrderScreen() {
                 ) {
                     Text(
                         text = "Количество",
-                        color = gray_700,
+                        color = MaterialTheme.colorScheme.onBackground,
                         style = CustomTextStyles.body2_medium
                     )
                     BasicTextField(
@@ -121,7 +122,7 @@ fun NewOrderScreen() {
                             .clip(RoundedCornerShape(8.dp))
                             .border(
                                 1.dp,
-                                color = gray_100,
+                                color = MaterialTheme.colorScheme.primary,
                                 RoundedCornerShape(8.dp)
                             )
                             .padding(14.dp, 10.dp, 14.dp, 10.dp),
@@ -130,7 +131,7 @@ fun NewOrderScreen() {
                             if (productName.text.isEmpty()) {
                                 Text(
                                     text = "Введиите количество",
-                                    color = gray_500,
+                                    color = MaterialTheme.colorScheme.onSecondary,
                                     style = CustomTextStyles.body1_regular
                                 )
                             }
@@ -145,7 +146,7 @@ fun NewOrderScreen() {
                 ) {
                     Text(
                         text = "Цена",
-                        color = gray_700,
+                        color = MaterialTheme.colorScheme.onBackground,
                         style = CustomTextStyles.body2_medium
                     )
                     BasicTextField(
@@ -156,7 +157,7 @@ fun NewOrderScreen() {
                             .clip(RoundedCornerShape(8.dp))
                             .border(
                                 1.dp,
-                                color = gray_100,
+                                color = MaterialTheme.colorScheme.primary,
                                 RoundedCornerShape(8.dp)
                             )
                             .padding(14.dp, 10.dp, 14.dp, 10.dp),
@@ -165,7 +166,7 @@ fun NewOrderScreen() {
                             if (productName.text.isEmpty()) {
                                 Text(
                                     text = "Введиите цену",
-                                    color = gray_500,
+                                    color = MaterialTheme.colorScheme.onSecondary,
                                     style = CustomTextStyles.body1_regular
                                 )
                             }
@@ -180,7 +181,7 @@ fun NewOrderScreen() {
                 ) {
                     Text(
                         text = "Дата доставки",
-                        color = gray_700,
+                        color = MaterialTheme.colorScheme.onBackground,
                         style = CustomTextStyles.body2_medium
                     )
                     BasicTextField(
@@ -191,7 +192,7 @@ fun NewOrderScreen() {
                             .clip(RoundedCornerShape(8.dp))
                             .border(
                                 1.dp,
-                                color = gray_100,
+                                color = MaterialTheme.colorScheme.primary,
                                 RoundedCornerShape(8.dp)
                             )
                             .padding(14.dp, 10.dp, 14.dp, 10.dp),
@@ -200,7 +201,7 @@ fun NewOrderScreen() {
                             if (productName.text.isEmpty()) {
                                 Text(
                                     text = "Введиите дату",
-                                    color = gray_500,
+                                    color = MaterialTheme.colorScheme.onSecondary,
                                     style = CustomTextStyles.body1_regular
                                 )
                             }
@@ -215,7 +216,7 @@ fun NewOrderScreen() {
                 ) {
                     Text(
                         text = "Статус",
-                        color = gray_700,
+                        color = MaterialTheme.colorScheme.onBackground,
                         style = CustomTextStyles.body2_medium
                     )
                     BasicTextField(
@@ -226,7 +227,7 @@ fun NewOrderScreen() {
                             .clip(RoundedCornerShape(8.dp))
                             .border(
                                 1.dp,
-                                color = gray_100,
+                                color = MaterialTheme.colorScheme.primary,
                                 RoundedCornerShape(8.dp)
                             )
                             .padding(14.dp, 10.dp, 14.dp, 10.dp),
@@ -235,7 +236,7 @@ fun NewOrderScreen() {
                             if (productName.text.isEmpty()) {
                                 Text(
                                     text = "Выберите статус",
-                                    color = gray_500,
+                                    color = MaterialTheme.colorScheme.onSecondary,
                                     style = CustomTextStyles.body1_regular
                                 )
                             }
@@ -252,8 +253,8 @@ fun NewOrderScreen() {
                         shape = RoundedCornerShape(8.dp),
                         onClick = { },
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = white,
-                            contentColor = gray_500
+                            containerColor = MaterialTheme.colorScheme.surface,
+                            contentColor = MaterialTheme.colorScheme.onSecondary
                         ),
                         contentPadding = PaddingValues(10.dp)
                     ) {
@@ -263,7 +264,7 @@ fun NewOrderScreen() {
                         modifier = Modifier.clip(RoundedCornerShape(8.dp)),
                         shape = RoundedCornerShape(8.dp),
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = primary_600,
+                            containerColor = primary_500,
                             contentColor = white
                         ),
                         contentPadding = PaddingValues(10.dp)

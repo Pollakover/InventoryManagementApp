@@ -17,6 +17,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
@@ -57,7 +58,7 @@ fun NewSupplierScreen() {
         modifier = Modifier
             .fillMaxSize()
             .background(
-                color = gray_50
+                color = MaterialTheme.colorScheme.background
             )
     ) {
         Column(
@@ -65,7 +66,7 @@ fun NewSupplierScreen() {
                 .padding(22.dp)
                 .fillMaxSize()
                 .clip(RoundedCornerShape(8.dp))
-                .background(color = gray_50)
+                .background(color = MaterialTheme.colorScheme.background)
                 .verticalScroll(rememberScrollState())
         ) {
             Column(
@@ -81,7 +82,7 @@ fun NewSupplierScreen() {
                 ) {
                     Text(
                         text = "Имя поставщика",
-                        color = gray_700,
+                        color = MaterialTheme.colorScheme.onBackground,
                         style = CustomTextStyles.body2_medium
                     )
                     BasicTextField(
@@ -92,7 +93,7 @@ fun NewSupplierScreen() {
                             .clip(RoundedCornerShape(8.dp))
                             .border(
                                 1.dp,
-                                color = gray_100,
+                                color = MaterialTheme.colorScheme.primary,
                                 RoundedCornerShape(8.dp)
                             )
                             .padding(14.dp, 10.dp, 14.dp, 10.dp),
@@ -101,7 +102,7 @@ fun NewSupplierScreen() {
                             if (productName.text.isEmpty()) {
                                 Text(
                                     text = "Введите имя поставщика",
-                                    color = gray_500,
+                                    color = MaterialTheme.colorScheme.onSecondary,
                                     style = CustomTextStyles.body1_regular
                                 )
                             }
@@ -116,7 +117,7 @@ fun NewSupplierScreen() {
                 ) {
                     Text(
                         text = "Номер телефона",
-                        color = gray_700,
+                        color = MaterialTheme.colorScheme.onBackground,
                         style = CustomTextStyles.body2_medium
                     )
                     BasicTextField(
@@ -127,7 +128,7 @@ fun NewSupplierScreen() {
                             .clip(RoundedCornerShape(8.dp))
                             .border(
                                 1.dp,
-                                color = gray_100,
+                                color = MaterialTheme.colorScheme.primary,
                                 RoundedCornerShape(8.dp)
                             )
                             .padding(14.dp, 10.dp, 14.dp, 10.dp),
@@ -136,7 +137,7 @@ fun NewSupplierScreen() {
                             if (productName.text.isEmpty()) {
                                 Text(
                                     text = "Введиите номер телефона",
-                                    color = gray_500,
+                                    color = MaterialTheme.colorScheme.onSecondary,
                                     style = CustomTextStyles.body1_regular
                                 )
                             }
@@ -152,7 +153,7 @@ fun NewSupplierScreen() {
                 ) {
                     Text(
                         text = "Выберите тип",
-                        color = gray_700,
+                        color = MaterialTheme.colorScheme.onBackground,
                         style = CustomTextStyles.body2_medium
                     )
 
@@ -168,8 +169,8 @@ fun NewSupplierScreen() {
                         shape = RoundedCornerShape(8.dp),
                         onClick = { },
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = white,
-                            contentColor = gray_500
+                            containerColor = MaterialTheme.colorScheme.surface,
+                            contentColor = MaterialTheme.colorScheme.onSecondary
                         ),
                         contentPadding = PaddingValues(10.dp)
                     ) {
@@ -179,7 +180,7 @@ fun NewSupplierScreen() {
                         modifier = Modifier.clip(RoundedCornerShape(8.dp)),
                         shape = RoundedCornerShape(8.dp),
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = primary_600,
+                            containerColor = primary_500,
                             contentColor = white
                         ),
                         contentPadding = PaddingValues(10.dp)
@@ -219,12 +220,12 @@ fun SingleChoiceSegmentedButton(modifier: Modifier = Modifier) {
                 selected = index == selectedIndex,
                 colors = SegmentedButtonDefaults.colors(
                     // Цвета для выбранной кнопки
-                    activeContainerColor = success_300,
-                    activeContentColor = Color.White,
+                    activeContainerColor = success_500,
+                    activeContentColor = white,
                     // Цвета для невыбранной кнопки
-                    inactiveContainerColor = Color.White,
-                    inactiveContentColor = gray_400,
-                    //borderColor = if (index == selectedIndex) success_300 else gray_400
+                    inactiveContainerColor = white,
+                    inactiveContentColor = MaterialTheme.colorScheme.onPrimary,
+                    //borderColor = if (index == selectedIndex) success_300 else MaterialTheme.colorScheme.onPrimary
                 ),
                 label = { Text(label) },
                 modifier = Modifier.fillMaxWidth().weight(1f)

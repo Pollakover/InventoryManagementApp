@@ -149,46 +149,36 @@ object CustomTextStyles {
 }
 
 private val DarkColorScheme = darkColorScheme(
-    primary = gray_900,
-    secondary = gray_800,
-    tertiary = gray_700,
-    background = gray_600,
-    surface = gray_500,
-    onPrimary = gray_400,
-    onSecondary = gray_300,
-    onTertiary = gray_200,
-    onBackground = gray_100,
-    onSurface = gray_50
+    background = darkBackgroundColor,
+    surface = darkSurfaceColor,
+    primary = darkThemeGray_100,
+    secondary = darkThemeGray_200,
+    tertiary = darkThemeGray_300,
+    onPrimary = darkThemeGray_400,
+    onSecondary = darkThemeGray_500,
+    onTertiary = darkThemeGray_600,
+    onBackground = darkThemeGray_700,
+    onSurface = darkThemeGray_800
 
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = gray_50,
-    secondary = gray_100,
-    tertiary = gray_200,
-    background = gray_300,
-    surface = gray_400,
-    onPrimary = gray_500,
-    onSecondary = gray_600,
-    onTertiary = gray_700,
-    onBackground = gray_800,
-    onSurface = gray_900
-
-    /* Other default colors to override
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
-    onPrimary = Color.White,
-    onSecondary = Color.White,
-    onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
-    */
+    background = lightBackgroundColor,
+    surface = lightSurfaceColor,
+    primary = lightThemeGray_100,
+    secondary = lightThemeGray_200,
+    tertiary = lightThemeGray_300,
+    onPrimary = lightThemeGray_400,
+    onSecondary = lightThemeGray_500,
+    onTertiary = lightThemeGray_600,
+    onBackground = lightThemeGray_700,
+    onSurface = lightThemeGray_800
 )
 
 @Composable
 fun InventoryManagementAppTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    dynamicColor: Boolean = true,
+    dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {

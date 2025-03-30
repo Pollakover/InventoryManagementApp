@@ -16,6 +16,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -33,7 +34,7 @@ fun SignUpScreen() {
         modifier = Modifier
             .fillMaxWidth()
             .fillMaxHeight()
-            .background(color = white)
+            .background(color = MaterialTheme.colorScheme.surface)
     ) {
         Column(
             modifier = Modifier
@@ -62,12 +63,12 @@ fun SignUpScreen() {
 
                 Text(
                     text = "Создайте аккаунт",
-                    color = gray_900,
+                    color = MaterialTheme.colorScheme.onSurface,
                     style = CustomTextStyles.heading1_semi_bold
                 )
                 Text(
                     text = "Заполните поля для регистрации.",
-                    color = gray_500,
+                    color = MaterialTheme.colorScheme.onSecondary,
                     style = CustomTextStyles.body1_regular,
                 )
 
@@ -87,7 +88,7 @@ fun SignUpScreen() {
                 ) {
                     Text(
                         text = "Логин*",
-                        color = gray_700,
+                        color = MaterialTheme.colorScheme.onBackground,
                         style = CustomTextStyles.body2_medium
                     )
                     BasicTextField(
@@ -98,14 +99,14 @@ fun SignUpScreen() {
                             .clip(RoundedCornerShape(8.dp))
                             .border(
                                 1.dp,
-                                color = gray_100,
+                                color = MaterialTheme.colorScheme.primary,
                                 RoundedCornerShape(8.dp)
                             )
                             .padding(14.dp, 10.dp, 14.dp, 10.dp),
                         decorationBox = {
                             Text(
                                 text = "Введите логин",
-                                color = gray_500,
+                                color = MaterialTheme.colorScheme.onSecondary,
                                 style = CustomTextStyles.body1_regular
                             )
                         }
@@ -118,7 +119,7 @@ fun SignUpScreen() {
                 ) {
                     Text(
                         text = "Email*",
-                        color = gray_700,
+                        color = MaterialTheme.colorScheme.onBackground,
                         style = CustomTextStyles.body2_medium
                     )
                     BasicTextField(
@@ -129,14 +130,14 @@ fun SignUpScreen() {
                             .clip(RoundedCornerShape(8.dp))
                             .border(
                                 1.dp,
-                                color = gray_100,
+                                color = MaterialTheme.colorScheme.primary,
                                 RoundedCornerShape(8.dp)
                             )
                             .padding(14.dp, 10.dp, 14.dp, 10.dp),
                         decorationBox = {
                             Text(
                                 text = "Введите Email",
-                                color = gray_500,
+                                color = MaterialTheme.colorScheme.onSecondary,
                                 style = CustomTextStyles.body1_regular
                             )
                         }
@@ -149,7 +150,7 @@ fun SignUpScreen() {
                 ) {
                     Text(
                         text = "Пароль*",
-                        color = gray_700,
+                        color = MaterialTheme.colorScheme.onBackground,
                         style = CustomTextStyles.body2_medium
                     )
                     BasicTextField(
@@ -160,14 +161,14 @@ fun SignUpScreen() {
                             .clip(RoundedCornerShape(8.dp))
                             .border(
                                 1.dp,
-                                color = gray_100,
+                                color = MaterialTheme.colorScheme.primary,
                                 RoundedCornerShape(8.dp)
                             )
                             .padding(14.dp, 10.dp, 14.dp, 10.dp),
                         decorationBox = {
                             Text(
                                 text = "Придумайте пароль",
-                                color = gray_500,
+                                color = MaterialTheme.colorScheme.onSecondary,
                                 style = CustomTextStyles.body1_regular
                             )
                         }
@@ -195,12 +196,12 @@ fun SignUpScreen() {
                 Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
                     Text(
                         text = "У вас уже есть аккаунт?",
-                        color = gray_500,
+                        color = MaterialTheme.colorScheme.onSecondary,
                         style = CustomTextStyles.body2_regular
                     )
                     Text(
                         text = "Войдите",
-                        color = primary_600,
+                        color = primary_500,
                         style = CustomTextStyles.body2_medium
                     )
                 }

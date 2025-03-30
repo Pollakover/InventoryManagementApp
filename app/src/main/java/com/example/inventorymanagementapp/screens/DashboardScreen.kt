@@ -19,6 +19,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Badge
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -38,7 +39,7 @@ fun DashboardScreen() {
         verticalArrangement = Arrangement.spacedBy(22.dp),
         modifier = Modifier
             .fillMaxSize()
-            //.background(color = MaterialTheme.colorScheme.primary)
+            .background(color = MaterialTheme.colorScheme.background)
     ) {
         Column(
             verticalArrangement = Arrangement.spacedBy(22.dp),
@@ -56,7 +57,7 @@ fun DashboardScreen() {
             ) {
                 Text(
                     "Товар на складах",
-                    color = gray_800,
+                    color = MaterialTheme.colorScheme.onSurface,
                     style = CustomTextStyles.sub_heading_medium
                 )
                 Row(
@@ -66,7 +67,7 @@ fun DashboardScreen() {
                 ) {
 
                     //Карточка
-                    Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.clip(RoundedCornerShape(8.dp)).background(color = white).weight(1f)){
+                    Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.clip(RoundedCornerShape(8.dp)).background(color = MaterialTheme.colorScheme.surface).weight(1f)){
                         Column(modifier = Modifier.padding(0.dp, 20.dp, 0.dp, 10.dp )) {
                             Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(8.dp)) {
 
@@ -87,15 +88,15 @@ fun DashboardScreen() {
 
                                 //Текст под иконкой
                                 Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(2.dp)){
-                                    Text("842", style = CustomTextStyles.body1_semi_bold, color = gray_600)
-                                    Text("На складе", style = CustomTextStyles.body2_medium, color = gray_800)
+                                    Text("842", style = CustomTextStyles.body1_semi_bold, color = MaterialTheme.colorScheme.onTertiary)
+                                    Text("На складе", style = CustomTextStyles.body2_medium, color = MaterialTheme.colorScheme.onSurface)
                                 }
                             }
                         }
                     }
 
                     //Карточка
-                    Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.clip(RoundedCornerShape(8.dp)).background(color = white).weight(1f)){
+                    Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.clip(RoundedCornerShape(8.dp)).background(color = MaterialTheme.colorScheme.surface).weight(1f)){
                         Column(modifier = Modifier.padding(0.dp, 20.dp, 0.dp, 10.dp )) {
                             Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(8.dp)) {
 
@@ -116,8 +117,8 @@ fun DashboardScreen() {
 
                                 //Текст под иконкой
                                 Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(2.dp)){
-                                    Text("790", style = CustomTextStyles.body1_semi_bold, color = gray_600)
-                                    Text("В наличии", style = CustomTextStyles.body2_medium, color = gray_800)
+                                    Text("790", style = CustomTextStyles.body1_semi_bold, color = MaterialTheme.colorScheme.onTertiary)
+                                    Text("В наличии", style = CustomTextStyles.body2_medium, color = MaterialTheme.colorScheme.onSurface)
                                 }
                             }
                         }
@@ -129,7 +130,7 @@ fun DashboardScreen() {
             Row(horizontalArrangement = Arrangement.spacedBy(22.dp), modifier = Modifier.fillMaxWidth()) {
 
                 //Карточка
-                Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.clip(RoundedCornerShape(8.dp)).background(color = white).weight(1f)){
+                Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.clip(RoundedCornerShape(8.dp)).background(color = MaterialTheme.colorScheme.surface).weight(1f)){
                     Column(modifier = Modifier.padding(0.dp, 20.dp, 0.dp, 10.dp )) {
                         Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(8.dp)) {
 
@@ -149,15 +150,15 @@ fun DashboardScreen() {
 
                             //Текст под иконкой
                             Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(2.dp)){
-                                Text("32", style = CustomTextStyles.body1_semi_bold, color = gray_600)
-                                Text("Заканчивается", style = CustomTextStyles.body2_medium, color = gray_800)
+                                Text("32", style = CustomTextStyles.body1_semi_bold, color = MaterialTheme.colorScheme.onTertiary)
+                                Text("Заканчивается", style = CustomTextStyles.body2_medium, color = MaterialTheme.colorScheme.onSurface)
                             }
                         }
                     }
                 }
 
                 //Карточка
-                Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.clip(RoundedCornerShape(8.dp)).background(color = white).weight(1f)){
+                Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.clip(RoundedCornerShape(8.dp)).background(color = MaterialTheme.colorScheme.surface).weight(1f)){
                     Column(modifier = Modifier.padding(0.dp, 20.dp, 0.dp, 10.dp )) {
                         Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(8.dp)) {
 
@@ -178,8 +179,8 @@ fun DashboardScreen() {
 
                             //Текст под иконкой
                             Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(2.dp)){
-                                Text("46", style = CustomTextStyles.body1_semi_bold, color = gray_600)
-                                Text("Нет в наличии", style = CustomTextStyles.body2_medium, color = gray_800)
+                                Text("46", style = CustomTextStyles.body1_semi_bold, color = MaterialTheme.colorScheme.onTertiary)
+                                Text("Нет в наличии", style = CustomTextStyles.body2_medium, color = MaterialTheme.colorScheme.onSurface)
                             }
                         }
                     }
@@ -189,8 +190,8 @@ fun DashboardScreen() {
 
             //Товары с низким запасом
             Column(verticalArrangement = Arrangement.spacedBy(10.dp), modifier = Modifier.fillMaxWidth()) {
-                Text("Товары с низким запасом", color = gray_800, style = CustomTextStyles.sub_heading_medium)
-                Column(modifier = Modifier.fillMaxWidth().height(270.dp).clip(RoundedCornerShape(8.dp)).background(color = white)) {
+                Text("Товары с низким запасом", color = MaterialTheme.colorScheme.onSurface, style = CustomTextStyles.sub_heading_medium)
+                Column(modifier = Modifier.fillMaxWidth().height(270.dp).clip(RoundedCornerShape(8.dp)).background(color = MaterialTheme.colorScheme.surface)) {
                     LazyColumn(verticalArrangement = Arrangement.spacedBy(16.dp),modifier = Modifier.padding(0.dp, 4.dp, 0.dp, 4.dp).fillMaxSize()) {
                         items(6){
                             Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(10.dp, 0.dp, 10.dp, 0.dp).fillMaxWidth()){
@@ -217,8 +218,8 @@ fun DashboardScreen() {
                                         modifier = Modifier,
                                         verticalArrangement = Arrangement.spacedBy(4.dp)
                                     ) {
-                                        Text("Название продукта", style = CustomTextStyles.body1_semi_bold, color = gray_800)
-                                        Text("Осталось: 5 шт.", style = CustomTextStyles.body2_regular, color = gray_500)
+                                        Text("Название продукта", style = CustomTextStyles.body1_semi_bold, color = MaterialTheme.colorScheme.onSurface)
+                                        Text("Осталось: 5 шт.", style = CustomTextStyles.body2_regular, color = MaterialTheme.colorScheme.onSecondary)
                                     }
                                 }
                                 //Spacer(modifier = Modifier.weight(1f))
@@ -237,8 +238,8 @@ fun DashboardScreen() {
 
             //Самые продаваемые товары
             Column(verticalArrangement = Arrangement.spacedBy(10.dp), modifier = Modifier.fillMaxWidth()) {
-                Text("Самые продаваемые товары", color = gray_800, style = CustomTextStyles.sub_heading_medium)
-                Column(modifier = Modifier.fillMaxWidth().height(270.dp).clip(RoundedCornerShape(8.dp)).background(color = white)) {
+                Text("Самые продаваемые товары", color = MaterialTheme.colorScheme.onSurface, style = CustomTextStyles.sub_heading_medium)
+                Column(modifier = Modifier.fillMaxWidth().height(270.dp).clip(RoundedCornerShape(8.dp)).background(color = MaterialTheme.colorScheme.surface)) {
                     LazyColumn(verticalArrangement = Arrangement.spacedBy(16.dp),modifier = Modifier.padding(20.dp).fillMaxSize()) {
                         items(6){
                             Row(){
@@ -247,10 +248,10 @@ fun DashboardScreen() {
                                     modifier = Modifier.weight(1f)
 
                                 ) {
-                                    Text("Tata Salt", style = CustomTextStyles.body1_semi_bold, color = gray_800)
+                                    Text("Tata Salt", style = CustomTextStyles.body1_semi_bold, color = MaterialTheme.colorScheme.onSurface)
                                     Row(){
-                                        Text("Продано: ", style = CustomTextStyles.body2_regular, color = gray_400)
-                                        Text("100 шт.", style = CustomTextStyles.body2_regular, color = gray_600)
+                                        Text("Продано: ", style = CustomTextStyles.body2_regular, color = MaterialTheme.colorScheme.onPrimary)
+                                        Text("100 шт.", style = CustomTextStyles.body2_regular, color = MaterialTheme.colorScheme.onTertiary)
                                     }
 
                                 }
@@ -259,16 +260,16 @@ fun DashboardScreen() {
                                     //modifier = Modifier.weight(1f)
                                 ) {
                                     Row(){
-                                        Text("Осталось: ", style = CustomTextStyles.body2_regular, color = gray_400)
-                                        Text("5 шт.", style = CustomTextStyles.body2_regular, color = gray_600)
+                                        Text("Осталось: ", style = CustomTextStyles.body2_regular, color = MaterialTheme.colorScheme.onPrimary)
+                                        Text("5 шт.", style = CustomTextStyles.body2_regular, color = MaterialTheme.colorScheme.onTertiary)
                                     }
                                     Row(){
-                                        Text("Цена: ", style = CustomTextStyles.body2_regular, color = gray_400)
-                                        Text("119.99 ₽", style = CustomTextStyles.body2_regular, color = gray_600)
+                                        Text("Цена: ", style = CustomTextStyles.body2_regular, color = MaterialTheme.colorScheme.onPrimary)
+                                        Text("119.99 ₽", style = CustomTextStyles.body2_regular, color = MaterialTheme.colorScheme.onTertiary)
                                     }
                                 }
                             }
-                            HorizontalDivider(thickness = 1.dp, color = gray_400, modifier = Modifier.padding(0.dp, 16.dp, 0.dp, 0.dp))
+                            HorizontalDivider(thickness = 1.dp, color = MaterialTheme.colorScheme.onPrimary, modifier = Modifier.padding(0.dp, 16.dp, 0.dp, 0.dp))
                         }
                     }
                 }

@@ -16,6 +16,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -41,7 +42,7 @@ fun LoginScreen() {
         modifier = Modifier
             .fillMaxWidth()
             .fillMaxHeight()
-            .background(color = white)
+            .background(color = MaterialTheme.colorScheme.surface)
     ) {
         Column(
             modifier = Modifier
@@ -69,12 +70,12 @@ fun LoginScreen() {
 
                 Text(
                     text = "Войдите в аккаунт",
-                    color = gray_900,
+                    color = MaterialTheme.colorScheme.onSurface,
                     style = CustomTextStyles.heading1_semi_bold
                 )
                 Text(
                     text = "Заполните поля для входа в систему.",
-                    color = gray_500,
+                    color = MaterialTheme.colorScheme.onSecondary,
                     style = CustomTextStyles.body1_regular
                 )
 
@@ -94,7 +95,7 @@ fun LoginScreen() {
                 ) {
                     Text(
                         text = "Email",
-                        color = gray_700,
+                        color = MaterialTheme.colorScheme.onBackground,
                         style = CustomTextStyles.body2_medium
                     )
                     BasicTextField(
@@ -105,7 +106,7 @@ fun LoginScreen() {
                             .clip(RoundedCornerShape(8.dp))
                             .border(
                                 1.dp,
-                                color = gray_100,
+                                color = MaterialTheme.colorScheme.primary,
                                 RoundedCornerShape(8.dp)
                             )
                             .padding(14.dp, 10.dp, 14.dp, 10.dp),
@@ -114,7 +115,7 @@ fun LoginScreen() {
                             if (email.text.isEmpty()) {
                                 Text(
                                     text = "Введите Email",
-                                    color = gray_500,
+                                    color = MaterialTheme.colorScheme.onSecondary,
                                     style = CustomTextStyles.body1_regular
                                 )
                             }
@@ -129,7 +130,7 @@ fun LoginScreen() {
                 ) {
                     Text(
                         text = "Пароль",
-                        color = gray_700,
+                        color = MaterialTheme.colorScheme.onBackground,
                         style = CustomTextStyles.body2_medium
                     )
                     BasicTextField(
@@ -140,14 +141,14 @@ fun LoginScreen() {
                             .clip(RoundedCornerShape(8.dp))
                             .border(
                                 1.dp,
-                                color = gray_100,
+                                color = MaterialTheme.colorScheme.primary,
                                 RoundedCornerShape(8.dp)
                             )
                             .padding(14.dp, 10.dp, 14.dp, 10.dp),
                         decorationBox = {
                             Text(
                                 text = "Введите пароль",
-                                color = gray_500,
+                                color = MaterialTheme.colorScheme.onSecondary,
                                 style = CustomTextStyles.body1_regular
                             )
                         }
@@ -176,12 +177,12 @@ fun LoginScreen() {
                 Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
                     Text(
                         text = "У вас нет аккаунта?",
-                        color = gray_500,
+                        color = MaterialTheme.colorScheme.onSecondary,
                         style = CustomTextStyles.body2_regular
                     )
                     Text(
                         text = "Зарегистрируйтесь",
-                        color = primary_600,
+                        color = primary_500,
                         style = CustomTextStyles.body2_medium
                     )
                 }

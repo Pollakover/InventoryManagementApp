@@ -17,6 +17,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -43,7 +44,7 @@ fun OrdersScreen(viewModel: MainViewModel) {
         modifier = Modifier
             .fillMaxSize()
             .background(
-                color = gray_50
+                color = MaterialTheme.colorScheme.background
             )
     ) {
         Column(
@@ -51,7 +52,7 @@ fun OrdersScreen(viewModel: MainViewModel) {
                 .padding(22.dp)
                 .fillMaxSize()
                 .clip(RoundedCornerShape(8.dp))
-                .background(color = white)
+                .background(color = MaterialTheme.colorScheme.surface)
         ) {
             Column(
                 verticalArrangement = Arrangement.spacedBy(15.dp),
@@ -68,7 +69,7 @@ fun OrdersScreen(viewModel: MainViewModel) {
                     FloatingActionButton(
                         onClick = {  },
                         modifier = Modifier.size(33.dp),
-                        containerColor = primary_600,
+                        containerColor = primary_500,
                         contentColor = white,
                         shape = RoundedCornerShape(8.dp)
                     ) {
@@ -78,10 +79,10 @@ fun OrdersScreen(viewModel: MainViewModel) {
                     FloatingActionButton(
                         onClick = {  },
                         modifier = Modifier
-                            .border(1.dp, color = gray_100, RoundedCornerShape(8.dp))
+                            .border(1.dp, color = MaterialTheme.colorScheme.primary, RoundedCornerShape(8.dp))
                             .size(33.dp),
-                        containerColor = white,
-                        contentColor = gray_600,
+                        containerColor = MaterialTheme.colorScheme.surface,
+                        contentColor = MaterialTheme.colorScheme.onTertiary,
                         shape = RoundedCornerShape(8.dp),
                     ) {
                         Icon(painter = painterResource(id = R.drawable.filters_icon), "Floating action button.")
@@ -115,29 +116,29 @@ fun OrdersScreen(viewModel: MainViewModel) {
 @Composable
 fun OrderRow (order : Order) {
     Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(10.dp)) {
-        Text(order.name, style = CustomTextStyles.body1_semi_bold, color = gray_800)
+        Text(order.name, style = CustomTextStyles.body1_semi_bold, color = MaterialTheme.colorScheme.onSurface)
         Row {
-            Text("Продукты:", modifier = Modifier.weight(1f), style = CustomTextStyles.body2_medium, color = gray_600)
-            Text(order.allProducts(), modifier = Modifier.weight(1f), textAlign = TextAlign.End, style = CustomTextStyles.body2_medium, color = gray_400)
+            Text("Продукты:", modifier = Modifier.weight(1f), style = CustomTextStyles.body2_medium, color = MaterialTheme.colorScheme.onTertiary)
+            Text(order.allProducts(), modifier = Modifier.weight(1f), textAlign = TextAlign.End, style = CustomTextStyles.body2_medium, color = MaterialTheme.colorScheme.onPrimary)
         }
         Row {
-            Text("Количество:", modifier = Modifier.weight(1f), style = CustomTextStyles.body2_medium, color = gray_600)
-            Text(order.calculateAmount(), modifier = Modifier.weight(1f), textAlign = TextAlign.End, style = CustomTextStyles.body2_medium, color = gray_400)
+            Text("Количество:", modifier = Modifier.weight(1f), style = CustomTextStyles.body2_medium, color = MaterialTheme.colorScheme.onTertiary)
+            Text(order.calculateAmount(), modifier = Modifier.weight(1f), textAlign = TextAlign.End, style = CustomTextStyles.body2_medium, color = MaterialTheme.colorScheme.onPrimary)
         }
         Row {
-            Text("Цена:", modifier = Modifier.weight(1f), style = CustomTextStyles.body2_medium, color = gray_600)
-            Text("${order.calculatePrice()} ₽", modifier = Modifier.weight(1f), textAlign = TextAlign.End, style = CustomTextStyles.body2_medium, color = gray_400)
+            Text("Цена:", modifier = Modifier.weight(1f), style = CustomTextStyles.body2_medium, color = MaterialTheme.colorScheme.onTertiary)
+            Text("${order.calculatePrice()} ₽", modifier = Modifier.weight(1f), textAlign = TextAlign.End, style = CustomTextStyles.body2_medium, color = MaterialTheme.colorScheme.onPrimary)
         }
         Row {
-            Text("Ожидаемая дата доставки:", modifier = Modifier.weight(1f), style = CustomTextStyles.body2_medium, color = gray_600)
-            Text(order.deliveryDate, modifier = Modifier.weight(1f), textAlign = TextAlign.End, style = CustomTextStyles.body2_medium, color = gray_400)
+            Text("Ожидаемая дата доставки:", modifier = Modifier.weight(1f), style = CustomTextStyles.body2_medium, color = MaterialTheme.colorScheme.onTertiary)
+            Text(order.deliveryDate, modifier = Modifier.weight(1f), textAlign = TextAlign.End, style = CustomTextStyles.body2_medium, color = MaterialTheme.colorScheme.onPrimary)
         }
         Row {
-            Text("Статус:", modifier = Modifier.weight(1f), style = CustomTextStyles.body2_medium, color = gray_600)
+            Text("Статус:", modifier = Modifier.weight(1f), style = CustomTextStyles.body2_medium, color = MaterialTheme.colorScheme.onTertiary)
             Text(order.status.text, modifier = Modifier.weight(1f), textAlign = TextAlign.End, style = CustomTextStyles.body2_medium, color = order.status.color)
         }
     }
-    HorizontalDivider(modifier = Modifier.padding(0.dp, 20.dp, 0.dp, 0.dp), color = gray_50)
+    HorizontalDivider(modifier = Modifier.padding(0.dp, 20.dp, 0.dp, 0.dp), color = MaterialTheme.colorScheme.background)
 }
 
 

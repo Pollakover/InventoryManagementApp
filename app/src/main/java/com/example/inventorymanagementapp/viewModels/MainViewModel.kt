@@ -24,6 +24,13 @@ import kotlin.random.Random
 
 class MainViewModel : ViewModel() {
 
+    var isDarkModeOn by mutableStateOf(false)
+        private set
+
+    fun changeTheme() {
+        isDarkModeOn = !isDarkModeOn
+    }
+
     var searchButtonState by mutableStateOf(false)
         private set
 

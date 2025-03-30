@@ -37,6 +37,7 @@ import com.example.inventorymanagementapp.R
 import com.example.inventorymanagementapp.data.models.Product
 import com.example.inventorymanagementapp.ui.theme.*
 import com.example.inventorymanagementapp.viewModels.MainViewModel
+import androidx.compose.material3.MaterialTheme
 
 @Composable
 fun InventoryScreen(viewModel: MainViewModel) {
@@ -46,7 +47,7 @@ fun InventoryScreen(viewModel: MainViewModel) {
         modifier = Modifier
             .fillMaxSize()
             .background(
-                color = gray_50
+                color = MaterialTheme.colorScheme.background
             )
     ) {
         Column(
@@ -54,7 +55,7 @@ fun InventoryScreen(viewModel: MainViewModel) {
                 .padding(22.dp)
                 .fillMaxSize()
                 .clip(RoundedCornerShape(8.dp))
-                .background(color = white)
+                .background(color = MaterialTheme.colorScheme.surface)
         ) {
             Column(
                 verticalArrangement = Arrangement.spacedBy(15.dp),
@@ -71,7 +72,7 @@ fun InventoryScreen(viewModel: MainViewModel) {
                     FloatingActionButton(
                         onClick = {  },
                         modifier = Modifier.size(33.dp),
-                        containerColor = primary_600,
+                        containerColor = primary_500,
                         contentColor = white,
                         shape = RoundedCornerShape(8.dp)
                     ) {
@@ -80,9 +81,9 @@ fun InventoryScreen(viewModel: MainViewModel) {
 
                     FloatingActionButton(
                         onClick = {  },
-                        modifier = Modifier.border(1.dp, color = gray_100, RoundedCornerShape(8.dp)).size(33.dp),
-                        containerColor = white,
-                        contentColor = gray_600,
+                        modifier = Modifier.border(1.dp, color = MaterialTheme.colorScheme.primary, RoundedCornerShape(8.dp)).size(33.dp),
+                        containerColor = MaterialTheme.colorScheme.surface,
+                        contentColor = MaterialTheme.colorScheme.onTertiary,
                         shape = RoundedCornerShape(8.dp),
                     ) {
                         Icon(painter = painterResource(id = R.drawable.filters_icon), "Floating action button.")
@@ -138,18 +139,18 @@ fun ProductRow(product: Product) {
                 verticalArrangement = Arrangement.spacedBy(4.dp),
                 modifier = Modifier.weight(1f)
             ) {
-                Text(product.name, style = CustomTextStyles.body1_semi_bold, color = gray_800)
+                Text(product.name, style = CustomTextStyles.body1_semi_bold, color = MaterialTheme.colorScheme.onSurface)
                 Row {
-                    Text("Цена: ", style = CustomTextStyles.body2_regular, color = gray_400)
-                    Text("${product.price} ₽", style = CustomTextStyles.body2_regular, color = gray_600)
+                    Text("Цена: ", style = CustomTextStyles.body2_regular, color = MaterialTheme.colorScheme.onPrimary)
+                    Text("${product.price} ₽", style = CustomTextStyles.body2_regular, color = MaterialTheme.colorScheme.onTertiary)
                 }
                 Row {
-                    Text("Всего на складах: ", style = CustomTextStyles.body2_regular, color = gray_400)
-                    Text("${product.amount}", style = CustomTextStyles.body2_regular, color = gray_600)
+                    Text("Всего на складах: ", style = CustomTextStyles.body2_regular, color = MaterialTheme.colorScheme.onPrimary)
+                    Text("${product.amount}", style = CustomTextStyles.body2_regular, color = MaterialTheme.colorScheme.onTertiary)
                 }
                 Row {
-                    Text("Срок годности: ", style = CustomTextStyles.body2_regular, color = gray_400)
-                    Text(product.expiryDate, style = CustomTextStyles.body2_regular, color = gray_600)
+                    Text("Срок годности: ", style = CustomTextStyles.body2_regular, color = MaterialTheme.colorScheme.onPrimary)
+                    Text(product.expiryDate, style = CustomTextStyles.body2_regular, color = MaterialTheme.colorScheme.onTertiary)
                 }
                 if (product.amount == 0) Text("Нет в наличии", style = CustomTextStyles.body2_regular, color = error_500)
                 else
@@ -158,7 +159,7 @@ fun ProductRow(product: Product) {
                 }
             }
         }
-        HorizontalDivider(modifier = Modifier.padding(0.dp, 10.dp, 0.dp, 0.dp), color = gray_50)
+        HorizontalDivider(modifier = Modifier.padding(0.dp, 10.dp, 0.dp, 0.dp), color = MaterialTheme.colorScheme.background)
 }
 
 @Preview(showBackground = true)

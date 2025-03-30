@@ -19,6 +19,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -41,7 +42,7 @@ fun WarehousesScreen(viewModel: MainViewModel) {
         modifier = Modifier
             .fillMaxSize()
             .background(
-                color = gray_50
+                color = MaterialTheme.colorScheme.background
             )
     ) {
         Column(
@@ -49,7 +50,7 @@ fun WarehousesScreen(viewModel: MainViewModel) {
                 .padding(22.dp)
                 .fillMaxSize()
                 .clip(RoundedCornerShape(8.dp))
-                .background(color = white)
+                .background(color = MaterialTheme.colorScheme.surface)
         ) {
             Column(
                 verticalArrangement = Arrangement.spacedBy(15.dp),
@@ -66,7 +67,7 @@ fun WarehousesScreen(viewModel: MainViewModel) {
                     FloatingActionButton(
                         onClick = {  },
                         modifier = Modifier.size(50.dp),
-                        containerColor = primary_600,
+                        containerColor = primary_500,
                         contentColor = white,
                         shape = RoundedCornerShape(8.dp)
                     ) {
@@ -96,7 +97,7 @@ fun WarehouseRow(warehouse: Warehouse) {
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(8.dp))
-            .border(1.dp, color = gray_200, RoundedCornerShape(8.dp))
+            .border(1.dp, color = MaterialTheme.colorScheme.secondary, RoundedCornerShape(8.dp))
     ) {
 
         Column(
@@ -105,9 +106,9 @@ fun WarehouseRow(warehouse: Warehouse) {
                 .padding(20.dp, 0.dp, 0.dp, 0.dp)
                 .weight(1f)
         ) {
-            Text(warehouse.name, style = CustomTextStyles.body1_medium, color = gray_600)
-            Text(warehouse.address, style = CustomTextStyles.body2_regular, color = gray_400)
-            Text(warehouse.postalCode, style = CustomTextStyles.body2_regular, color = gray_400)
+            Text(warehouse.name, style = CustomTextStyles.body1_medium, color = MaterialTheme.colorScheme.onTertiary)
+            Text(warehouse.address, style = CustomTextStyles.body2_regular, color = MaterialTheme.colorScheme.onPrimary)
+            Text(warehouse.postalCode, style = CustomTextStyles.body2_regular, color = MaterialTheme.colorScheme.onPrimary)
         }
 
 
