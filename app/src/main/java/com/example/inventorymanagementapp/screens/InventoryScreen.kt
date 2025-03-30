@@ -1,4 +1,4 @@
-package com.example.inventorymanagementapp
+package com.example.inventorymanagementapp.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -31,6 +31,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.inventorymanagementapp.NoResults
+import com.example.inventorymanagementapp.QueryError
+import com.example.inventorymanagementapp.R
 import com.example.inventorymanagementapp.data.models.Product
 import com.example.inventorymanagementapp.ui.theme.*
 import com.example.inventorymanagementapp.viewModels.MainViewModel
@@ -112,7 +115,7 @@ fun InventoryScreen(viewModel: MainViewModel) {
 
 @Composable
 fun ProductRow(product: Product) {
-    Column(){
+    Column{
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(22.dp),

@@ -1,4 +1,4 @@
-package com.example.inventorymanagementapp
+package com.example.inventorymanagementapp.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -18,17 +18,25 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.inventorymanagementapp.R
 import com.example.inventorymanagementapp.ui.theme.*
 
-
 @Composable
-fun SignUpScreen() {
+fun LoginScreen() {
+
+    var email by remember { mutableStateOf(TextFieldValue("")) }
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -46,7 +54,6 @@ fun SignUpScreen() {
             verticalArrangement = Arrangement.spacedBy(18.dp),
         ) {
 
-            //Логотип, верхний текст
             Column(
                 modifier = Modifier
                     .fillMaxWidth(),
@@ -61,19 +68,19 @@ fun SignUpScreen() {
                 )
 
                 Text(
-                    text = "Создайте аккаунт",
+                    text = "Войдите в аккаунт",
                     color = gray_900,
                     style = CustomTextStyles.heading1_semi_bold
                 )
                 Text(
-                    text = "Заполните поля для регистрации.",
+                    text = "Заполните поля для входа в систему.",
                     color = gray_500,
-                    style = CustomTextStyles.body1_regular,
+                    style = CustomTextStyles.body1_regular
                 )
 
             }
 
-            //Поля ввода, кнопка, нижний текст
+            //Поля ввода
             Column(
                 modifier = Modifier
                     .fillMaxWidth(),
@@ -86,13 +93,13 @@ fun SignUpScreen() {
                     verticalArrangement = Arrangement.spacedBy(6.dp)
                 ) {
                     Text(
-                        text = "Логин*",
+                        text = "Email",
                         color = gray_700,
                         style = CustomTextStyles.body2_medium
                     )
                     BasicTextField(
-                        value = "",
-                        onValueChange = {},
+                        value = email,
+                        onValueChange = { email = it },
                         modifier = Modifier
                             .fillMaxWidth()
                             .clip(RoundedCornerShape(8.dp))
@@ -102,12 +109,16 @@ fun SignUpScreen() {
                                 RoundedCornerShape(8.dp)
                             )
                             .padding(14.dp, 10.dp, 14.dp, 10.dp),
-                        decorationBox = {
-                            Text(
-                                text = "Введите логин",
-                                color = gray_500,
-                                style = CustomTextStyles.body1_regular
-                            )
+                        textStyle = CustomTextStyles.body1_regular,
+                        decorationBox = { innerTextField ->
+                            if (email.text.isEmpty()) {
+                                Text(
+                                    text = "Введите Email",
+                                    color = gray_500,
+                                    style = CustomTextStyles.body1_regular
+                                )
+                            }
+                            innerTextField()
                         }
                     )
                 }
@@ -117,7 +128,7 @@ fun SignUpScreen() {
                     verticalArrangement = Arrangement.spacedBy(6.dp)
                 ) {
                     Text(
-                        text = "Email*",
+                        text = "Пароль",
                         color = gray_700,
                         style = CustomTextStyles.body2_medium
                     )
@@ -135,38 +146,7 @@ fun SignUpScreen() {
                             .padding(14.dp, 10.dp, 14.dp, 10.dp),
                         decorationBox = {
                             Text(
-                                text = "Введите Email",
-                                color = gray_500,
-                                style = CustomTextStyles.body1_regular
-                            )
-                        }
-                    )
-                }
-
-                Column(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalArrangement = Arrangement.spacedBy(6.dp)
-                ) {
-                    Text(
-                        text = "Пароль*",
-                        color = gray_700,
-                        style = CustomTextStyles.body2_medium
-                    )
-                    BasicTextField(
-                        value = "",
-                        onValueChange = {},
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clip(RoundedCornerShape(8.dp))
-                            .border(
-                                1.dp,
-                                color = gray_100,
-                                RoundedCornerShape(8.dp)
-                            )
-                            .padding(14.dp, 10.dp, 14.dp, 10.dp),
-                        decorationBox = {
-                            Text(
-                                text = "Придумайте пароль",
+                                text = "Введите пароль",
                                 color = gray_500,
                                 style = CustomTextStyles.body1_regular
                             )
@@ -185,21 +165,22 @@ fun SignUpScreen() {
                     )
                 ) {
                     Text(
-                        "Зарегистрироваться",
+                        "Войти",
                         color = white,
                         style = CustomTextStyles.body1_medium,
-                        modifier = Modifier.padding(5.dp)
+                        modifier = Modifier
+                            .padding(5.dp)
                     )
                 }
 
                 Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
                     Text(
-                        text = "У вас уже есть аккаунт?",
+                        text = "У вас нет аккаунта?",
                         color = gray_500,
                         style = CustomTextStyles.body2_regular
                     )
                     Text(
-                        text = "Войдите",
+                        text = "Зарегистрируйтесь",
                         color = primary_600,
                         style = CustomTextStyles.body2_medium
                     )
@@ -211,6 +192,6 @@ fun SignUpScreen() {
 
 @Preview(showBackground = true)
 @Composable
-fun PreviewSignUp() {
-    SignUpScreen()
+fun PreviewLoginScreen() {
+    LoginScreen()
 }

@@ -1,4 +1,4 @@
-package com.example.inventorymanagementapp
+package com.example.inventorymanagementapp.screens.dialogs
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -35,7 +35,7 @@ import com.example.inventorymanagementapp.ui.theme.*
 
 
 @Composable
-fun NewWarehouseScreen() {
+fun NewOrderScreen() {
     var productName by remember { mutableStateOf(TextFieldValue("")) }
     var price by remember { mutableStateOf(TextFieldValue("")) }
     var amount by remember { mutableStateOf(TextFieldValue("")) }
@@ -49,15 +49,15 @@ fun NewWarehouseScreen() {
 
     Column(
         modifier = Modifier
-            .fillMaxSize()
-            .background(
+            .fillMaxWidth()
+            /*.background(
                 color = gray_50
-            )
+            )*/
     ) {
         Column(
             modifier = Modifier
                 .padding(22.dp)
-                .fillMaxSize()
+                .fillMaxWidth()
                 .clip(RoundedCornerShape(8.dp))
                 .background(color = white)
                 .verticalScroll(rememberScrollState())
@@ -74,7 +74,7 @@ fun NewWarehouseScreen() {
                     verticalArrangement = Arrangement.spacedBy(6.dp)
                 ) {
                     Text(
-                        text = "Название склада",
+                        text = "Название продукта",
                         color = gray_700,
                         style = CustomTextStyles.body2_medium
                     )
@@ -94,7 +94,7 @@ fun NewWarehouseScreen() {
                         decorationBox = { innerTextField ->
                             if (productName.text.isEmpty()) {
                                 Text(
-                                    text = "Введите название склада",
+                                    text = "Введите название продукта",
                                     color = gray_500,
                                     style = CustomTextStyles.body1_regular
                                 )
@@ -109,7 +109,7 @@ fun NewWarehouseScreen() {
                     verticalArrangement = Arrangement.spacedBy(6.dp)
                 ) {
                     Text(
-                        text = "Адрес",
+                        text = "Количество",
                         color = gray_700,
                         style = CustomTextStyles.body2_medium
                     )
@@ -129,7 +129,7 @@ fun NewWarehouseScreen() {
                         decorationBox = { innerTextField ->
                             if (productName.text.isEmpty()) {
                                 Text(
-                                    text = "Введиите адрес склада",
+                                    text = "Введиите количество",
                                     color = gray_500,
                                     style = CustomTextStyles.body1_regular
                                 )
@@ -144,7 +144,7 @@ fun NewWarehouseScreen() {
                     verticalArrangement = Arrangement.spacedBy(6.dp)
                 ) {
                     Text(
-                        text = "Почтовый адрес",
+                        text = "Цена",
                         color = gray_700,
                         style = CustomTextStyles.body2_medium
                     )
@@ -164,7 +164,7 @@ fun NewWarehouseScreen() {
                         decorationBox = { innerTextField ->
                             if (productName.text.isEmpty()) {
                                 Text(
-                                    text = "Введиите почтовый адрес",
+                                    text = "Введиите цену",
                                     color = gray_500,
                                     style = CustomTextStyles.body1_regular
                                 )
@@ -173,6 +173,77 @@ fun NewWarehouseScreen() {
                         }
                     )
                 }
+
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalArrangement = Arrangement.spacedBy(6.dp)
+                ) {
+                    Text(
+                        text = "Дата доставки",
+                        color = gray_700,
+                        style = CustomTextStyles.body2_medium
+                    )
+                    BasicTextField(
+                        value = productName,
+                        onValueChange = { productName = it },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clip(RoundedCornerShape(8.dp))
+                            .border(
+                                1.dp,
+                                color = gray_100,
+                                RoundedCornerShape(8.dp)
+                            )
+                            .padding(14.dp, 10.dp, 14.dp, 10.dp),
+                        textStyle = CustomTextStyles.body1_regular,
+                        decorationBox = { innerTextField ->
+                            if (productName.text.isEmpty()) {
+                                Text(
+                                    text = "Введиите дату",
+                                    color = gray_500,
+                                    style = CustomTextStyles.body1_regular
+                                )
+                            }
+                            innerTextField()
+                        }
+                    )
+                }
+
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalArrangement = Arrangement.spacedBy(6.dp)
+                ) {
+                    Text(
+                        text = "Статус",
+                        color = gray_700,
+                        style = CustomTextStyles.body2_medium
+                    )
+                    BasicTextField(
+                        value = productName,
+                        onValueChange = { productName = it },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clip(RoundedCornerShape(8.dp))
+                            .border(
+                                1.dp,
+                                color = gray_100,
+                                RoundedCornerShape(8.dp)
+                            )
+                            .padding(14.dp, 10.dp, 14.dp, 10.dp),
+                        textStyle = CustomTextStyles.body1_regular,
+                        decorationBox = { innerTextField ->
+                            if (productName.text.isEmpty()) {
+                                Text(
+                                    text = "Выберите статус",
+                                    color = gray_500,
+                                    style = CustomTextStyles.body1_regular
+                                )
+                            }
+                            innerTextField()
+                        }
+                    )
+                }
+
 
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)){
                     Spacer(modifier = Modifier.weight(1f))
@@ -197,7 +268,7 @@ fun NewWarehouseScreen() {
                         ),
                         contentPadding = PaddingValues(10.dp)
                     ) {
-                        Text("Добавить склад", style = CustomTextStyles.body2_medium)
+                        Text("Добавить заказ", style = CustomTextStyles.body2_medium)
                     }
                 }
             }
@@ -208,6 +279,6 @@ fun NewWarehouseScreen() {
 
 @Preview(showBackground = true)
 @Composable
-fun PreviewNewWarehouse() {
-    NewWarehouseScreen()
+fun PreviewNewOrder() {
+    NewOrderScreen()
 }

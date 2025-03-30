@@ -25,7 +25,7 @@ import com.example.inventorymanagementapp.ui.theme.white
 import com.example.inventorymanagementapp.viewModels.MainViewModel
 
 @Composable
-fun NoResults(){
+fun NoResults() {
     Column(
         verticalArrangement = Arrangement.spacedBy(15.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -47,7 +47,7 @@ fun NoResults(){
 }
 
 @Composable
-fun QueryError(viewModel: MainViewModel){
+fun QueryError(viewModel: MainViewModel) {
     Column(
         verticalArrangement = Arrangement.spacedBy(15.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -61,7 +61,7 @@ fun QueryError(viewModel: MainViewModel){
         )
 
         Button(
-            onClick = {viewModel.error = false},
+            onClick = { viewModel.error = false },
             shape = RoundedCornerShape(8.dp),
             colors = ButtonDefaults.buttonColors(
                 containerColor = primary_500,

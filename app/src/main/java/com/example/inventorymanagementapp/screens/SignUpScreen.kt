@@ -1,4 +1,4 @@
-package com.example.inventorymanagementapp
+package com.example.inventorymanagementapp.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -18,24 +18,17 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.inventorymanagementapp.R
 import com.example.inventorymanagementapp.ui.theme.*
 
 @Composable
-fun LoginScreen() {
-
-    var email by remember { mutableStateOf(TextFieldValue("")) }
-
+fun SignUpScreen() {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -53,6 +46,7 @@ fun LoginScreen() {
             verticalArrangement = Arrangement.spacedBy(18.dp),
         ) {
 
+            //Логотип, верхний текст
             Column(
                 modifier = Modifier
                     .fillMaxWidth(),
@@ -67,19 +61,19 @@ fun LoginScreen() {
                 )
 
                 Text(
-                    text = "Войдите в аккаунт",
+                    text = "Создайте аккаунт",
                     color = gray_900,
                     style = CustomTextStyles.heading1_semi_bold
                 )
                 Text(
-                    text = "Заполните поля для входа в систему.",
+                    text = "Заполните поля для регистрации.",
                     color = gray_500,
-                    style = CustomTextStyles.body1_regular
+                    style = CustomTextStyles.body1_regular,
                 )
 
             }
 
-            //Поля ввода
+            //Поля ввода, кнопка, нижний текст
             Column(
                 modifier = Modifier
                     .fillMaxWidth(),
@@ -92,42 +86,7 @@ fun LoginScreen() {
                     verticalArrangement = Arrangement.spacedBy(6.dp)
                 ) {
                     Text(
-                        text = "Email",
-                        color = gray_700,
-                        style = CustomTextStyles.body2_medium
-                    )
-                    BasicTextField(
-                        value = email,
-                        onValueChange = { email = it },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clip(RoundedCornerShape(8.dp))
-                            .border(
-                                1.dp,
-                                color = gray_100,
-                                RoundedCornerShape(8.dp)
-                            )
-                            .padding(14.dp, 10.dp, 14.dp, 10.dp),
-                        textStyle = CustomTextStyles.body1_regular,
-                        decorationBox = { innerTextField ->
-                            if (email.text.isEmpty()) {
-                                Text(
-                                    text = "Введите Email",
-                                    color = gray_500,
-                                    style = CustomTextStyles.body1_regular
-                                )
-                            }
-                            innerTextField()
-                        }
-                    )
-                }
-
-                Column(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalArrangement = Arrangement.spacedBy(6.dp)
-                ) {
-                    Text(
-                        text = "Пароль",
+                        text = "Логин*",
                         color = gray_700,
                         style = CustomTextStyles.body2_medium
                     )
@@ -145,7 +104,69 @@ fun LoginScreen() {
                             .padding(14.dp, 10.dp, 14.dp, 10.dp),
                         decorationBox = {
                             Text(
-                                text = "Введите пароль",
+                                text = "Введите логин",
+                                color = gray_500,
+                                style = CustomTextStyles.body1_regular
+                            )
+                        }
+                    )
+                }
+
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalArrangement = Arrangement.spacedBy(6.dp)
+                ) {
+                    Text(
+                        text = "Email*",
+                        color = gray_700,
+                        style = CustomTextStyles.body2_medium
+                    )
+                    BasicTextField(
+                        value = "",
+                        onValueChange = {},
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clip(RoundedCornerShape(8.dp))
+                            .border(
+                                1.dp,
+                                color = gray_100,
+                                RoundedCornerShape(8.dp)
+                            )
+                            .padding(14.dp, 10.dp, 14.dp, 10.dp),
+                        decorationBox = {
+                            Text(
+                                text = "Введите Email",
+                                color = gray_500,
+                                style = CustomTextStyles.body1_regular
+                            )
+                        }
+                    )
+                }
+
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalArrangement = Arrangement.spacedBy(6.dp)
+                ) {
+                    Text(
+                        text = "Пароль*",
+                        color = gray_700,
+                        style = CustomTextStyles.body2_medium
+                    )
+                    BasicTextField(
+                        value = "",
+                        onValueChange = {},
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clip(RoundedCornerShape(8.dp))
+                            .border(
+                                1.dp,
+                                color = gray_100,
+                                RoundedCornerShape(8.dp)
+                            )
+                            .padding(14.dp, 10.dp, 14.dp, 10.dp),
+                        decorationBox = {
+                            Text(
+                                text = "Придумайте пароль",
                                 color = gray_500,
                                 style = CustomTextStyles.body1_regular
                             )
@@ -164,22 +185,21 @@ fun LoginScreen() {
                     )
                 ) {
                     Text(
-                        "Войти",
+                        "Зарегистрироваться",
                         color = white,
                         style = CustomTextStyles.body1_medium,
-                        modifier = Modifier
-                            .padding(5.dp)
+                        modifier = Modifier.padding(5.dp)
                     )
                 }
 
                 Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
                     Text(
-                        text = "У вас нет аккаунта?",
+                        text = "У вас уже есть аккаунт?",
                         color = gray_500,
                         style = CustomTextStyles.body2_regular
                     )
                     Text(
-                        text = "Зарегистрируйтесь",
+                        text = "Войдите",
                         color = primary_600,
                         style = CustomTextStyles.body2_medium
                     )
@@ -191,6 +211,6 @@ fun LoginScreen() {
 
 @Preview(showBackground = true)
 @Composable
-fun PreviewLoginScreen() {
-    LoginScreen()
+fun PreviewSignUp() {
+    SignUpScreen()
 }
