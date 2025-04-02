@@ -86,7 +86,10 @@ fun InventoryScreen(viewModel: MainViewModel) {
                         contentColor = MaterialTheme.colorScheme.onTertiary,
                         shape = RoundedCornerShape(8.dp),
                     ) {
-                        Icon(painter = painterResource(id = R.drawable.filters_icon), "Floating action button.")
+                        Icon(
+                            painter = painterResource(id = R.drawable.filters_icon),
+                            "Floating action button."
+                        )
                     }
                 }
 
