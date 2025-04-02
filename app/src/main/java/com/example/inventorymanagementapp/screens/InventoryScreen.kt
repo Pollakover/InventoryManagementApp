@@ -94,7 +94,7 @@ fun InventoryScreen(viewModel: MainViewModel) {
                     QueryError(viewModel)
                 }
                 else {
-                    if(products.isEmpty()){
+                    if(products.isEmpty()) {
                         NoResults()
                     }
                     else {
@@ -131,7 +131,9 @@ fun ProductRow(product: Product) {
             ) {
                 Image(
                     painter = painterResource(product.image),
-                    modifier = Modifier.size(80.dp),
+                    modifier = Modifier
+                        .size(80.dp)
+                        .clip(RoundedCornerShape(8.dp)),
                     contentDescription = "Logo"
                 )
             }

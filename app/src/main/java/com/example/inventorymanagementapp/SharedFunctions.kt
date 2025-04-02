@@ -54,7 +54,7 @@ fun QueryError(viewModel: MainViewModel) {
     ) {
         Text(
             "Произошла ошибка при выполнении запроса",
-            color = white,
+            color = MaterialTheme.colorScheme.onSecondary,
             style = CustomTextStyles.body2_regular,
             textAlign = TextAlign.Center
         )
@@ -64,12 +64,11 @@ fun QueryError(viewModel: MainViewModel) {
             shape = RoundedCornerShape(8.dp),
             colors = ButtonDefaults.buttonColors(
                 containerColor = primary_500,
-                contentColor = MaterialTheme.colorScheme.surface
+                contentColor = white
             )
         ) {
             Text(
                 "Обновить",
-                color = MaterialTheme.colorScheme.surface,
                 style = CustomTextStyles.body1_medium,
                 modifier = Modifier
                     .padding(5.dp)

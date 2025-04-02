@@ -209,8 +209,10 @@ fun DashboardScreen() {
                                     ){
                                         Image(
                                             painter = painterResource(R.drawable.test),
-                                            modifier = Modifier.size(60.dp),
-                                            contentDescription = "Logo"
+                                            modifier = Modifier
+                                                .size(60.dp)
+                                                .clip(RoundedCornerShape(8.dp)),
+                                        contentDescription = "Logo"
                                         )
                                     }
 

@@ -4,6 +4,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.FocusState
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
@@ -24,6 +25,7 @@ import kotlin.random.Random
 
 class MainViewModel : ViewModel() {
 
+    //Изменение темы
     var isDarkModeOn by mutableStateOf(false)
         private set
 
@@ -31,29 +33,37 @@ class MainViewModel : ViewModel() {
         isDarkModeOn = !isDarkModeOn
     }
 
+
+    //Состояние кнопки поиска
     var searchButtonState by mutableStateOf(false)
         private set
 
-    // changes button state
+    // изменения состояния кнопки поиска
     fun changeButtonState() {
         searchButtonState = !searchButtonState
         _searchText.value = TextFieldValue("")
     }
+
     
-    //Focus request for search bar
+    //Запрос фокуса
     var focusRequester by mutableStateOf(FocusRequester())
     
     fun requestSearchFocus() {
         focusRequester.requestFocus()
     }
 
-    // Сбрасывает фокус
-    fun clearSearchFocus() {
-        focusRequester.freeFocus()
-    }
 
+    //Для задержки при поиске
+    private val _isSearching = MutableStateFlow(false)
+    val isSearching = _isSearching.asStateFlow()
+
+    var isFocused by mutableStateOf(false)
+
+
+    //Текст внутри поля
     private val _searchText = MutableStateFlow(TextFieldValue(""))
     val searchText = _searchText.asStateFlow()
+
 
     //Products
     private val _products = MutableStateFlow(allProducts)
@@ -73,6 +83,7 @@ class MainViewModel : ViewModel() {
             _products.value
         )
 
+
     //Suppliers
     private val _suppliers = MutableStateFlow(allSuppliers)
     val suppliers = searchText
@@ -91,6 +102,7 @@ class MainViewModel : ViewModel() {
             _suppliers.value
         )
 
+
     //Orders
     private val _orders = MutableStateFlow(allOrders)
     val orders = searchText
@@ -108,6 +120,7 @@ class MainViewModel : ViewModel() {
             SharingStarted.WhileSubscribed(5000),
             _orders.value
         )
+
 
     //Warehoses
     private val _warehouses = MutableStateFlow(allWarehouses)

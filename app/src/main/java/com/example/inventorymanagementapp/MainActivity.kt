@@ -3,7 +3,6 @@ package com.example.inventorymanagementapp
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -14,7 +13,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -24,14 +22,10 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.outlined.Delete
-import androidx.compose.material.icons.rounded.ShoppingCart
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -57,20 +51,24 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.Popup
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -79,8 +77,11 @@ import androidx.navigation.compose.rememberNavController
 import com.example.inventorymanagementapp.screens.DashboardScreen
 import com.example.inventorymanagementapp.screens.InventoryScreen
 import com.example.inventorymanagementapp.screens.OrdersScreen
+import com.example.inventorymanagementapp.screens.searchScreens.InventorySearchScreen
 import com.example.inventorymanagementapp.screens.SuppliersScreen
 import com.example.inventorymanagementapp.screens.WarehousesScreen
+import com.example.inventorymanagementapp.screens.searchScreens.OrdersSearchScreen
+import com.example.inventorymanagementapp.screens.searchScreens.SuppliersSearchScreen
 import com.example.inventorymanagementapp.ui.theme.CustomTextStyles
 import com.example.inventorymanagementapp.ui.theme.InventoryManagementAppTheme
 import com.example.inventorymanagementapp.ui.theme.*
@@ -113,7 +114,13 @@ fun MainScreen(mainViewModel: MainViewModel) {
     val navController = rememberNavController()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
-    val colors = arrayOf(MaterialTheme.colorScheme.onTertiary, MaterialTheme.colorScheme.onTertiary, MaterialTheme.colorScheme.onTertiary, MaterialTheme.colorScheme.onTertiary, MaterialTheme.colorScheme.onTertiary)
+    val colors = arrayOf(
+        MaterialTheme.colorScheme.onTertiary,
+        MaterialTheme.colorScheme.onTertiary,
+        MaterialTheme.colorScheme.onTertiary,
+        MaterialTheme.colorScheme.onTertiary,
+        MaterialTheme.colorScheme.onTertiary
+    )
     val currentBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = currentBackStackEntry?.destination?.route
 
@@ -410,11 +417,14 @@ fun MainScreen(mainViewModel: MainViewModel) {
             }
         },
     ) {
+
         if (drawerState.currentValue == DrawerValue.Open) {
             if (mainViewModel.searchButtonState) {
                 mainViewModel.changeButtonState()
+                navController.popBackStack()
             }
         }
+
         Scaffold(
             containerColor = MaterialTheme.colorScheme.background,
             topBar = {
@@ -431,6 +441,7 @@ fun MainScreen(mainViewModel: MainViewModel) {
                             "warehouses" -> "Склады"
                             else -> ""
                         }
+
                         if (mainViewModel.searchButtonState) {
                             TopSearchBar(mainViewModel)
                         } else {
@@ -446,21 +457,42 @@ fun MainScreen(mainViewModel: MainViewModel) {
                             scope.launch { drawerState.open() }
                             if (mainViewModel.searchButtonState) {
                                 mainViewModel.changeButtonState()
+                                navController.popBackStack()
                             }
                         }
                         ) {
-                            Icon(Icons.Default.Menu, contentDescription = "Menu", tint = MaterialTheme.colorScheme.onSurface)
+                            Icon(
+                                painterResource(id = R.drawable.menu_icon),
+                                contentDescription = "Menu",
+                                tint = MaterialTheme.colorScheme.onSurface,
+                                modifier = Modifier.size(20.dp)
+                            )
                         }
                     },
                     actions = {
                         if (currentRoute != "dashboard" && currentRoute != "warehouses") {
                             IconButton(
-                                onClick = { mainViewModel.changeButtonState() }
+                                onClick = {
+                                    if(!mainViewModel.searchButtonState) {
+                                        mainViewModel.changeButtonState()
+                                        when(currentRoute){
+                                            "inventory" -> navController.navigate("search_inventory") { launchSingleTop = true }
+                                            "suppliers" -> navController.navigate("search_suppliers") { launchSingleTop = true }
+                                            "orders" -> navController.navigate("search_orders") { launchSingleTop = true }
+                                        }
+
+                                    }
+                                    else {
+                                        mainViewModel.changeButtonState()
+                                        navController.popBackStack()
+                                    }
+                                }
                             ) {
                                 Icon(
-                                    imageVector = if (mainViewModel.searchButtonState) Icons.Filled.Close else Icons.Filled.Search,
+                                    painter = if (mainViewModel.searchButtonState) painterResource(id = R.drawable.error_icon) else painterResource(id = R.drawable.search_icon),
                                     contentDescription = "Search",
-                                    tint = MaterialTheme.colorScheme.onSurface
+                                    tint = MaterialTheme.colorScheme.onSurface,
+                                    modifier = Modifier.size(20.dp)
                                 )
                             }
                         }
@@ -473,7 +505,9 @@ fun MainScreen(mainViewModel: MainViewModel) {
                 startDestination = "dashboard",
                 modifier = Modifier.padding(innerPadding)
             ) {
-                composable("black") { Demo_ExposedDropdownMenuBox() }
+                composable("search_inventory") { InventorySearchScreen(mainViewModel) }
+                composable("search_suppliers") { SuppliersSearchScreen(mainViewModel) }
+                composable("search_orders") { OrdersSearchScreen(mainViewModel) }
                 composable("dashboard") { DashboardScreen() }
                 composable("inventory") { InventoryScreen(mainViewModel) }
                 composable("suppliers") { SuppliersScreen(mainViewModel) }
@@ -558,15 +592,17 @@ fun ExitDialog(state: MutableState<Boolean>) {
 @Composable
 fun TopSearchBar(viewModel: MainViewModel) {
     val searchText by viewModel.searchText.collectAsState()
-    val isInitialized = remember { mutableStateOf(false) }
-    val rainbowColors: List<Color> = listOf(primary_500, success_500)
     val focusManager = LocalFocusManager.current
+    //var focusState by remember { mutableStateOf<FocusState?>(null) }
+    //var isFocused by remember { mutableStateOf(false) }
+
     val brush = remember {
         Brush.linearGradient(
-            colors = rainbowColors
+            colors = listOf(primary_500, success_500)
         )
     }
 
+    val isInitialized = remember { mutableStateOf(false) }
     LaunchedEffect(isInitialized) {
         if (!isInitialized.value) {
             viewModel.requestSearchFocus()
@@ -586,14 +622,14 @@ fun TopSearchBar(viewModel: MainViewModel) {
         trailingIcon = {
             if (searchText.text.isNotBlank()) {
                 Icon(
-                    imageVector = Icons.Outlined.Delete,
+                    painter = painterResource(id = R.drawable.clear_icon),
                     contentDescription = "Очистить поиск",
                     tint = MaterialTheme.colorScheme.onSurface,
-                    modifier = Modifier.clickable {
-                        viewModel.clearSearch()
-                        focusManager.clearFocus()
-                        //viewModel.clearSearchFocus()
-                    }
+                    modifier = Modifier
+                        .clickable {
+                            viewModel.clearSearch()
+                            focusManager.clearFocus()
+                        }
                 )
             }
         },
@@ -611,7 +647,9 @@ fun TopSearchBar(viewModel: MainViewModel) {
         onValueChange = viewModel::onSearchTextChange,
         modifier = Modifier
             .fillMaxWidth()
-            .focusRequester(viewModel.focusRequester),
+            .focusRequester(viewModel.focusRequester)
+            .onFocusChanged { focusState ->
+                viewModel.isFocused = focusState.isFocused },
         placeholder = {
             Text(
                 "Поиск…",
