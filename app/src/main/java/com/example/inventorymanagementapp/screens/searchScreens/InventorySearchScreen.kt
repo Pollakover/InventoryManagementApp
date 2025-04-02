@@ -1,7 +1,11 @@
 package com.example.inventorymanagementapp.screens.searchScreens
 
+import android.content.SharedPreferences
+import android.util.Log
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -13,6 +17,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -22,10 +28,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.Red
 import androidx.compose.ui.res.painterResource
@@ -36,6 +44,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.inventorymanagementapp.NoResults
 import com.example.inventorymanagementapp.QueryError
 import com.example.inventorymanagementapp.R
+import com.example.inventorymanagementapp.data.models.PreferencesManager
 import com.example.inventorymanagementapp.data.models.Product
 import com.example.inventorymanagementapp.screens.ProductRow
 import com.example.inventorymanagementapp.ui.theme.CustomTextStyles
@@ -44,15 +53,19 @@ import com.example.inventorymanagementapp.ui.theme.success_500
 import com.example.inventorymanagementapp.viewModels.MainViewModel
 
 @Composable
-fun InventorySearchScreen(viewModel: MainViewModel) {
+fun InventorySearchScreen(viewModel: MainViewModel, preferencesManager: PreferencesManager) {
+
     val products by viewModel.products.collectAsState()
     var isFocused by remember { mutableStateOf(false) }
     val searchText by viewModel.searchText.collectAsState()
-    val historyList = listOf(
-        TextFieldValue("Истор1"),
-        TextFieldValue("Истор2"),
-        TextFieldValue("Истор3")
-    ) // Заглушка истории
+    val isSearching by viewModel.isSearching.collectAsState()
+
+    val history by produceState<List<TextFieldValue>>(
+        initialValue = emptyList(),
+        key1 = preferencesManager
+    ) {
+        value = preferencesManager.getSearchHistory().map { TextFieldValue(it) }
+    }
 
     Column(
         modifier = Modifier
@@ -74,108 +87,72 @@ fun InventorySearchScreen(viewModel: MainViewModel) {
                 Spacer(modifier = Modifier.weight(1f))
 
                 IconButton(
-                    onClick = {  },
-                    modifier = Modifier.size(25.dp)
+                    onClick = {
+                        preferencesManager.clearSearchHistory()
+                        Log.d("MY_TAG", "Это сообщение отладки (Debug)")
+                    }
                 ) {
                     Icon(
                         painter = painterResource(id = R.drawable.clear_icon),
-                        contentDescription = "Очистить историю",
+                        contentDescription = "Clear search history",
                         tint = MaterialTheme.colorScheme.onPrimary,
-                        modifier = Modifier
-                            .size(20.dp)
-                            .clickable {
-
-                            }
+                        modifier = Modifier.size(20.dp)
                     )
                 }
             }
             Column{
-                historyList.forEach { item ->
-
-                    TextButton(
-                        shape = RoundedCornerShape(8.dp),
-                        modifier = Modifier.fillMaxWidth(),
-                        contentPadding = PaddingValues(0.dp, 0.dp, 0.dp, 0.dp),
-                        onClick = {
-                            viewModel.onSearchTextChange(item)
-                            isFocused = false
+                history.forEach { item ->
+                    if(item.text != "") {
+                        TextButton(
+                            shape = RoundedCornerShape(8.dp),
+                            modifier = Modifier.fillMaxWidth(),
+                            contentPadding = PaddingValues(0.dp, 0.dp, 0.dp, 0.dp),
+                            onClick = {
+                                viewModel.onSearchTextChange(item)
+                                isFocused = false
+                            }
+                        ) {
+                            Text(
+                                text = item.text,
+                                color = MaterialTheme.colorScheme.onSurface,
+                                style = CustomTextStyles.body2_medium,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                            )
                         }
-                    ) {
-                        Text(
-                            text = item.text,
-                            color = Red,
-                            style = CustomTextStyles.body2_medium,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                        )
                     }
                 }
             }
 
         } else {
-            if(viewModel.error) {
-                QueryError(viewModel)
-            }
-
-            else {
-                if(products.isEmpty()) {
-                    NoResults()
+            if(isSearching){
+                Box(modifier = Modifier.fillMaxSize()) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.align(Alignment.Center)
+                    )
                 }
+            } else {
+                if(viewModel.error) {
+                    QueryError(viewModel)
+                }
+
                 else {
-                    LazyColumn(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                    ) {
-                        items(products) { product ->
-                            SearchResultRow(product)
+                    if(products.isEmpty()) {
+                        NoResults()
+                    }
+                    else {
+                        LazyColumn(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                        ) {
+                            items(products) { product ->
+                                SearchResultRow(product)
+                            }
                         }
                     }
                 }
             }
         }
-
-//        if(viewModel.error) {
-//            QueryError(viewModel)
-//        }
-//
-//        else {
-//            if(products.isEmpty()) {
-//                NoResults()
-//            }
-//            else {
-//                LazyColumn(
-//                    modifier = Modifier
-//                        .fillMaxWidth()
-//                ) {
-//                    items(products) { product ->
-//                        SearchResultRow(product)
-//                    }
-//                }
-//            }
-//        }
-
-//        Column{
-//            historyList.forEach { item ->
-//
-//                TextButton(
-//                    shape = RoundedCornerShape(8.dp),
-//                    modifier = Modifier.fillMaxWidth(),
-//                    contentPadding = PaddingValues(0.dp, 0.dp, 0.dp, 0.dp),
-//                    onClick = {
-//                        viewModel.onSearchTextChange(item)
-//                        isFocused = false
-//                    }
-//                ) {
-//                    Text(
-//                        text = item.text,
-//                        color = MaterialTheme.colorScheme.onSurface,
-//                        style = CustomTextStyles.body2_medium,
-//                        modifier = Modifier
-//                            .fillMaxWidth()
-//                    )
-//                }
-//            }
-//        }
     }
 }
 
@@ -189,19 +166,32 @@ fun SearchResultRow(product: Product) {
 
         }
     ) {
-        Text(
-            text = product.name,
-            color = MaterialTheme.colorScheme.onSurface,
-            style = CustomTextStyles.body2_medium,
-            modifier = Modifier
-                .fillMaxWidth()
-        )
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Image(
+                painter = painterResource(product.image),
+                modifier = Modifier
+                    .size(30.dp)
+                    .clip(RoundedCornerShape(8.dp)),
+                contentDescription = "Logo"
+            )
+            Text(
+                text = product.name,
+                color = MaterialTheme.colorScheme.onSurface,
+                style = CustomTextStyles.body2_medium,
+                modifier = Modifier
+                    .fillMaxWidth()
+            )
+        }
+
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun PreviewSearch() {
-    val mainViewModel = viewModel<MainViewModel>()
-    InventorySearchScreen(mainViewModel)
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun PreviewSearch() {
+//    val mainViewModel = viewModel<MainViewModel>()
+//    InventorySearchScreen(mainViewModel)
+//}

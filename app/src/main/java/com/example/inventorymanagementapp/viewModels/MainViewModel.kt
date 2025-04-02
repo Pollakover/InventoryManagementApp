@@ -1,5 +1,6 @@
 package com.example.inventorymanagementapp.viewModels
 
+import android.content.SharedPreferences
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -12,18 +13,27 @@ import androidx.lifecycle.viewModelScope
 import com.example.inventorymanagementapp.R
 import com.example.inventorymanagementapp.data.models.Order
 import com.example.inventorymanagementapp.data.models.OrderStatus
+import com.example.inventorymanagementapp.data.models.PreferencesManager
 import com.example.inventorymanagementapp.data.models.Product
 import com.example.inventorymanagementapp.data.models.Supplier
 import com.example.inventorymanagementapp.data.models.Warehouse
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlin.random.Random
 
 
-class MainViewModel : ViewModel() {
+class MainViewModel(
+    private val preferencesManager: PreferencesManager
+) : ViewModel() {
+
 
     //Изменение темы
     var isDarkModeOn by mutableStateOf(false)
@@ -42,6 +52,11 @@ class MainViewModel : ViewModel() {
     fun changeButtonState() {
         searchButtonState = !searchButtonState
         _searchText.value = TextFieldValue("")
+    }
+
+    fun refreshSearchState() {
+        // Триггер для обновления состояния
+        _searchText.update { it.copy() }
     }
 
     
@@ -67,16 +82,24 @@ class MainViewModel : ViewModel() {
 
     //Products
     private val _products = MutableStateFlow(allProducts)
+    @OptIn(FlowPreview::class)
     val products = searchText
+        .debounce(1000L)
+        .onEach { query ->
+            _isSearching.update { true }
+            preferencesManager.saveSearchQuery(query.text)
+        }
         .combine(_products) { query, products ->
             if (query.text.isBlank()) {
                 products
             } else {
+                delay(2000L)
                 products.filter {
                     it.doesMatchSearchQuery(query.text)
                 }
             }
         }
+        .onEach { _isSearching.update { false } }
         .stateIn(
             viewModelScope,
             SharingStarted.WhileSubscribed(5000),
@@ -136,12 +159,11 @@ class MainViewModel : ViewModel() {
 
     var error by mutableStateOf(false)
 
+
     fun onSearchTextChange(text: TextFieldValue) {
         _searchText.value = text
-
         //Случайный вызов ошибки.
-
-        if(Random.nextInt(0, 10) == 1 && _searchText.value.text.isNotBlank()) {
+        if(Random.nextInt(0, 100) == 1 && _searchText.value.text.isNotBlank()) {
             error = true
         }
     }

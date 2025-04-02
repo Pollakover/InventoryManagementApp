@@ -1,5 +1,7 @@
 package com.example.inventorymanagementapp
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -59,6 +61,7 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -69,11 +72,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.Popup
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.inventorymanagementapp.data.models.PreferencesManager
 import com.example.inventorymanagementapp.screens.DashboardScreen
 import com.example.inventorymanagementapp.screens.InventoryScreen
 import com.example.inventorymanagementapp.screens.OrdersScreen
@@ -89,11 +95,23 @@ import com.example.inventorymanagementapp.viewModels.MainViewModel
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
+    private lateinit var preferencesManager: PreferencesManager
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        preferencesManager = PreferencesManager(this)
         //enableEdgeToEdge()
         setContent {
-            val mainViewModel = viewModel<MainViewModel>()
+//            val mainViewModel = viewModel<MainViewModel>()
+            val context = LocalContext.current
+            val mainViewModel : MainViewModel = viewModel(
+                factory = object : ViewModelProvider.Factory {
+                    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                        val preferencesManager = PreferencesManager(context)
+                        return MainViewModel(preferencesManager) as T
+                    }
+                }
+            )
+
             InventoryManagementAppTheme(darkTheme = mainViewModel.isDarkModeOn) {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
@@ -101,7 +119,7 @@ class MainActivity : ComponentActivity() {
                 )
                 {
                     //Demo_ExposedDropdownMenuBox()
-                    MainScreen(mainViewModel)
+                    MainScreen(mainViewModel, preferencesManager)
                 }
             }
         }
@@ -110,7 +128,7 @@ class MainActivity : ComponentActivity() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen(mainViewModel: MainViewModel) {
+fun MainScreen(mainViewModel: MainViewModel, preferencesManager: PreferencesManager) {
     val navController = rememberNavController()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
@@ -489,7 +507,7 @@ fun MainScreen(mainViewModel: MainViewModel) {
                                 }
                             ) {
                                 Icon(
-                                    painter = if (mainViewModel.searchButtonState) painterResource(id = R.drawable.error_icon) else painterResource(id = R.drawable.search_icon),
+                                    painter = if (mainViewModel.searchButtonState) painterResource(id = R.drawable.delete_icon) else painterResource(id = R.drawable.search_icon),
                                     contentDescription = "Search",
                                     tint = MaterialTheme.colorScheme.onSurface,
                                     modifier = Modifier.size(20.dp)
@@ -505,7 +523,7 @@ fun MainScreen(mainViewModel: MainViewModel) {
                 startDestination = "dashboard",
                 modifier = Modifier.padding(innerPadding)
             ) {
-                composable("search_inventory") { InventorySearchScreen(mainViewModel) }
+                composable("search_inventory") { InventorySearchScreen(mainViewModel, preferencesManager) }
                 composable("search_suppliers") { SuppliersSearchScreen(mainViewModel) }
                 composable("search_orders") { OrdersSearchScreen(mainViewModel) }
                 composable("dashboard") { DashboardScreen() }
@@ -626,6 +644,7 @@ fun TopSearchBar(viewModel: MainViewModel) {
                     contentDescription = "Очистить поиск",
                     tint = MaterialTheme.colorScheme.onSurface,
                     modifier = Modifier
+                        .size(20.dp)
                         .clickable {
                             viewModel.clearSearch()
                             focusManager.clearFocus()
@@ -660,12 +679,12 @@ fun TopSearchBar(viewModel: MainViewModel) {
     )
 }
 
-@Preview(showBackground = true)
-@Composable
-fun PreviewMain() {
-    val mainViewModel = viewModel<MainViewModel>()
-    MainScreen(mainViewModel)
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun PreviewMain() {
+//    val mainViewModel = viewModel<MainViewModel>()
+//    MainScreen(mainViewModel)
+//}
 
 fun changeColors(array: Array<Color>, index: Int) {
     array[index] = primary_500

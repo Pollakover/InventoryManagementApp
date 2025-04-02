@@ -93,23 +93,13 @@ fun InventoryScreen(viewModel: MainViewModel) {
                     }
                 }
 
-                if(viewModel.error) {
-                    QueryError(viewModel)
-                }
-                else {
-                    if(products.isEmpty()) {
-                        NoResults()
-                    }
-                    else {
-                        LazyColumn(
-                            verticalArrangement = Arrangement.spacedBy(10.dp),
-                            modifier = Modifier
-                                .fillMaxWidth()
-                        ) {
-                            items(products) { product ->
-                                ProductRow(product)
-                            }
-                        }
+                LazyColumn(
+                    verticalArrangement = Arrangement.spacedBy(10.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                ) {
+                    items(products) { product ->
+                        ProductRow(product)
                     }
                 }
             }
