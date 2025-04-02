@@ -36,9 +36,6 @@ class MainViewModel(
     private val sharedPreferences: SharedPreferences
 ) : ViewModel() {
 
-    private val searchHistoryKey = "search_history"
-    private val maxHistorySize = 10
-
     // Поток для хранения истории поиска
     private val _searchHistory = MutableStateFlow<List<TextFieldValue>>(emptyList())
     val searchHistory: StateFlow<List<TextFieldValue>> = _searchHistory
@@ -49,8 +46,10 @@ class MainViewModel(
 
     // Загружает историю поиска из SharedPreferences
     private fun loadSearchHistory() {
-        val history = sharedPreferences.getStringSet(searchHistoryKey, emptySet())
-            ?.map { TextFieldValue(it) } ?: emptyList()
+        val history = sharedPreferences.getStringSet("search_history", emptySet())
+            ?.map { TextFieldValue(it) }
+            ?.sortedByDescending { it.text } // Сортировка, если вдруг порядок нарушен
+            ?: emptyList()
         _searchHistory.value = history
     }
 
@@ -58,23 +57,24 @@ class MainViewModel(
     fun saveSearchQuery(query: TextFieldValue) {
         val history = _searchHistory.value.toMutableList()
 
-        if (!history.contains(query)) {
-            history.add(query)
-        }
+        // Удаляем запрос, если он уже есть в истории (чтобы избежать дублирования)
+        history.remove(query)
+        history.add(0, query) // Добавляем в начало списка
 
-        if (history.size > maxHistorySize) {
-            history.removeAt(0)
+        // Ограничиваем размер истории
+        if (history.size > 11) {
+            history.removeAt(history.lastIndex) // Удаляем самый старый элемент
         }
 
         _searchHistory.value = history
         sharedPreferences.edit()
-            .putStringSet(searchHistoryKey, history.map { it.text }.toSet())
+            .putStringSet("search_history", history.map { it.text }.toSet())
             .apply()
     }
 
     // Очищает историю поиска
     fun clearSearchHistory() {
-        sharedPreferences.edit().remove(searchHistoryKey).apply()
+        sharedPreferences.edit().remove("search_history").apply()
         _searchHistory.value = emptyList() // Обновляем UI
     }
 

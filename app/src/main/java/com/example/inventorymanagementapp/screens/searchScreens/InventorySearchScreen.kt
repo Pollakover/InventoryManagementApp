@@ -141,7 +141,7 @@ fun InventorySearchScreen(viewModel: MainViewModel, sharedPreferences: SharedPre
                                 .fillMaxWidth()
                         ) {
                             items(products) { product ->
-                                SearchResultRow(product)
+                                SearchResultRow(product, viewModel)
                             }
                         }
                     }
@@ -152,13 +152,13 @@ fun InventorySearchScreen(viewModel: MainViewModel, sharedPreferences: SharedPre
 }
 
 @Composable
-fun SearchResultRow(product: Product) {
+fun SearchResultRow(product: Product, mainViewModel: MainViewModel) {
     TextButton(
         shape = RoundedCornerShape(8.dp),
         modifier = Modifier.fillMaxWidth(),
         contentPadding = PaddingValues(0.dp, 0.dp, 0.dp, 0.dp),
         onClick = {
-
+            mainViewModel.saveSearchQuery(TextFieldValue(product.name))
         }
     ) {
         Row(
