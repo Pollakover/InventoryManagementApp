@@ -79,7 +79,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.inventorymanagementapp.data.models.PreferencesManager
+//import com.example.inventorymanagementapp.data.models.PreferencesManager
 import com.example.inventorymanagementapp.screens.DashboardScreen
 import com.example.inventorymanagementapp.screens.InventoryScreen
 import com.example.inventorymanagementapp.screens.OrdersScreen
@@ -95,10 +95,11 @@ import com.example.inventorymanagementapp.viewModels.MainViewModel
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
-    private lateinit var preferencesManager: PreferencesManager
+    //private lateinit var preferencesManager: PreferencesManager
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        preferencesManager = PreferencesManager(this)
+        val sharedPreferences = getSharedPreferences("search_preferences", MODE_PRIVATE)
+        //preferencesManager = PreferencesManager(this)
         //enableEdgeToEdge()
         setContent {
 //            val mainViewModel = viewModel<MainViewModel>()
@@ -106,8 +107,8 @@ class MainActivity : ComponentActivity() {
             val mainViewModel : MainViewModel = viewModel(
                 factory = object : ViewModelProvider.Factory {
                     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                        val preferencesManager = PreferencesManager(context)
-                        return MainViewModel(preferencesManager) as T
+                        val sharedPreferences = sharedPreferences
+                        return MainViewModel(sharedPreferences) as T
                     }
                 }
             )
@@ -119,7 +120,7 @@ class MainActivity : ComponentActivity() {
                 )
                 {
                     //Demo_ExposedDropdownMenuBox()
-                    MainScreen(mainViewModel, preferencesManager)
+                    MainScreen(mainViewModel, sharedPreferences)
                 }
             }
         }
@@ -128,7 +129,7 @@ class MainActivity : ComponentActivity() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen(mainViewModel: MainViewModel, preferencesManager: PreferencesManager) {
+fun MainScreen(mainViewModel: MainViewModel, sharedPreferences: SharedPreferences) {
     val navController = rememberNavController()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
@@ -523,7 +524,7 @@ fun MainScreen(mainViewModel: MainViewModel, preferencesManager: PreferencesMana
                 startDestination = "dashboard",
                 modifier = Modifier.padding(innerPadding)
             ) {
-                composable("search_inventory") { InventorySearchScreen(mainViewModel, preferencesManager) }
+                composable("search_inventory") { InventorySearchScreen(mainViewModel, sharedPreferences) }
                 composable("search_suppliers") { SuppliersSearchScreen(mainViewModel) }
                 composable("search_orders") { OrdersSearchScreen(mainViewModel) }
                 composable("dashboard") { DashboardScreen() }

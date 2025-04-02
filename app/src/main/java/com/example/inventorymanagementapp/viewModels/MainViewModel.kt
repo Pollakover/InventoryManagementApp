@@ -13,7 +13,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.inventorymanagementapp.R
 import com.example.inventorymanagementapp.data.models.Order
 import com.example.inventorymanagementapp.data.models.OrderStatus
-import com.example.inventorymanagementapp.data.models.PreferencesManager
+//import com.example.inventorymanagementapp.data.models.PreferencesManager
 import com.example.inventorymanagementapp.data.models.Product
 import com.example.inventorymanagementapp.data.models.Supplier
 import com.example.inventorymanagementapp.data.models.Warehouse
@@ -21,6 +21,7 @@ import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
@@ -31,8 +32,58 @@ import kotlin.random.Random
 
 
 class MainViewModel(
-    private val preferencesManager: PreferencesManager
+//    private val preferencesManager: PreferencesManager
+    private val sharedPreferences: SharedPreferences
 ) : ViewModel() {
+
+    private val searchHistoryKey = "search_history"
+    private val maxHistorySize = 10
+
+    // Поток для хранения истории поиска
+    private val _searchHistory = MutableStateFlow<List<TextFieldValue>>(emptyList())
+    val searchHistory: StateFlow<List<TextFieldValue>> = _searchHistory
+
+    init {
+        loadSearchHistory()
+    }
+
+    // Загружает историю поиска из SharedPreferences
+    private fun loadSearchHistory() {
+        val history = sharedPreferences.getStringSet(searchHistoryKey, emptySet())
+            ?.map { TextFieldValue(it) } ?: emptyList()
+        _searchHistory.value = history
+    }
+
+    // Сохраняет новый поисковый запрос
+    fun saveSearchQuery(query: TextFieldValue) {
+        val history = _searchHistory.value.toMutableList()
+
+        if (!history.contains(query)) {
+            history.add(query)
+        }
+
+        if (history.size > maxHistorySize) {
+            history.removeAt(0)
+        }
+
+        _searchHistory.value = history
+        sharedPreferences.edit()
+            .putStringSet(searchHistoryKey, history.map { it.text }.toSet())
+            .apply()
+    }
+
+    // Очищает историю поиска
+    fun clearSearchHistory() {
+        sharedPreferences.edit().remove(searchHistoryKey).apply()
+        _searchHistory.value = emptyList() // Обновляем UI
+    }
+
+
+
+
+
+
+
 
 
     //Изменение темы
@@ -87,7 +138,7 @@ class MainViewModel(
         .debounce(1000L)
         .onEach { query ->
             _isSearching.update { true }
-            preferencesManager.saveSearchQuery(query.text)
+            saveSearchQuery(query)
         }
         .combine(_products) { query, products ->
             if (query.text.isBlank()) {

@@ -44,7 +44,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.inventorymanagementapp.NoResults
 import com.example.inventorymanagementapp.QueryError
 import com.example.inventorymanagementapp.R
-import com.example.inventorymanagementapp.data.models.PreferencesManager
+//import com.example.inventorymanagementapp.data.models.PreferencesManager
 import com.example.inventorymanagementapp.data.models.Product
 import com.example.inventorymanagementapp.screens.ProductRow
 import com.example.inventorymanagementapp.ui.theme.CustomTextStyles
@@ -53,19 +53,14 @@ import com.example.inventorymanagementapp.ui.theme.success_500
 import com.example.inventorymanagementapp.viewModels.MainViewModel
 
 @Composable
-fun InventorySearchScreen(viewModel: MainViewModel, preferencesManager: PreferencesManager) {
+fun InventorySearchScreen(viewModel: MainViewModel, sharedPreferences: SharedPreferences) {
 
     val products by viewModel.products.collectAsState()
     var isFocused by remember { mutableStateOf(false) }
     val searchText by viewModel.searchText.collectAsState()
     val isSearching by viewModel.isSearching.collectAsState()
 
-    val history by produceState<List<TextFieldValue>>(
-        initialValue = emptyList(),
-        key1 = preferencesManager
-    ) {
-        value = preferencesManager.getSearchHistory().map { TextFieldValue(it) }
-    }
+    val searchHistory by viewModel.searchHistory.collectAsState()
 
     Column(
         modifier = Modifier
@@ -88,7 +83,7 @@ fun InventorySearchScreen(viewModel: MainViewModel, preferencesManager: Preferen
 
                 IconButton(
                     onClick = {
-                        preferencesManager.clearSearchHistory()
+                        viewModel.clearSearchHistory()
                         Log.d("MY_TAG", "Это сообщение отладки (Debug)")
                     }
                 ) {
@@ -101,7 +96,7 @@ fun InventorySearchScreen(viewModel: MainViewModel, preferencesManager: Preferen
                 }
             }
             Column{
-                history.forEach { item ->
+                searchHistory.forEach { item ->
                     if(item.text != "") {
                         TextButton(
                             shape = RoundedCornerShape(8.dp),
