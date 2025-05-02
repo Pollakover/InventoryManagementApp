@@ -1,9 +1,11 @@
-package com.example.inventorymanagementapp.screens
+package com.example.inventorymanagementapp.login
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -19,17 +21,31 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.example.inventorymanagementapp.R
 import com.example.inventorymanagementapp.ui.theme.*
+import kotlin.math.log
 
 @Composable
-fun SignUpScreen() {
+fun SignUpScreen(navController: NavController) {
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -87,28 +103,45 @@ fun SignUpScreen() {
                     verticalArrangement = Arrangement.spacedBy(6.dp)
                 ) {
                     Text(
-                        text = "Логин*",
+                        text = "Логин",
                         color = MaterialTheme.colorScheme.onBackground,
                         style = CustomTextStyles.body2_medium
                     )
+
+                    var login by remember { mutableStateOf("") }
                     BasicTextField(
-                        value = "",
-                        onValueChange = {},
+                        value = login,
+                        onValueChange = { login = it},
                         modifier = Modifier
                             .fillMaxWidth()
                             .clip(RoundedCornerShape(8.dp))
                             .border(
                                 1.dp,
                                 color = MaterialTheme.colorScheme.primary,
-                                RoundedCornerShape(8.dp)
+                                shape = RoundedCornerShape(8.dp)
                             )
                             .padding(14.dp, 10.dp, 14.dp, 10.dp),
-                        decorationBox = {
-                            Text(
-                                text = "Введите логин",
-                                color = MaterialTheme.colorScheme.onSecondary,
-                                style = CustomTextStyles.body1_regular
-                            )
+                        textStyle = TextStyle(
+                            color = MaterialTheme.colorScheme.onSurface,
+                            fontSize = 16.sp,
+                            lineHeight = 24.sp,
+                            fontWeight = FontWeight.Normal
+                        ),
+                        cursorBrush = SolidColor(MaterialTheme.colorScheme.onSurface),
+                        decorationBox = { innerTextField ->
+                            Box(
+                                modifier = Modifier.fillMaxWidth(),
+                                contentAlignment = Alignment.CenterStart
+                            ) {
+                                if (login.isEmpty()) {
+                                    Text(
+                                        text = "Введите логин",
+                                        color = MaterialTheme.colorScheme.onSecondary,
+                                        style = CustomTextStyles.body1_regular
+                                    )
+                                }
+                                innerTextField()
+                            }
                         }
                     )
                 }
@@ -118,13 +151,15 @@ fun SignUpScreen() {
                     verticalArrangement = Arrangement.spacedBy(6.dp)
                 ) {
                     Text(
-                        text = "Email*",
+                        text = "E-mail",
                         color = MaterialTheme.colorScheme.onBackground,
                         style = CustomTextStyles.body2_medium
                     )
+
+                    var email by remember { mutableStateOf("") }
                     BasicTextField(
-                        value = "",
-                        onValueChange = {},
+                        value = email,
+                        onValueChange = {email = it},
                         modifier = Modifier
                             .fillMaxWidth()
                             .clip(RoundedCornerShape(8.dp))
@@ -134,12 +169,27 @@ fun SignUpScreen() {
                                 RoundedCornerShape(8.dp)
                             )
                             .padding(14.dp, 10.dp, 14.dp, 10.dp),
-                        decorationBox = {
-                            Text(
-                                text = "Введите Email",
-                                color = MaterialTheme.colorScheme.onSecondary,
-                                style = CustomTextStyles.body1_regular
-                            )
+                        textStyle = TextStyle(
+                            color = MaterialTheme.colorScheme.onSurface,
+                            fontSize = 16.sp,
+                            lineHeight = 24.sp,
+                            fontWeight = FontWeight.Normal
+                        ),
+                        cursorBrush = SolidColor(MaterialTheme.colorScheme.onSurface),
+                        decorationBox = { innerTextField ->
+                            Box(
+                                modifier = Modifier.fillMaxWidth(),
+                                contentAlignment = Alignment.CenterStart
+                            ) {
+                                if (email.isEmpty()) {
+                                    Text(
+                                        text = "Введите e-mail",
+                                        color = MaterialTheme.colorScheme.onSecondary,
+                                        style = CustomTextStyles.body1_regular
+                                    )
+                                }
+                                innerTextField()
+                            }
                         }
                     )
                 }
@@ -149,13 +199,15 @@ fun SignUpScreen() {
                     verticalArrangement = Arrangement.spacedBy(6.dp)
                 ) {
                     Text(
-                        text = "Пароль*",
+                        text = "Пароль",
                         color = MaterialTheme.colorScheme.onBackground,
                         style = CustomTextStyles.body2_medium
                     )
+
+                    var password by remember { mutableStateOf("") }
                     BasicTextField(
-                        value = "",
-                        onValueChange = {},
+                        value = password,
+                        onValueChange = { password = it },
                         modifier = Modifier
                             .fillMaxWidth()
                             .clip(RoundedCornerShape(8.dp))
@@ -165,12 +217,27 @@ fun SignUpScreen() {
                                 RoundedCornerShape(8.dp)
                             )
                             .padding(14.dp, 10.dp, 14.dp, 10.dp),
-                        decorationBox = {
-                            Text(
-                                text = "Придумайте пароль",
-                                color = MaterialTheme.colorScheme.onSecondary,
-                                style = CustomTextStyles.body1_regular
-                            )
+                        textStyle = TextStyle(
+                            color = MaterialTheme.colorScheme.onSurface,
+                            fontSize = 16.sp,
+                            lineHeight = 24.sp,
+                            fontWeight = FontWeight.Normal
+                        ),
+                        cursorBrush = SolidColor(MaterialTheme.colorScheme.onSurface),
+                        decorationBox = { innerTextField ->
+                            Box(
+                                modifier = Modifier.fillMaxWidth(),
+                                contentAlignment = Alignment.CenterStart
+                            ) {
+                                if (password.isEmpty()) {
+                                    Text(
+                                        text = "Придумайте пароль",
+                                        color = MaterialTheme.colorScheme.onSecondary,
+                                        style = CustomTextStyles.body1_regular
+                                    )
+                                }
+                                innerTextField()
+                            }
                         }
                     )
                 }
@@ -202,7 +269,13 @@ fun SignUpScreen() {
                     Text(
                         text = "Войдите",
                         color = primary_500,
-                        style = CustomTextStyles.body2_medium
+                        style = CustomTextStyles.body2_medium,
+                        modifier = Modifier.clickable {
+                            navController.navigate(Screen.LoginScreen.route) {
+                                popUpTo(navController.graph.startDestinationId)
+                                launchSingleTop = true
+                            }
+                        }
                     )
                 }
             }
@@ -213,5 +286,6 @@ fun SignUpScreen() {
 @Preview(showBackground = true)
 @Composable
 fun PreviewSignUp() {
-    SignUpScreen()
+    val navController = rememberNavController()
+    SignUpScreen(navController)
 }
