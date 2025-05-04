@@ -102,7 +102,7 @@ class MainActivity : ComponentActivity() {
                 }
             )
 
-            InventoryManagementAppTheme(darkTheme = true) {
+            InventoryManagementAppTheme(darkTheme = mainViewModel.isDarkModeOn) {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.primary

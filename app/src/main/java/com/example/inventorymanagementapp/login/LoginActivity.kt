@@ -9,7 +9,7 @@ class LoginActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            InventoryManagementAppTheme(darkTheme = true) {
+            InventoryManagementAppTheme(darkTheme = false) {
                 Navigation()
             }
         }
