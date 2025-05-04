@@ -1,5 +1,9 @@
 package com.example.inventorymanagementapp.login
 
+//import android.content.ContentValues.TAG
+import android.content.Context
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -29,6 +33,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -42,9 +47,16 @@ import androidx.navigation.compose.rememberNavController
 import com.example.inventorymanagementapp.R
 import com.example.inventorymanagementapp.ui.theme.*
 import kotlin.math.log
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 @Composable
 fun SignUpScreen(navController: NavController) {
+
+    var login by remember { mutableStateOf("") }
+    var email by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
 
     Column(
         modifier = Modifier
@@ -108,7 +120,6 @@ fun SignUpScreen(navController: NavController) {
                         style = CustomTextStyles.body2_medium
                     )
 
-                    var login by remember { mutableStateOf("") }
                     BasicTextField(
                         value = login,
                         onValueChange = { login = it},
@@ -156,7 +167,6 @@ fun SignUpScreen(navController: NavController) {
                         style = CustomTextStyles.body2_medium
                     )
 
-                    var email by remember { mutableStateOf("") }
                     BasicTextField(
                         value = email,
                         onValueChange = {email = it},
@@ -204,7 +214,6 @@ fun SignUpScreen(navController: NavController) {
                         style = CustomTextStyles.body2_medium
                     )
 
-                    var password by remember { mutableStateOf("") }
                     BasicTextField(
                         value = password,
                         onValueChange = { password = it },
@@ -242,8 +251,15 @@ fun SignUpScreen(navController: NavController) {
                     )
                 }
 
+                val context = LocalContext.current
                 Button(
-                    onClick = {},
+                    onClick = {
+                        if(login.isNotEmpty() && password.isNotEmpty() && email.isNotEmpty()) {
+                            registerUser(login, password, email, context)
+                        } else {
+                            Toast.makeText(context, "Заполните все поля", Toast.LENGTH_LONG).show()
+                        }
+                    },
                     shape = RoundedCornerShape(8.dp),
                     modifier = Modifier
                         .fillMaxWidth(),
@@ -281,6 +297,24 @@ fun SignUpScreen(navController: NavController) {
             }
         }
     }
+}
+const val TAG = "RegisterUser"
+private fun registerUser(login: String, password: String, email: String, context: Context) {
+    val call = ApiClient.authApi.register(RegisterRequest(login, password, email))
+    call.enqueue(object : Callback<AuthResponse> {
+        override fun onResponse(call: Call<AuthResponse>, response: Response<AuthResponse>) {
+            if (response.isSuccessful) {
+                Toast.makeText(context, "Успешная регистрация", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(context, "Ошибка регистрации", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        override fun onFailure(call: Call<AuthResponse>, t: Throwable) {
+            Toast.makeText(context, "Ошибка uj: ${t.message}", Toast.LENGTH_SHORT).show()
+            Log.d(TAG, "ERROR: ${t.message.toString()}")
+        }
+    })
 }
 
 @Preview(showBackground = true)

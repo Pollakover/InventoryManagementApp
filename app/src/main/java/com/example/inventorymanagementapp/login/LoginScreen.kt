@@ -1,5 +1,8 @@
 package com.example.inventorymanagementapp.login
 
+import android.content.Context
+import android.content.Intent
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -17,11 +20,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -30,108 +30,33 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.inventorymanagementapp.R
 import com.example.inventorymanagementapp.ui.theme.*
-import android.content.SharedPreferences
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
+import android.widget.Toast
 import androidx.compose.foundation.layout.Box
-
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.rememberScrollState
-
-import androidx.compose.foundation.verticalScroll
-
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.DrawerValue
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-
-import androidx.compose.material3.ModalDrawerSheet
-import androidx.compose.material3.ModalNavigationDrawer
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.TextField
-
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
-import androidx.compose.material3.rememberDrawerState
-
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.res.painterResource
-
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.Dialog
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
-import com.example.inventorymanagementapp.screens.DashboardScreen
-import com.example.inventorymanagementapp.screens.InventoryScreen
-import com.example.inventorymanagementapp.screens.OrdersScreen
-import com.example.inventorymanagementapp.screens.searchScreens.InventorySearchScreen
-import com.example.inventorymanagementapp.screens.SuppliersScreen
-import com.example.inventorymanagementapp.screens.WarehousesScreen
-import com.example.inventorymanagementapp.screens.searchScreens.OrdersSearchScreen
-import com.example.inventorymanagementapp.screens.searchScreens.SuppliersSearchScreen
+import androidx.core.content.ContextCompat.startActivity
+import com.example.inventorymanagementapp.MainActivity
 import com.example.inventorymanagementapp.ui.theme.CustomTextStyles
-import com.example.inventorymanagementapp.ui.theme.InventoryManagementAppTheme
-import com.example.inventorymanagementapp.ui.theme.*
-import com.example.inventorymanagementapp.viewModels.MainViewModel
-import kotlinx.coroutines.launch
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+
 
 
 @Composable
 fun LoginScreen(navController: NavController) {
+    var login by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
 
     Column(
         modifier = Modifier
@@ -195,8 +120,6 @@ fun LoginScreen(navController: NavController) {
                         style = CustomTextStyles.body2_medium
                     )
 
-                    var login by remember { mutableStateOf("") }
-
                     BasicTextField(
                         value = login,
                         onValueChange = { login = it },
@@ -244,7 +167,6 @@ fun LoginScreen(navController: NavController) {
                             style = CustomTextStyles.body2_medium
                         )
 
-                        var password by remember { mutableStateOf("") }
                         BasicTextField(
                             value = password,
                             onValueChange = { password = it },
@@ -282,8 +204,15 @@ fun LoginScreen(navController: NavController) {
                         )
                     }
 
-                    Button(
-                        onClick = {},
+                val context = LocalContext.current
+                Button(
+                        onClick = {
+                            if(login.isNotEmpty() && password.isNotEmpty()) {
+                                loginUser(login, password, context)
+                            } else {
+                                Toast.makeText(context, "Заполните все поля", Toast.LENGTH_LONG).show()
+                            }
+                        },
                         shape = RoundedCornerShape(8.dp),
                         modifier = Modifier
                             .fillMaxWidth(),
@@ -323,6 +252,26 @@ fun LoginScreen(navController: NavController) {
             }
         }
     }
+
+private fun loginUser(login: String, password: String, context: Context) {
+    val call = ApiClient.authApi.login(LoginRequest(login, password))
+    call.enqueue(object : Callback<AuthResponse> {
+        override fun onResponse(call: Call<AuthResponse>, response: Response<AuthResponse>) {
+            if (response.isSuccessful) {
+                val intent = Intent(context, MainActivity::class.java)
+                context.startActivity(intent)
+                Toast.makeText(context, "Успешный вход!", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(context, "Ошибка входа", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        override fun onFailure(call: Call<AuthResponse>, t: Throwable) {
+            Toast.makeText(context, "Ошибка сети: ${t.message}", Toast.LENGTH_SHORT).show()
+            Log.d(TAG, "ERROR: ${t.message.toString()}")
+        }
+    })
+}
 
 @Preview(showBackground = true)
 @Composable

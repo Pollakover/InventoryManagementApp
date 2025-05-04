@@ -61,6 +61,12 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.media3.common.ktx)
+
+    implementation (libs.gson)
+    implementation (libs.retrofit)
+    implementation(libs.okhttp)
+    implementation (libs.converter.gson)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
