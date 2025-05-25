@@ -1,4 +1,4 @@
-package com.example.inventorymanagementapp.login
+package com.example.inventorymanagementapp.database.login
 
 sealed class Screen(val route : String) {
     object LoginScreen : Screen("login_screen")

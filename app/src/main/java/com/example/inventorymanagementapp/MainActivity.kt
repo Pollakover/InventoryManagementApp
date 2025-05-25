@@ -88,6 +88,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        val userLogin = intent.getStringExtra("USER_LOGIN")
         val sharedPreferences = getSharedPreferences("search_preferences", MODE_PRIVATE)
 
         //enableEdgeToEdge()
@@ -109,7 +110,7 @@ class MainActivity : ComponentActivity() {
                 )
                 {
                     //Demo_ExposedDropdownMenuBox()
-                    MainScreen(mainViewModel, sharedPreferences)
+                    MainScreen(mainViewModel, sharedPreferences, userLogin)
                 }
             }
         }
@@ -118,7 +119,7 @@ class MainActivity : ComponentActivity() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen(mainViewModel: MainViewModel, sharedPreferences: SharedPreferences) {
+fun MainScreen(mainViewModel: MainViewModel, sharedPreferences: SharedPreferences, userLogin : String?) {
     val navController = rememberNavController()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
@@ -140,6 +141,7 @@ fun MainScreen(mainViewModel: MainViewModel, sharedPreferences: SharedPreference
                     modifier = Modifier
                         .fillMaxSize()
                         .verticalScroll(rememberScrollState())
+                        .background(color = MaterialTheme.colorScheme.surface)
                 ) {
                     Column(
                         verticalArrangement = Arrangement.spacedBy(20.dp)
@@ -152,7 +154,7 @@ fun MainScreen(mainViewModel: MainViewModel, sharedPreferences: SharedPreference
                         ) {
                             Row(modifier = Modifier.fillMaxWidth()) {
                                 Image(
-                                    painter = painterResource(R.drawable.profile_placeholder),
+                                    painter = painterResource(R.drawable.icon),
                                     modifier = Modifier
                                         .size(80.dp)
                                         .clip(RoundedCornerShape(50))
@@ -178,7 +180,7 @@ fun MainScreen(mainViewModel: MainViewModel, sharedPreferences: SharedPreference
                             Column(verticalArrangement = Arrangement.spacedBy(5.dp))
                             {
                                 Text(
-                                    "Алексей Поляков",
+                                    text = userLogin.toString(),
                                     color = MaterialTheme.colorScheme.onTertiary,
                                     style = CustomTextStyles.body1_bold
                                 )
@@ -478,15 +480,13 @@ fun MainScreen(mainViewModel: MainViewModel, sharedPreferences: SharedPreference
                         }
                     },
                     actions = {
-                        if (currentRoute != "dashboard" && currentRoute != "warehouses") {
+                        if (currentRoute == "inventory" || currentRoute == "search_inventory") {
                             IconButton(
                                 onClick = {
                                     if(!mainViewModel.searchButtonState) {
                                         mainViewModel.changeButtonState()
                                         when(currentRoute){
                                             "inventory" -> navController.navigate("search_inventory") { launchSingleTop = true }
-                                            "suppliers" -> navController.navigate("search_suppliers") { launchSingleTop = true }
-                                            "orders" -> navController.navigate("search_orders") { launchSingleTop = true }
                                         }
 
                                     }
@@ -517,6 +517,7 @@ fun MainScreen(mainViewModel: MainViewModel, sharedPreferences: SharedPreference
                 composable("search_suppliers") { SuppliersSearchScreen(mainViewModel) }
                 composable("search_orders") { OrdersSearchScreen(mainViewModel) }
                 composable("dashboard") { DashboardScreen() }
+                //composable("dashboard") { Demo_ExposedDropdownMenuBox() }
                 composable("inventory") { InventoryScreen(mainViewModel) }
                 composable("suppliers") { SuppliersScreen(mainViewModel) }
                 composable("orders") { OrdersScreen(mainViewModel) }

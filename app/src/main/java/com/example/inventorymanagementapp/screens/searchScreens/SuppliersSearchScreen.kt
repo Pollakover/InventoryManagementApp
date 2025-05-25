@@ -30,7 +30,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.inventorymanagementapp.R
-import com.example.inventorymanagementapp.data.models.Supplier
 import com.example.inventorymanagementapp.ui.theme.CustomTextStyles
 import com.example.inventorymanagementapp.ui.theme.primary_500
 import com.example.inventorymanagementapp.ui.theme.success_500

@@ -1,4 +1,4 @@
-package com.example.inventorymanagementapp.login
+package com.example.inventorymanagementapp.database.login
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.Navigation

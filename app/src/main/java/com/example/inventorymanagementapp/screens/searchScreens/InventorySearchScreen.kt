@@ -1,9 +1,8 @@
 package com.example.inventorymanagementapp.screens.searchScreens
 
+import android.annotation.SuppressLint
 import android.content.SharedPreferences
 import android.util.Log
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,7 +16,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -28,30 +26,24 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Color.Companion.Red
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import coil.compose.AsyncImage
 import com.example.inventorymanagementapp.NoResults
 import com.example.inventorymanagementapp.QueryError
 import com.example.inventorymanagementapp.R
-//import com.example.inventorymanagementapp.data.models.PreferencesManager
-import com.example.inventorymanagementapp.data.models.Product
-import com.example.inventorymanagementapp.screens.ProductRow
+import com.example.inventorymanagementapp.database.products.Product
 import com.example.inventorymanagementapp.ui.theme.CustomTextStyles
-import com.example.inventorymanagementapp.ui.theme.primary_500
-import com.example.inventorymanagementapp.ui.theme.success_500
 import com.example.inventorymanagementapp.viewModels.MainViewModel
 
+@SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 fun InventorySearchScreen(viewModel: MainViewModel, sharedPreferences: SharedPreferences) {
 
@@ -165,12 +157,15 @@ fun SearchResultRow(product: Product, mainViewModel: MainViewModel) {
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Image(
-                painter = painterResource(product.image),
+            AsyncImage(
+                model = product.image_data,
+                contentDescription = "Product image",
                 modifier = Modifier
                     .size(30.dp)
                     .clip(RoundedCornerShape(8.dp)),
-                contentDescription = "Logo"
+                contentScale = ContentScale.Crop,
+                placeholder = painterResource(R.drawable.icon), // необязательный плейсхолдер
+                error = painterResource(R.drawable.icon) // необязательная ошибка загрузки
             )
             Text(
                 text = product.name,

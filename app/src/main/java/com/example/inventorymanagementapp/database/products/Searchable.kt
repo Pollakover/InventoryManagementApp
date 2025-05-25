@@ -1,4 +1,4 @@
-package com.example.inventorymanagementapp.data.models
+package com.example.inventorymanagementapp.database.products
 
 interface Searchable
 {

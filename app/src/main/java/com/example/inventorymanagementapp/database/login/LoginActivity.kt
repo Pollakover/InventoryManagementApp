@@ -1,4 +1,4 @@
-package com.example.inventorymanagementapp.login
+package com.example.inventorymanagementapp.database.login
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity

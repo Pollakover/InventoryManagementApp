@@ -1,4 +1,4 @@
-package com.example.inventorymanagementapp.login
+package com.example.inventorymanagementapp.database.login
 
 import android.content.Context
 import android.content.Intent
@@ -44,8 +44,8 @@ import android.widget.Toast
 import androidx.compose.foundation.layout.Box
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalContext
-import androidx.core.content.ContextCompat.startActivity
 import com.example.inventorymanagementapp.MainActivity
+import com.example.inventorymanagementapp.database.ApiClient
 import com.example.inventorymanagementapp.ui.theme.CustomTextStyles
 import retrofit2.Call
 import retrofit2.Callback
@@ -259,6 +259,7 @@ private fun loginUser(login: String, password: String, context: Context) {
         override fun onResponse(call: Call<AuthResponse>, response: Response<AuthResponse>) {
             if (response.isSuccessful) {
                 val intent = Intent(context, MainActivity::class.java)
+                intent.putExtra("USER_LOGIN", login)
                 context.startActivity(intent)
                 Toast.makeText(context, "Успешный вход!", Toast.LENGTH_SHORT).show()
             } else {
