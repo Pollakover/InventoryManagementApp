@@ -9,6 +9,9 @@ interface SupplierApi {
 
     @POST("/suppliers/add")
     suspend fun addSupplier(@Body request: AddSupplierRequest)
+
+    @POST("/suppliers/getById")
+    suspend fun getSupplierById(@Body request: GetSupplierByIdRequest): Supplier
 }
 
 data class FetchSuppliersRequest(
@@ -20,4 +23,8 @@ data class AddSupplierRequest(
     val phone_number: String,
     val type: String,
     val user_login: String,
+)
+
+data class GetSupplierByIdRequest(
+    val supplierId: String
 )

@@ -37,6 +37,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -120,7 +121,11 @@ fun SignUpScreen(navController: NavController) {
 
                     BasicTextField(
                         value = login,
-                        onValueChange = { login = it},
+                        onValueChange = { newText ->
+                            if (newText.length <= 25) {
+                                login = newText
+                            }
+                        },
                         modifier = Modifier
                             .fillMaxWidth()
                             .clip(RoundedCornerShape(8.dp))
@@ -167,7 +172,11 @@ fun SignUpScreen(navController: NavController) {
 
                     BasicTextField(
                         value = email,
-                        onValueChange = {email = it},
+                        onValueChange = { newText ->
+                            if (newText.length <= 50) {
+                                email = newText
+                            }
+                        },
                         modifier = Modifier
                             .fillMaxWidth()
                             .clip(RoundedCornerShape(8.dp))
@@ -214,7 +223,11 @@ fun SignUpScreen(navController: NavController) {
 
                     BasicTextField(
                         value = password,
-                        onValueChange = { password = it },
+                        onValueChange = { newText ->
+                            if (newText.length <= 25) {
+                                password = newText
+                            }
+                        },
                         modifier = Modifier
                             .fillMaxWidth()
                             .clip(RoundedCornerShape(8.dp))
@@ -252,10 +265,8 @@ fun SignUpScreen(navController: NavController) {
                 val context = LocalContext.current
                 Button(
                     onClick = {
-                        if(login.isNotEmpty() && password.isNotEmpty() && email.isNotEmpty()) {
+                        if (checkFields(context, login, email, password)) {
                             registerUser(login, password, email, context)
-                        } else {
-                            Toast.makeText(context, "Заполните все поля", Toast.LENGTH_LONG).show()
                         }
                     },
                     shape = RoundedCornerShape(8.dp),
@@ -296,6 +307,7 @@ fun SignUpScreen(navController: NavController) {
         }
     }
 }
+
 const val TAG = "RegisterUser"
 private fun registerUser(login: String, password: String, email: String, context: Context) {
     val call = ApiClient.authApi.register(RegisterRequest(login, password, email))
@@ -309,7 +321,7 @@ private fun registerUser(login: String, password: String, email: String, context
         }
 
         override fun onFailure(call: Call<AuthResponse>, t: Throwable) {
-            Toast.makeText(context, "Ошибка uj: ${t.message}", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "Ошибка: ${t.message}", Toast.LENGTH_SHORT).show()
             Log.d(TAG, "ERROR: ${t.message.toString()}")
         }
     })
@@ -320,4 +332,33 @@ private fun registerUser(login: String, password: String, email: String, context
 fun PreviewSignUp() {
     val navController = rememberNavController()
     SignUpScreen(navController)
+}
+
+fun String.isValidEmail(): Boolean {
+    val emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\$"
+    return Regex(emailRegex).matches(this)
+}
+
+fun checkFields(
+    context: Context,
+    login: String,
+    email: String,
+    password: String
+
+    ): Boolean {
+    // Проверка на пустые поля
+    if (login.isBlank() || email.isBlank() || password.isBlank()) {
+        Toast.makeText(context, "Заполните все поля", Toast.LENGTH_SHORT).show()
+        return false
+    } else {
+        if (email.isValidEmail()) {
+            return true
+        }
+        else {
+            Toast.makeText(context, "Некорректный email", Toast.LENGTH_SHORT).show()
+            return false
+        }
+
+
+    }
 }

@@ -42,19 +42,22 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.window.Dialog
 import coil.compose.AsyncImage
+import com.example.inventorymanagementapp.screens.dialogs.ClickOnItemScreen
 import com.example.inventorymanagementapp.screens.dialogs.NewProductScreen
 
 @Composable
 fun InventoryScreen(viewModel: MainViewModel) {
 
     val products by viewModel._products.collectAsState()
-    val userLogin = "test1"
     val clickOnAddButton = remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
-        viewModel.loadProducts(userLogin)
+        viewModel.loadProducts()
+        viewModel.loadSuppliers()
+        viewModel.loadWarehouses()
     }
 
     if (clickOnAddButton.value) {
@@ -109,14 +112,20 @@ fun InventoryScreen(viewModel: MainViewModel) {
                         Text(text = "Ошибка загрузки", color = MaterialTheme.colorScheme.error)
                     }
                 } else {
-                    LazyColumn(
-                        verticalArrangement = Arrangement.spacedBy(10.dp),
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        items(products) { product ->
-                            ProductRow(product)
+                    if (products.isEmpty()) {
+                        EmptyInventoryList()
+                    }
+                    else {
+                        LazyColumn(
+                            verticalArrangement = Arrangement.spacedBy(10.dp),
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            items(products) { product ->
+                                ProductRow(product)
+                            }
                         }
                     }
+
                 }
             }
         }
@@ -130,7 +139,7 @@ fun ProductRow(product: Product) {
         Modifier
             .clip(RoundedCornerShape(8.dp))
             .clickable { clickOnItemDialogState.value = true }
-    ){
+    ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(22.dp),
@@ -144,7 +153,9 @@ fun ProductRow(product: Product) {
             }
 
             Row(
-                modifier = Modifier.width(100.dp).height(100.dp),
+                modifier = Modifier
+                    .width(100.dp)
+                    .height(100.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center
             ) {
@@ -165,23 +176,58 @@ fun ProductRow(product: Product) {
                 verticalArrangement = Arrangement.spacedBy(4.dp),
                 modifier = Modifier.weight(1f)
             ) {
-                Text(product.name, style = CustomTextStyles.body1_semi_bold, color = MaterialTheme.colorScheme.onSurface)
+                Text(
+                    product.name,
+                    style = CustomTextStyles.body1_semi_bold,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
                 Row {
-                    Text("Цена: ", style = CustomTextStyles.body2_regular, color = MaterialTheme.colorScheme.onPrimary)
-                    Text("${product.price} ₽", style = CustomTextStyles.body2_regular, color = MaterialTheme.colorScheme.onTertiary)
+                    Text(
+                        "Цена: ",
+                        style = CustomTextStyles.body2_regular,
+                        color = MaterialTheme.colorScheme.onPrimary
+                    )
+                    Text(
+                        "${product.price} ₽",
+                        style = CustomTextStyles.body2_regular,
+                        color = MaterialTheme.colorScheme.onTertiary
+                    )
                 }
                 Row {
-                    Text("Всего на складах: ", style = CustomTextStyles.body2_regular, color = MaterialTheme.colorScheme.onPrimary)
-                    Text("${product.amount}", style = CustomTextStyles.body2_regular, color = MaterialTheme.colorScheme.onTertiary)
+                    Text(
+                        "Всего на складе: ",
+                        style = CustomTextStyles.body2_regular,
+                        color = MaterialTheme.colorScheme.onPrimary
+                    )
+                    Text(
+                        "${product.amount}",
+                        style = CustomTextStyles.body2_regular,
+                        color = MaterialTheme.colorScheme.onTertiary
+                    )
                 }
-                if (product.amount == 0) Text("Нет в наличии", style = CustomTextStyles.body2_regular, color = error_500)
+                if (product.amount == 0) Text(
+                    "Нет в наличии",
+                    style = CustomTextStyles.body2_regular,
+                    color = error_500
+                )
                 else
-                    if (product.amount <= 10) Text("Заканчивается", style = CustomTextStyles.body2_regular, color = warning_500)
-                    else Text("В наличии", style = CustomTextStyles.body2_regular, color = success_500)
-                }
+                    if (product.amount <= 10) Text(
+                        "Заканчивается",
+                        style = CustomTextStyles.body2_regular,
+                        color = warning_500
+                    )
+                    else Text(
+                        "В наличии",
+                        style = CustomTextStyles.body2_regular,
+                        color = success_500
+                    )
             }
         }
-        HorizontalDivider(modifier = Modifier.padding(0.dp, 10.dp, 0.dp, 0.dp), color = MaterialTheme.colorScheme.background)
+    }
+    HorizontalDivider(
+        modifier = Modifier.padding(0.dp, 10.dp, 0.dp, 0.dp),
+        color = MaterialTheme.colorScheme.background
+    )
 }
 
 @Preview(showBackground = true)
@@ -193,7 +239,7 @@ fun PreviewInventory() {
 
 @Composable
 fun ClickOnItem(product: Product, state: MutableState<Boolean>) {
-    if(state.value) {
+    if (state.value) {
         Dialog(onDismissRequest = { state.value = false }) {
             ClickOnItemScreen(product)
         }
@@ -202,9 +248,31 @@ fun ClickOnItem(product: Product, state: MutableState<Boolean>) {
 
 @Composable
 fun ClickOnAddButton(state: MutableState<Boolean>, viewModel: MainViewModel) {
-    if(state.value) {
+    if (state.value) {
         Dialog(onDismissRequest = { state.value = false }) {
             NewProductScreen(state, viewModel)
         }
+    }
+}
+
+@Composable
+fun EmptyInventoryList() {
+    Column(
+        verticalArrangement = Arrangement.spacedBy(15.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Icon(
+            painter = painterResource(id = R.drawable.inventory_icon),
+            contentDescription = "Inventory icon",
+            tint = MaterialTheme.colorScheme.primary,
+            modifier = Modifier.size(100.dp)
+        )
+        Text(
+            "Вы пока не добавили товары",
+            color = MaterialTheme.colorScheme.onSecondary,
+            style = CustomTextStyles.body2_regular,
+            textAlign = TextAlign.Center
+        )
     }
 }

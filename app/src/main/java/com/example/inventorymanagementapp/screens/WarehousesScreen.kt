@@ -30,10 +30,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.inventorymanagementapp.R
 import com.example.inventorymanagementapp.database.warehouses.Warehouse
 import com.example.inventorymanagementapp.screens.dialogs.NewWarehouseScreen
 import com.example.inventorymanagementapp.ui.theme.*
@@ -42,11 +45,10 @@ import com.example.inventorymanagementapp.viewModels.MainViewModel
 @Composable
 fun WarehousesScreen(viewModel: MainViewModel) {
     val warehouses by viewModel._warehouses.collectAsState()
-    val userLogin = "test1"
     val clickOnAddButton = remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
-        viewModel.loadWarehouses(userLogin)
+        viewModel.loadWarehouses()
     }
 
     if (clickOnAddButton.value) {
@@ -101,14 +103,20 @@ fun WarehousesScreen(viewModel: MainViewModel) {
                         Text(text = "Ошибка загрузки", color = MaterialTheme.colorScheme.error)
                     }
                 } else {
-                    LazyColumn(
-                        verticalArrangement = Arrangement.spacedBy(20.dp),
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        items(warehouses) { warehouse ->
-                            WarehouseRow(warehouse)
+                    if (warehouses.isEmpty()){
+                        EmptyWarehousesList()
+                    }
+                    else {
+                        LazyColumn(
+                            verticalArrangement = Arrangement.spacedBy(20.dp),
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            items(warehouses) { warehouse ->
+                                WarehouseRow(warehouse)
+                            }
                         }
                     }
+
                 }
             }
         }
@@ -117,7 +125,7 @@ fun WarehousesScreen(viewModel: MainViewModel) {
 
 @Composable
 fun AddWarehouse(state: MutableState<Boolean>, viewModel: MainViewModel) {
-    if(state.value) {
+    if (state.value) {
         Dialog(onDismissRequest = { state.value = false }) {
             NewWarehouseScreen(state, viewModel)
         }
@@ -139,9 +147,21 @@ fun WarehouseRow(warehouse: Warehouse) {
             modifier = Modifier
                 .padding(20.dp)
         ) {
-            Text(warehouse.name, style = CustomTextStyles.body1_medium, color = MaterialTheme.colorScheme.onTertiary)
-            Text(warehouse.address, style = CustomTextStyles.body2_regular, color = MaterialTheme.colorScheme.onPrimary)
-            Text(warehouse.postal_address, style = CustomTextStyles.body2_regular, color = MaterialTheme.colorScheme.onPrimary)
+            Text(
+                warehouse.name,
+                style = CustomTextStyles.body1_medium,
+                color = MaterialTheme.colorScheme.onTertiary
+            )
+            Text(
+                warehouse.address,
+                style = CustomTextStyles.body2_regular,
+                color = MaterialTheme.colorScheme.onPrimary
+            )
+            Text(
+                warehouse.postal_address,
+                style = CustomTextStyles.body2_regular,
+                color = MaterialTheme.colorScheme.onPrimary
+            )
         }
     }
 }
@@ -152,4 +172,26 @@ fun WarehouseRow(warehouse: Warehouse) {
 fun PreviewWarehouses() {
     val mainViewModel = viewModel<MainViewModel>()
     WarehousesScreen(mainViewModel)
+}
+
+@Composable
+fun EmptyWarehousesList() {
+    Column(
+        verticalArrangement = Arrangement.spacedBy(15.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Icon(
+            painter = painterResource(id = R.drawable.warehouses_icon),
+            contentDescription = "Inventory icon",
+            tint = MaterialTheme.colorScheme.primary,
+            modifier = Modifier.size(100.dp)
+        )
+        Text(
+            "Вы пока не добавили склады",
+            color = MaterialTheme.colorScheme.onSecondary,
+            style = CustomTextStyles.body2_regular,
+            textAlign = TextAlign.Center
+        )
+    }
 }

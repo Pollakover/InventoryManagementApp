@@ -37,6 +37,7 @@ val primary_500 = Color(0xFF1570EF)
 
 val success_100 = Color(0xFFB6E9D1)
 val success_500 = Color(0xFF12B76A)
+val success_700 = Color(0xFF0D824B)
 
 val warning_100 = Color(0xFFFDDDB3)
 val warning_500 = Color(0xFFF79009)
@@ -44,3 +45,4 @@ val warning_700 = Color(0xFFAF6606)
 
 val error_100 = Color(0xFFFAC5C1)
 val error_500 = Color(0xFFF04438)
+val error_700 = Color(0xFFAA3028)

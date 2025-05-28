@@ -1,8 +1,7 @@
 package com.example.inventorymanagementapp.database.products
 
-interface Searchable
-{
-    val name : String
+interface Searchable {
+    val name: String
 
     fun doesMatchSearchQuery(query: String): Boolean {
         val matchingCombinations = listOf(

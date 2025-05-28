@@ -51,11 +51,10 @@ import com.example.inventorymanagementapp.viewModels.MainViewModel
 @Composable
 fun OrdersScreen(viewModel: MainViewModel) {
     val orders by viewModel._orders.collectAsState()
-    val userLogin = "test1"
     val clickOnAddButton = remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
-        viewModel.loadOrders(userLogin)
+        viewModel.loadOrders()
     }
 
     if (clickOnAddButton.value) {
@@ -110,12 +109,17 @@ fun OrdersScreen(viewModel: MainViewModel) {
                         Text(text = "Ошибка загрузки", color = MaterialTheme.colorScheme.error)
                     }
                 } else {
-                    LazyColumn(
-                        verticalArrangement = Arrangement.spacedBy(20.dp),
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        items(orders) { order ->
-                            OrderRow(order)
+                    if (orders.isEmpty()) {
+                        EmptyOrdersList()
+                    }
+                    else {
+                        LazyColumn(
+                            verticalArrangement = Arrangement.spacedBy(20.dp),
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            items(orders) { order ->
+                                OrderRow(order)
+                            }
                         }
                     }
                 }
@@ -126,7 +130,7 @@ fun OrdersScreen(viewModel: MainViewModel) {
 
 @Composable
 fun AddOrder(state: MutableState<Boolean>, viewModel: MainViewModel) {
-    if(state.value) {
+    if (state.value) {
         Dialog(onDismissRequest = { state.value = false }) {
             NewOrderScreen(state, viewModel)
         }
@@ -134,31 +138,93 @@ fun AddOrder(state: MutableState<Boolean>, viewModel: MainViewModel) {
 }
 
 @Composable
-fun OrderRow (order : Order) {
+fun OrderRow(order: Order) {
     Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(10.dp)) {
-        Text("№ " + order.number, style = CustomTextStyles.body1_semi_bold, color = MaterialTheme.colorScheme.onSurface)
+        Text(
+            "№ " + order.number,
+            style = CustomTextStyles.body1_semi_bold,
+            color = MaterialTheme.colorScheme.onSurface
+        )
         Row {
-            Text("Товар:", modifier = Modifier.weight(1f), style = CustomTextStyles.body2_medium, color = MaterialTheme.colorScheme.onTertiary)
-            Text(order.product, modifier = Modifier.weight(1f), textAlign = TextAlign.End, style = CustomTextStyles.body2_medium, color = MaterialTheme.colorScheme.onPrimary)
+            Text(
+                "Товар:",
+                modifier = Modifier.weight(1f),
+                style = CustomTextStyles.body2_medium,
+                color = MaterialTheme.colorScheme.onTertiary
+            )
+            Text(
+                order.product,
+                modifier = Modifier.weight(1f),
+                textAlign = TextAlign.End,
+                style = CustomTextStyles.body2_medium,
+                color = MaterialTheme.colorScheme.onPrimary
+            )
         }
         Row {
-            Text("Количество:", modifier = Modifier.weight(1f), style = CustomTextStyles.body2_medium, color = MaterialTheme.colorScheme.onTertiary)
-            Text(order.amount.toString(), modifier = Modifier.weight(1f), textAlign = TextAlign.End, style = CustomTextStyles.body2_medium, color = MaterialTheme.colorScheme.onPrimary)
+            Text(
+                "Количество:",
+                modifier = Modifier.weight(1f),
+                style = CustomTextStyles.body2_medium,
+                color = MaterialTheme.colorScheme.onTertiary
+            )
+            Text(
+                order.amount.toString(),
+                modifier = Modifier.weight(1f),
+                textAlign = TextAlign.End,
+                style = CustomTextStyles.body2_medium,
+                color = MaterialTheme.colorScheme.onPrimary
+            )
         }
         Row {
-            Text("Цена:", modifier = Modifier.weight(1f), style = CustomTextStyles.body2_medium, color = MaterialTheme.colorScheme.onTertiary)
-            Text("${order.price} ₽", modifier = Modifier.weight(1f), textAlign = TextAlign.End, style = CustomTextStyles.body2_medium, color = MaterialTheme.colorScheme.onPrimary)
+            Text(
+                "Цена:",
+                modifier = Modifier.weight(1f),
+                style = CustomTextStyles.body2_medium,
+                color = MaterialTheme.colorScheme.onTertiary
+            )
+            Text(
+                "${order.price} ₽",
+                modifier = Modifier.weight(1f),
+                textAlign = TextAlign.End,
+                style = CustomTextStyles.body2_medium,
+                color = MaterialTheme.colorScheme.onPrimary
+            )
         }
         Row {
-            Text("Ожидаемая дата доставки:", modifier = Modifier.weight(1f), style = CustomTextStyles.body2_medium, color = MaterialTheme.colorScheme.onTertiary)
-            Text(order.delivery_date, modifier = Modifier.weight(1f), textAlign = TextAlign.End, style = CustomTextStyles.body2_medium, color = MaterialTheme.colorScheme.onPrimary)
+            Text(
+                "Ожидаемая дата доставки:",
+                modifier = Modifier.weight(1f),
+                style = CustomTextStyles.body2_medium,
+                color = MaterialTheme.colorScheme.onTertiary
+            )
+            Text(
+                order.delivery_date,
+                modifier = Modifier.weight(1f),
+                textAlign = TextAlign.End,
+                style = CustomTextStyles.body2_medium,
+                color = MaterialTheme.colorScheme.onPrimary
+            )
         }
         Row {
-            Text("Статус:", modifier = Modifier.weight(1f), style = CustomTextStyles.body2_medium, color = MaterialTheme.colorScheme.onTertiary)
-            Text(order.status, modifier = Modifier.weight(1f), textAlign = TextAlign.End, style = CustomTextStyles.body2_medium, color = setColor(order.status))
+            Text(
+                "Статус:",
+                modifier = Modifier.weight(1f),
+                style = CustomTextStyles.body2_medium,
+                color = MaterialTheme.colorScheme.onTertiary
+            )
+            Text(
+                order.status,
+                modifier = Modifier.weight(1f),
+                textAlign = TextAlign.End,
+                style = CustomTextStyles.body2_medium,
+                color = setColor(order.status)
+            )
         }
     }
-    HorizontalDivider(modifier = Modifier.padding(0.dp, 20.dp, 0.dp, 0.dp), color = MaterialTheme.colorScheme.background)
+    HorizontalDivider(
+        modifier = Modifier.padding(0.dp, 20.dp, 0.dp, 0.dp),
+        color = MaterialTheme.colorScheme.background
+    )
 }
 
 
@@ -176,5 +242,27 @@ fun setColor(status: String): Color {
         "Задерживается" -> warning_500
         "Отменен" -> error_500
         else -> primary_500
+    }
+}
+
+@Composable
+fun EmptyOrdersList() {
+    Column(
+        verticalArrangement = Arrangement.spacedBy(15.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Icon(
+            painter = painterResource(id = R.drawable.orders_icon),
+            contentDescription = "Inventory icon",
+            tint = MaterialTheme.colorScheme.primary,
+            modifier = Modifier.size(100.dp)
+        )
+        Text(
+            "Вы пока не добавили заказы",
+            color = MaterialTheme.colorScheme.onSecondary,
+            style = CustomTextStyles.body2_regular,
+            textAlign = TextAlign.Center
+        )
     }
 }

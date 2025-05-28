@@ -40,30 +40,36 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.inventorymanagementapp.R
-import com.example.inventorymanagementapp.ui.theme.*import android.content.Context
+import com.example.inventorymanagementapp.ui.theme.*
+import android.content.Context
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.platform.LocalContext
-import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.inventorymanagementapp.DropdownMenuInventory
 import com.example.inventorymanagementapp.viewModels.MainViewModel
 
 
 @Composable
-fun NewProductScreen(state: MutableState<Boolean>, viewModel : MainViewModel) {
+fun NewProductScreen(state: MutableState<Boolean>, viewModel: MainViewModel) {
     var productName by remember { mutableStateOf(TextFieldValue("")) }
     var price by remember { mutableStateOf(TextFieldValue("")) }
     var amount by remember { mutableStateOf(TextFieldValue("")) }
     var amount_sold by remember { mutableStateOf(TextFieldValue("")) }
     var category by remember { mutableStateOf(TextFieldValue("")) }
-    var supplier by remember { mutableStateOf(TextFieldValue("")) }
-    var warehouse by remember { mutableStateOf(TextFieldValue("")) }
+
+    var supplier by remember { mutableStateOf("") }
+    var warehouse by remember { mutableStateOf("") }
 
     var image = "https://i.imgur.com/YfB6HcL.png"
-    val userLogin = "test1"
 
-    val stroke = Stroke(width = 3f,
+    val userSuppliers by viewModel.suppliersNames.collectAsState()
+    val userWarehouses by viewModel.warehousesNames.collectAsState()
+
+    val stroke = Stroke(
+        width = 3f,
         pathEffect = PathEffect.dashPathEffect(floatArrayOf(10f, 10f), 0f)
     )
 
@@ -92,11 +98,20 @@ fun NewProductScreen(state: MutableState<Boolean>, viewModel : MainViewModel) {
                     modifier = Modifier
                         .size(100.dp)
                         .drawBehind {
-                            drawRoundRect(color = boxColor, style = stroke, cornerRadius = CornerRadius(10.dp.toPx()))
+                            drawRoundRect(
+                                color = boxColor,
+                                style = stroke,
+                                cornerRadius = CornerRadius(10.dp.toPx())
+                            )
                         }
                 )
                 {
-                    Icon(painter = painterResource(R.drawable.upload_file_icon), contentDescription = "Menu", tint = MaterialTheme.colorScheme.onPrimary, modifier = Modifier.size(80.dp))
+                    Icon(
+                        painter = painterResource(R.drawable.upload_file_icon),
+                        contentDescription = "Menu",
+                        tint = MaterialTheme.colorScheme.onPrimary,
+                        modifier = Modifier.size(80.dp)
+                    )
                 }
                 Column(
                     modifier = Modifier.fillMaxWidth(),
@@ -138,7 +153,7 @@ fun NewProductScreen(state: MutableState<Boolean>, viewModel : MainViewModel) {
                             ) {
                                 if (productName.text.isEmpty()) {
                                     Text(
-                                        text = "Введите название продукта",
+                                        text = "Введите название товара",
                                         color = MaterialTheme.colorScheme.onSecondary,
                                         style = CustomTextStyles.body1_regular
                                     )
@@ -184,7 +199,7 @@ fun NewProductScreen(state: MutableState<Boolean>, viewModel : MainViewModel) {
                         decorationBox = { innerTextField ->
                             if (category.text.isEmpty()) {
                                 Text(
-                                    text = "Выберите категорию",
+                                    text = "Введите категорию",
                                     color = MaterialTheme.colorScheme.onSecondary,
                                     style = CustomTextStyles.body1_regular
                                 )
@@ -326,35 +341,10 @@ fun NewProductScreen(state: MutableState<Boolean>, viewModel : MainViewModel) {
                         color = MaterialTheme.colorScheme.onBackground,
                         style = CustomTextStyles.body2_medium
                     )
-                    BasicTextField(
-                        value = supplier,
-                        onValueChange = { supplier = it },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clip(RoundedCornerShape(8.dp))
-                            .border(
-                                1.dp,
-                                color = MaterialTheme.colorScheme.primary,
-                                RoundedCornerShape(8.dp)
-                            )
-                            .padding(14.dp, 10.dp, 14.dp, 10.dp),
-                        textStyle = TextStyle(
-                            color = MaterialTheme.colorScheme.onSurface, // Используем onSurface для основного текста
-                            fontSize = 16.sp,
-                            lineHeight = 24.sp,
-                            fontWeight = FontWeight.Normal
-                        ),
-                        cursorBrush = SolidColor(MaterialTheme.colorScheme.onSurface),
-                        decorationBox = { innerTextField ->
-                            if (supplier.text.isEmpty()) {
-                                Text(
-                                    text = "Выберите поставщика",
-                                    color = MaterialTheme.colorScheme.onSecondary,
-                                    style = CustomTextStyles.body1_regular
-                                )
-                            }
-                            innerTextField()
-                        }
+                    DropdownMenuInventory(
+                        selectedField = supplier,
+                        onFieldSelected = { newSupplierId -> supplier = newSupplierId },
+                        map = userSuppliers
                     )
                 }
 
@@ -367,45 +357,23 @@ fun NewProductScreen(state: MutableState<Boolean>, viewModel : MainViewModel) {
                         color = MaterialTheme.colorScheme.onBackground,
                         style = CustomTextStyles.body2_medium
                     )
-
-                    BasicTextField(
-                        value = warehouse,
-                        onValueChange = { warehouse = it },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clip(RoundedCornerShape(8.dp))
-                            .border(
-                                1.dp,
-                                color = MaterialTheme.colorScheme.primary,
-                                RoundedCornerShape(8.dp)
-                            )
-                            .padding(14.dp, 10.dp, 14.dp, 10.dp),
-                        textStyle = TextStyle(
-                            color = MaterialTheme.colorScheme.onSurface, // Используем onSurface для основного текста
-                            fontSize = 16.sp,
-                            lineHeight = 24.sp,
-                            fontWeight = FontWeight.Normal
-                        ),
-                        cursorBrush = SolidColor(MaterialTheme.colorScheme.onSurface),
-                        decorationBox = { innerTextField ->
-                            if (warehouse.text.isEmpty()) {
-                                Text(
-                                    text = "Выберите склад",
-                                    color = MaterialTheme.colorScheme.onSecondary,
-                                    style = CustomTextStyles.body1_regular
-                                )
-                            }
-                            innerTextField()
-                        }
+                    DropdownMenuInventory(
+                        selectedField = warehouse,
+                        onFieldSelected = { newWarehouseId -> warehouse = newWarehouseId },
+                        map = userWarehouses
                     )
                 }
 
-                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)){
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
                     Spacer(modifier = Modifier.weight(1f))
                     OutlinedButton(
                         modifier = Modifier.clip(RoundedCornerShape(8.dp)),
                         shape = RoundedCornerShape(8.dp),
                         onClick = { state.value = false },
+                        border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
                         colors = ButtonDefaults.buttonColors(
                             containerColor = MaterialTheme.colorScheme.surface,
                             contentColor = MaterialTheme.colorScheme.onSecondary
@@ -417,45 +385,46 @@ fun NewProductScreen(state: MutableState<Boolean>, viewModel : MainViewModel) {
                     val context = LocalContext.current
                     Button(
                         onClick = {
-                                    if(checkFields(context, productName, price, amount, amount_sold, category, supplier, warehouse)) {
-                                        viewModel.addProduct(
-                                            name = productName.text,
-                                            amount_sold = amount_sold.text.toInt(),
-                                            category = category.text,
-                                            price = price.text.toDouble(),
-                                            userLogin = userLogin,
-                                            supplier = supplier.text,
-                                            warehouse = warehouse.text,
-                                            image_data = image,
-                                            amount = amount.text.toInt()
-                                        )
-                                        state.value = false
-                                        viewModel.loadProducts(userLogin)
-                                    }
-                                  },
-                            modifier = Modifier.clip(RoundedCornerShape(8.dp)),
-                            shape = RoundedCornerShape(8.dp),
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = primary_500,
-                                contentColor = white
-                            ),
-                            contentPadding = PaddingValues(10.dp)
-                        ) {
-                        Text("Добавить продукт", style = CustomTextStyles.body2_medium)
+                            if (checkFields(
+                                    context,
+                                    productName,
+                                    price,
+                                    amount,
+                                    amount_sold,
+                                    category,
+                                    supplier,
+                                    warehouse
+                                )
+                            ) {
+                                viewModel.addProduct(
+                                    name = productName.text,
+                                    amount_sold = amount_sold.text.toInt(),
+                                    category = category.text,
+                                    price = price.text.toDouble(),
+                                    supplier = supplier,
+                                    warehouse = warehouse,
+                                    image_data = image,
+                                    amount = amount.text.toInt()
+                                )
+                                state.value = false
+                                viewModel.loadProducts()
+                            }
+                        },
+                        modifier = Modifier.clip(RoundedCornerShape(8.dp)),
+                        shape = RoundedCornerShape(8.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = primary_500,
+                            contentColor = white
+                        ),
+                        contentPadding = PaddingValues(10.dp)
+                    ) {
+                        Text("Добавить товар", style = CustomTextStyles.body2_medium)
                     }
                 }
             }
         }
     }
 }
-
-
-//@Preview(showBackground = true)
-//@Composable
-//fun PreviewNewProduct() {
-//    val clickOnAddButton = remember { mutableStateOf(false) }
-//    //NewProductScreen(clickOnAddButton)
-//}
 
 fun checkFields(
     context: Context,
@@ -464,8 +433,8 @@ fun checkFields(
     amount: TextFieldValue,
     amount_sold: TextFieldValue,
     category: TextFieldValue,
-    supplier: TextFieldValue,
-    warehouse: TextFieldValue,
+    supplier: String,
+    warehouse: String,
 ): Boolean {
     // Проверка на пустые поля
     if (productName.text.isBlank() ||
@@ -473,8 +442,9 @@ fun checkFields(
         amount.text.isBlank() ||
         amount_sold.text.isBlank() ||
         category.text.isBlank() ||
-        supplier.text.isBlank() ||
-        warehouse.text.isBlank()) {
+        supplier.isBlank() ||
+        warehouse.isBlank()
+    ) {
         Toast.makeText(context, "Заполните все поля", Toast.LENGTH_SHORT).show()
         return false
     }
@@ -490,14 +460,17 @@ fun checkFields(
                 Toast.makeText(context, "Количество меньше 0", Toast.LENGTH_SHORT).show()
                 false
             }
+
             amountSoldValue < 0 -> {
                 Toast.makeText(context, "Количество продаж меньше 0", Toast.LENGTH_SHORT).show()
                 false
             }
+
             priceValue <= 0 -> {
                 Toast.makeText(context, "Цена меньше или равна 0", Toast.LENGTH_SHORT).show()
                 false
             }
+
             else -> {
                 Toast.makeText(context, "Товар добавлен", Toast.LENGTH_SHORT).show()
                 true

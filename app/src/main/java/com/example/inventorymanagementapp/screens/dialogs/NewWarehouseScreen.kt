@@ -2,6 +2,7 @@ package com.example.inventorymanagementapp.screens.dialogs
 
 import android.content.Context
 import android.widget.Toast
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -44,8 +45,6 @@ fun NewWarehouseScreen(state: MutableState<Boolean>, viewModel: MainViewModel) {
     var warehouseName by remember { mutableStateOf(TextFieldValue("")) }
     var address by remember { mutableStateOf(TextFieldValue("")) }
     var postal_address by remember { mutableStateOf(TextFieldValue("")) }
-
-    val user_login = "test1"
 
     Column(
         modifier = Modifier
@@ -189,12 +188,16 @@ fun NewWarehouseScreen(state: MutableState<Boolean>, viewModel: MainViewModel) {
                     )
                 }
 
-                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)){
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
                     Spacer(modifier = Modifier.weight(1f))
                     OutlinedButton(
                         modifier = Modifier.clip(RoundedCornerShape(8.dp)),
                         shape = RoundedCornerShape(8.dp),
                         onClick = { state.value = false },
+                        border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
                         colors = ButtonDefaults.buttonColors(
                             containerColor = MaterialTheme.colorScheme.surface,
                             contentColor = MaterialTheme.colorScheme.onSecondary
@@ -204,18 +207,24 @@ fun NewWarehouseScreen(state: MutableState<Boolean>, viewModel: MainViewModel) {
                         Text("Отмена", style = CustomTextStyles.body2_medium)
                     }
                     val context = LocalContext.current
-                    Button(onClick = {
-                        if (checkWarehouseFields(context, warehouseName, address, postal_address)) {
-                            viewModel.addWarehouse(
-                                name = warehouseName.text,
-                                address = address.text,
-                                postal_address = postal_address.text,
-                                user_login = user_login
-                            )
-                            viewModel.loadWarehouses(user_login)
-                            state.value = false
-                        }
-                    },
+                    Button(
+                        onClick = {
+                            if (checkWarehouseFields(
+                                    context,
+                                    warehouseName,
+                                    address,
+                                    postal_address
+                                )
+                            ) {
+                                viewModel.addWarehouse(
+                                    name = warehouseName.text,
+                                    address = address.text,
+                                    postal_address = postal_address.text,
+                                )
+                                viewModel.loadWarehouses()
+                                state.value = false
+                            }
+                        },
                         modifier = Modifier.clip(RoundedCornerShape(8.dp)),
                         shape = RoundedCornerShape(8.dp),
                         colors = ButtonDefaults.buttonColors(
@@ -248,11 +257,10 @@ fun checkWarehouseFields(
 
     ): Boolean {
     // Проверка на пустые поля
-    if (name.text.isBlank() || address.text.isBlank()|| postal_address.text.isBlank()) {
+    if (name.text.isBlank() || address.text.isBlank() || postal_address.text.isBlank()) {
         Toast.makeText(context, "Заполните все поля", Toast.LENGTH_SHORT).show()
         return false
-    }
-    else {
+    } else {
         Toast.makeText(context, "Склад добавлен", Toast.LENGTH_SHORT).show()
         return true
     }

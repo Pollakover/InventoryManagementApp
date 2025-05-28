@@ -2,13 +2,16 @@ package com.example.inventorymanagementapp.screens.dialogs
 
 import android.content.Context
 import android.widget.Toast
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -17,6 +20,7 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.SegmentedButton
@@ -25,6 +29,7 @@ import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -45,12 +50,12 @@ import com.example.inventorymanagementapp.viewModels.MainViewModel
 
 
 @Composable
-fun NewSupplierScreen(state: MutableState<Boolean>, viewModel : MainViewModel) {
+fun NewSupplierScreen(state: MutableState<Boolean>, viewModel: MainViewModel) {
     var name by remember { mutableStateOf(TextFieldValue("")) }
     var phone_number by remember { mutableStateOf(TextFieldValue("")) }
     var selectedTypeIndex by remember { mutableIntStateOf(0) }
 
-    val userLogin = "test1"
+    val isLoading by viewModel.isLoading.collectAsState()
 
     val type = when (selectedTypeIndex) {
         0 -> "Принимает возврат"
@@ -183,7 +188,10 @@ fun NewSupplierScreen(state: MutableState<Boolean>, viewModel : MainViewModel) {
                     )
                 }
 
-                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)){
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
 
                     Spacer(modifier = Modifier.weight(1f))
 
@@ -191,26 +199,33 @@ fun NewSupplierScreen(state: MutableState<Boolean>, viewModel : MainViewModel) {
                         modifier = Modifier.clip(RoundedCornerShape(8.dp)),
                         shape = RoundedCornerShape(8.dp),
                         onClick = { state.value = false },
+                        border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
                         colors = ButtonDefaults.buttonColors(
                             containerColor = MaterialTheme.colorScheme.surface,
-                            contentColor = MaterialTheme.colorScheme.onSecondary
+                            contentColor = MaterialTheme.colorScheme.onSecondary,
+
                         ),
-                        contentPadding = PaddingValues(10.dp)
+                        contentPadding = PaddingValues(10.dp),
                     ) {
                         Text("Отмена", style = CustomTextStyles.body2_medium)
                     }
                     val context = LocalContext.current
                     Button(
                         onClick = {
-                            if(checkFields(context, name, phone_number)){
+                            if (checkFields(context, name, phone_number)) {
                                 viewModel.addSupplier(
                                     name = name.text,
                                     phone_number = phone_number.text,
                                     type = type,
-                                    userLogin = userLogin
                                 )
-                                viewModel.loadSuppliers(userLogin)
-                                state.value = false
+                                viewModel.loadSuppliers()
+                                if (isLoading){
+
+                                }
+                                else {
+                                    state.value = false
+                                }
+
                             }
                         },
                         modifier = Modifier.clip(RoundedCornerShape(8.dp)),
@@ -265,23 +280,25 @@ fun SingleChoiceSegmentedButton(
                     inactiveBorderColor = transparent
                 ),
                 label = { Text(label) },
-                modifier = Modifier.fillMaxWidth().weight(1f)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f)
             )
         }
     }
 }
+
 fun checkFields(
     context: Context,
     name: TextFieldValue,
     phone_number: TextFieldValue,
 
-): Boolean {
+    ): Boolean {
     // Проверка на пустые поля
     if (name.text.isBlank() || phone_number.text.isBlank()) {
         Toast.makeText(context, "Заполните все поля", Toast.LENGTH_SHORT).show()
         return false
-    }
-    else {
+    } else {
         Toast.makeText(context, "Поставщик добавлен", Toast.LENGTH_SHORT).show()
         return true
     }

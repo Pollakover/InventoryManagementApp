@@ -10,4 +10,7 @@ interface AuthApi {
 
     @POST("register")
     fun register(@Body request: RegisterRequest): Call<AuthResponse>
+
+    @POST("/user/getByLogin")
+    suspend fun getUserByLogin(@Body request: GetUserByLoginRequest): UserResponse
 }

@@ -10,9 +10,12 @@ interface WarehouseApi {
 
     @POST("/warehouses/add")
     suspend fun addWarehouse(@Body request: AddWarehouseRequest)
+
+    @POST("/warehouses/getById")
+    suspend fun getWarehouseById(@Body request: GetWarehouseByIdRequest): Warehouse
 }
 
-data class FetchWarehousesRequest (
+data class FetchWarehousesRequest(
     val user_login: String
 )
 
@@ -21,4 +24,8 @@ data class AddWarehouseRequest(
     val address: String,
     val postal_address: String,
     val user_login: String
+)
+
+data class GetWarehouseByIdRequest(
+    val warehouseId: String
 )

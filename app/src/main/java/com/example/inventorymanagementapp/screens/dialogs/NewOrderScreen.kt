@@ -2,6 +2,7 @@ package com.example.inventorymanagementapp.screens.dialogs
 
 import android.content.Context
 import android.widget.Toast
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -36,20 +37,18 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.inventorymanagementapp.StatusDropdownMenu
+import com.example.inventorymanagementapp.DropdownMenuOrders
 import com.example.inventorymanagementapp.ui.theme.*
 import com.example.inventorymanagementapp.viewModels.MainViewModel
 
 
 @Composable
-fun NewOrderScreen(state: MutableState<Boolean>, viewModel : MainViewModel) {
+fun NewOrderScreen(state: MutableState<Boolean>, viewModel: MainViewModel) {
     var product by remember { mutableStateOf(TextFieldValue("")) }
     var price by remember { mutableStateOf(TextFieldValue("")) }
     var amount by remember { mutableStateOf(TextFieldValue("")) }
     var delivery_date by remember { mutableStateOf(TextFieldValue("")) }
     var status by remember { mutableStateOf("В пути") }
-
-    val userLogin = "test1"
 
     Column(
         modifier = Modifier
@@ -75,7 +74,7 @@ fun NewOrderScreen(state: MutableState<Boolean>, viewModel : MainViewModel) {
                     verticalArrangement = Arrangement.spacedBy(6.dp)
                 ) {
                     Text(
-                        text = "Название продукта",
+                        text = "Название товара",
                         color = MaterialTheme.colorScheme.onBackground,
                         style = CustomTextStyles.body2_medium
                     )
@@ -105,7 +104,7 @@ fun NewOrderScreen(state: MutableState<Boolean>, viewModel : MainViewModel) {
                         decorationBox = { innerTextField ->
                             if (product.text.isEmpty()) {
                                 Text(
-                                    text = "Введите название продукта",
+                                    text = "Введите название товара",
                                     color = MaterialTheme.colorScheme.onSecondary,
                                     style = CustomTextStyles.body1_regular
                                 )
@@ -247,9 +246,9 @@ fun NewOrderScreen(state: MutableState<Boolean>, viewModel : MainViewModel) {
                         color = MaterialTheme.colorScheme.onBackground,
                         style = CustomTextStyles.body2_medium
                     )
-                    StatusDropdownMenu(
-                        selectedStatus = status,
-                        onStatusSelected = { newStatus ->
+                    DropdownMenuOrders(
+                        selectedField = status,
+                        onFieldSelected = { newStatus ->
                             status = newStatus
                         },
                         modifier = Modifier.padding(vertical = 8.dp)
@@ -257,12 +256,16 @@ fun NewOrderScreen(state: MutableState<Boolean>, viewModel : MainViewModel) {
                 }
 
 
-                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)){
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
                     Spacer(modifier = Modifier.weight(1f))
                     OutlinedButton(
                         modifier = Modifier.clip(RoundedCornerShape(8.dp)),
                         shape = RoundedCornerShape(8.dp),
                         onClick = { state.value = false },
+                        border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
                         colors = ButtonDefaults.buttonColors(
                             containerColor = MaterialTheme.colorScheme.surface,
                             contentColor = MaterialTheme.colorScheme.onSecondary
@@ -272,20 +275,20 @@ fun NewOrderScreen(state: MutableState<Boolean>, viewModel : MainViewModel) {
                         Text("Отмена", style = CustomTextStyles.body2_medium)
                     }
                     val context = LocalContext.current
-                    Button(onClick = {
-                        if (checkFields(context, price, amount, delivery_date)) {
-                            viewModel.addOrder(
-                                amount = amount.text.toInt(),
-                                price = price.text.toDouble(),
-                                delivery_date = delivery_date.text,
-                                user_login = userLogin,
-                                status = status,
-                                product = product.text,
-                            )
-                            state.value = false
-                            viewModel.loadOrders(userLogin)
-                        }
-                    },
+                    Button(
+                        onClick = {
+                            if (checkFields(context, price, amount, delivery_date)) {
+                                viewModel.addOrder(
+                                    amount = amount.text.toInt(),
+                                    price = price.text.toDouble(),
+                                    delivery_date = delivery_date.text,
+                                    status = status,
+                                    product = product.text,
+                                )
+                                state.value = false
+                                viewModel.loadOrders()
+                            }
+                        },
                         modifier = Modifier.clip(RoundedCornerShape(8.dp)),
                         shape = RoundedCornerShape(8.dp),
                         colors = ButtonDefaults.buttonColors(
@@ -320,7 +323,8 @@ fun checkFields(
     if (
         price.text.isBlank() ||
         amount.text.isBlank() ||
-        delivery_date.text.isBlank()) {
+        delivery_date.text.isBlank()
+    ) {
         Toast.makeText(context, "Заполните все поля", Toast.LENGTH_SHORT).show()
         return false
     }
@@ -335,10 +339,12 @@ fun checkFields(
                 Toast.makeText(context, "Количество меньше или равно 0", Toast.LENGTH_SHORT).show()
                 false
             }
+
             priceValue <= 0 -> {
                 Toast.makeText(context, "Цена меньше или равна 0", Toast.LENGTH_SHORT).show()
                 false
             }
+
             else -> {
                 Toast.makeText(context, "Заказ добавлен", Toast.LENGTH_SHORT).show()
                 true

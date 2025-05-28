@@ -1,5 +1,8 @@
 package com.example.inventorymanagementapp
 
+import android.content.Context
+import android.content.Context.MODE_PRIVATE
+import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -24,6 +27,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -48,6 +52,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -70,40 +75,45 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.inventorymanagementapp.database.ApiClient
+import com.example.inventorymanagementapp.database.login.GetUserByLoginRequest
+import com.example.inventorymanagementapp.database.login.UserResponse
 import com.example.inventorymanagementapp.screens.DashboardScreen
 import com.example.inventorymanagementapp.screens.InventoryScreen
 import com.example.inventorymanagementapp.screens.OrdersScreen
 import com.example.inventorymanagementapp.screens.searchScreens.InventorySearchScreen
 import com.example.inventorymanagementapp.screens.SuppliersScreen
 import com.example.inventorymanagementapp.screens.WarehousesScreen
-import com.example.inventorymanagementapp.screens.searchScreens.OrdersSearchScreen
-import com.example.inventorymanagementapp.screens.searchScreens.SuppliersSearchScreen
 import com.example.inventorymanagementapp.ui.theme.CustomTextStyles
 import com.example.inventorymanagementapp.ui.theme.InventoryManagementAppTheme
 import com.example.inventorymanagementapp.ui.theme.*
 import com.example.inventorymanagementapp.viewModels.MainViewModel
 import kotlinx.coroutines.launch
+import androidx.core.content.edit
+import com.example.inventorymanagementapp.database.login.LoginActivity
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val userLogin = intent.getStringExtra("USER_LOGIN")
-        val sharedPreferences = getSharedPreferences("search_preferences", MODE_PRIVATE)
+        val userLogin = intent.getStringExtra("USER_LOGIN") ?: "test1"
+        val sharedPreferences = getSharedPreferences("user_preferences", MODE_PRIVATE)
+        sharedPreferences.edit {
+            putString("user_login", userLogin)
+        }
 
         //enableEdgeToEdge()
         setContent {
-
-            val mainViewModel : MainViewModel = viewModel(
+            val mainViewModel: MainViewModel = viewModel(
                 factory = object : ViewModelProvider.Factory {
                     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                        val sharedPreferences = sharedPreferences
-                        return MainViewModel(sharedPreferences) as T
+                        //val sharedPreferences = sharedPreferences
+                        return MainViewModel(sharedPreferences, userLogin) as T
                     }
                 }
             )
 
-            InventoryManagementAppTheme(darkTheme = mainViewModel.isDarkModeOn) {
+            InventoryManagementAppTheme(mainViewModel.isDarkModeOn) {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.primary
@@ -119,7 +129,26 @@ class MainActivity : ComponentActivity() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen(mainViewModel: MainViewModel, sharedPreferences: SharedPreferences, userLogin : String?) {
+fun MainScreen(
+    mainViewModel: MainViewModel,
+    sharedPreferences: SharedPreferences,
+    userLogin: String
+) {
+
+    var user by remember { mutableStateOf<UserResponse?>(null) }
+    var loading by remember { mutableStateOf(true) }
+    var error by remember { mutableStateOf<String?>(null) }
+
+    LaunchedEffect(userLogin) {
+        try {
+            user = ApiClient.authApi.getUserByLogin(GetUserByLoginRequest(userLogin))
+            loading = false
+        } catch (e: Exception) {
+            error = e.message ?: "Failed to load user data"
+            loading = false
+        }
+    }
+
     val navController = rememberNavController()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
@@ -136,7 +165,7 @@ fun MainScreen(mainViewModel: MainViewModel, sharedPreferences: SharedPreference
     ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {
-            ModalDrawerSheet{
+            ModalDrawerSheet {
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
@@ -157,8 +186,9 @@ fun MainScreen(mainViewModel: MainViewModel, sharedPreferences: SharedPreference
                                     painter = painterResource(R.drawable.icon),
                                     modifier = Modifier
                                         .size(80.dp)
-                                        .clip(RoundedCornerShape(50))
-                                        .border(1.dp, color = MaterialTheme.colorScheme.primary, RoundedCornerShape(50)),
+                                        .clip(RoundedCornerShape(8.dp))
+                                        .background(MaterialTheme.colorScheme.surface),
+                                    //.border(1.dp, color = MaterialTheme.colorScheme.primary, RoundedCornerShape(50)),
                                     contentDescription = "Logo"
                                 )
                                 Spacer(modifier = Modifier.weight(1f))
@@ -169,7 +199,9 @@ fun MainScreen(mainViewModel: MainViewModel, sharedPreferences: SharedPreference
                                     modifier = Modifier.size(35.dp)
                                 ) {
                                     Icon(
-                                        if (mainViewModel.isDarkModeOn) painterResource(id = R.drawable.light_mode_icon) else painterResource(id = R.drawable.dark_mode_icon),
+                                        if (mainViewModel.isDarkModeOn) painterResource(id = R.drawable.light_mode_icon) else painterResource(
+                                            id = R.drawable.dark_mode_icon
+                                        ),
                                         contentDescription = "Light / Dark mode",
                                         tint = MaterialTheme.colorScheme.onTertiary
                                     )
@@ -179,18 +211,24 @@ fun MainScreen(mainViewModel: MainViewModel, sharedPreferences: SharedPreference
                             //Имя и почта
                             Column(verticalArrangement = Arrangement.spacedBy(5.dp))
                             {
-                                Text(
-                                    text = userLogin.toString(),
-                                    color = MaterialTheme.colorScheme.onTertiary,
-                                    style = CustomTextStyles.body1_bold
-                                )
-                                Text(
-                                    "revokalloppollakover@gmail.com",
-                                    color = MaterialTheme.colorScheme.onPrimary,
-                                    fontSize = 12.sp,
-                                    fontWeight = FontWeight.Medium,
-                                    letterSpacing = 0.5.sp
-                                )
+                                when {
+                                    loading -> CircularProgressIndicator()
+                                    error != null -> Text("Error: $error", color = Color.Red)
+                                    user != null -> {
+                                        Text(
+                                            text = user?.login ?: "",
+                                            color = MaterialTheme.colorScheme.onTertiary,
+                                            style = CustomTextStyles.body1_bold
+                                        )
+                                        Text(
+                                            user?.email ?: "",
+                                            color = MaterialTheme.colorScheme.onPrimary,
+                                            fontSize = 12.sp,
+                                            fontWeight = FontWeight.Medium,
+                                            letterSpacing = 0.5.sp
+                                        )
+                                    }
+                                }
                             }
                         }
                         Column(
@@ -483,21 +521,24 @@ fun MainScreen(mainViewModel: MainViewModel, sharedPreferences: SharedPreference
                         if (currentRoute == "inventory" || currentRoute == "search_inventory") {
                             IconButton(
                                 onClick = {
-                                    if(!mainViewModel.searchButtonState) {
+                                    if (!mainViewModel.searchButtonState) {
                                         mainViewModel.changeButtonState()
-                                        when(currentRoute){
-                                            "inventory" -> navController.navigate("search_inventory") { launchSingleTop = true }
+                                        when (currentRoute) {
+                                            "inventory" -> navController.navigate("search_inventory") {
+                                                launchSingleTop = true
+                                            }
                                         }
 
-                                    }
-                                    else {
+                                    } else {
                                         mainViewModel.changeButtonState()
                                         navController.popBackStack()
                                     }
                                 }
                             ) {
                                 Icon(
-                                    painter = if (mainViewModel.searchButtonState) painterResource(id = R.drawable.delete_icon) else painterResource(id = R.drawable.search_icon),
+                                    painter = if (mainViewModel.searchButtonState) painterResource(
+                                        id = R.drawable.delete_icon
+                                    ) else painterResource(id = R.drawable.search_icon),
                                     contentDescription = "Search",
                                     tint = MaterialTheme.colorScheme.onSurface,
                                     modifier = Modifier.size(20.dp)
@@ -513,11 +554,8 @@ fun MainScreen(mainViewModel: MainViewModel, sharedPreferences: SharedPreference
                 startDestination = "dashboard",
                 modifier = Modifier.padding(innerPadding)
             ) {
-                composable("search_inventory") { InventorySearchScreen(mainViewModel, sharedPreferences) }
-                composable("search_suppliers") { SuppliersSearchScreen(mainViewModel) }
-                composable("search_orders") { OrdersSearchScreen(mainViewModel) }
-                composable("dashboard") { DashboardScreen() }
-                //composable("dashboard") { Demo_ExposedDropdownMenuBox() }
+                composable("search_inventory") { InventorySearchScreen(mainViewModel) }
+                composable("dashboard") { DashboardScreen(mainViewModel) }
                 composable("inventory") { InventoryScreen(mainViewModel) }
                 composable("suppliers") { SuppliersScreen(mainViewModel) }
                 composable("orders") { OrdersScreen(mainViewModel) }
@@ -567,10 +605,13 @@ fun ExitDialog(state: MutableState<Boolean>) {
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier.fillMaxWidth()
                     ) {
-
+                        val context = LocalContext.current
                         Row(horizontalArrangement = Arrangement.spacedBy(20.dp)) {
                             TextButton(
-                                onClick = { state.value = false },
+                                onClick = {
+                                    state.value = false
+                                    logout(context)
+                                },
                                 shape = RoundedCornerShape(8.dp),
                                 colors = ButtonDefaults.buttonColors(
                                     contentColor = primary_500,
@@ -602,8 +643,6 @@ fun ExitDialog(state: MutableState<Boolean>) {
 fun TopSearchBar(viewModel: MainViewModel) {
     val searchText by viewModel.searchText.collectAsState()
     val focusManager = LocalFocusManager.current
-    //var focusState by remember { mutableStateOf<FocusState?>(null) }
-    //var isFocused by remember { mutableStateOf(false) }
 
     val brush = remember {
         Brush.linearGradient(
@@ -659,7 +698,8 @@ fun TopSearchBar(viewModel: MainViewModel) {
             .fillMaxWidth()
             .focusRequester(viewModel.focusRequester)
             .onFocusChanged { focusState ->
-                viewModel.isFocused = focusState.isFocused },
+                viewModel.isFocused = focusState.isFocused
+            },
         placeholder = {
             Text(
                 "Поиск…",
@@ -670,12 +710,18 @@ fun TopSearchBar(viewModel: MainViewModel) {
     )
 }
 
-//@Preview(showBackground = true)
-//@Composable
-//fun PreviewMain() {
-//    val mainViewModel = viewModel<MainViewModel>()
-//    MainScreen(mainViewModel)
-//}
+fun logout(context: Context) {
+    // Очищаем сохраненный логин
+    context.getSharedPreferences("user_preferences", MODE_PRIVATE).edit {
+        remove("user_login")
+    }
+
+    // Переходим на экран входа
+    val intent = Intent(context, LoginActivity::class.java).apply {
+        flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+    }
+    context.startActivity(intent)
+}
 
 fun changeColors(array: Array<Color>, index: Int) {
     array[index] = primary_500

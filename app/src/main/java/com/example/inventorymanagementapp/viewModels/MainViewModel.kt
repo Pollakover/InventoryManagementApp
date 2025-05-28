@@ -29,21 +29,29 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import androidx.core.content.edit
 
 class MainViewModel(
-    private val sharedPreferences: SharedPreferences
+    private val sharedPreferences: SharedPreferences,
+    private val userLogin: String
 ) : ViewModel() {
 
     //Изменение темы
-    var isDarkModeOn by mutableStateOf(false)
+    var isDarkModeOn by mutableStateOf(
+        sharedPreferences.getBoolean("dark_mode", false)
+    )
         private set
 
     fun changeTheme() {
         isDarkModeOn = !isDarkModeOn
+        sharedPreferences.edit {
+            putBoolean("dark_mode", isDarkModeOn)
+        }
     }
 
     // Поток для хранения истории поиска
@@ -111,12 +119,11 @@ class MainViewModel(
 
     var isFocused by mutableStateOf(false)
 
-
     //Текст внутри поля
     private val _searchText = MutableStateFlow(TextFieldValue(""))
     val searchText = _searchText.asStateFlow()
 
-    //Products
+//Products
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
     private val _isLoading = MutableStateFlow(true)
@@ -151,7 +158,7 @@ class MainViewModel(
         )
 
 
-    fun loadProducts(userLogin: String) {
+    fun loadProducts() {
         viewModelScope.launch {
             try {
                 _isLoading.value = true
@@ -173,7 +180,6 @@ class MainViewModel(
         amount_sold: Int,
         category: String,
         price: Double,
-        userLogin: String,
         supplier: String,
         warehouse: String,
         image_data: String,
@@ -205,6 +211,58 @@ class MainViewModel(
         }
     }
 
+    fun getLowStockProducts(): List<Product> {
+        return _products.value
+            //.filter { it.amount > 0 }
+            .sortedBy { it.amount }
+            .take(3)
+    }
+
+    fun getHighDemandProducts(): List<Product> {
+        return _products.value
+            .filter { it.amount_sold > 0 }
+            .sortedByDescending { it.amount_sold }
+            .take(3)
+    }
+
+    fun countProducts() : Int {
+        var amount = 0
+        for (product in _products.value) {
+            amount += 1
+        }
+        return amount
+    }
+
+    fun countProductsInStock() : Int {
+        var amount = 0
+        for (product in _products.value) {
+            if(product.amount >= 10) {
+                amount += 1
+            }
+        }
+        return amount
+    }
+
+    fun countProductsLowInStock() : Int {
+        var amount = 0
+        for (product in _products.value) {
+            if(product.amount < 10 && product.amount != 0) {
+                amount += 1
+            }
+        }
+        return amount
+    }
+
+    fun countProductsNotInStock() : Int {
+        var amount = 0
+        for (product in _products.value) {
+            if(product.amount == 0) {
+                amount += 1
+            }
+        }
+        return amount
+    }
+
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
 //Suppliers
@@ -213,7 +271,7 @@ class MainViewModel(
 
     val _suppliers = MutableStateFlow<List<Supplier>>(emptyList())
 
-    fun loadSuppliers(userLogin: String) {
+    fun loadSuppliers() {
         viewModelScope.launch {
             try {
                 _isLoading.value = true
@@ -234,7 +292,6 @@ class MainViewModel(
         name: String,
         phone_number: String,
         type: String,
-        userLogin: String,
     ) {
         viewModelScope.launch {
             _isLoading.value = true
@@ -257,12 +314,22 @@ class MainViewModel(
         }
     }
 
+val suppliersNames: StateFlow<Map<String, String>> = _suppliers
+    .map { suppliers ->
+        suppliers.associate { it.supplierId to it.name }
+    }
+    .stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = emptyMap()
+    )
+
 //Orders
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
     val _orders = MutableStateFlow<List<Order>>(emptyList())
 
-    fun loadOrders(userLogin: String) {
+    fun loadOrders() {
         viewModelScope.launch {
             try {
                 _isLoading.value = true
@@ -282,7 +349,6 @@ class MainViewModel(
     fun addOrder(
         amount: Int,
         delivery_date: String,
-        user_login: String,
         status: String,
         product: String,
         price: Double,
@@ -295,7 +361,7 @@ class MainViewModel(
                         amount = amount,
                         delivery_date = delivery_date,
                         status = status,
-                        user_login = user_login,
+                        user_login = userLogin,
                         product = product,
                         price = price
                     )
@@ -317,7 +383,7 @@ class MainViewModel(
 
     val _warehouses = MutableStateFlow<List<Warehouse>>(emptyList())
 
-    fun loadWarehouses(userLogin: String) {
+    fun loadWarehouses() {
         viewModelScope.launch {
             try {
                 _isLoading.value = true
@@ -338,7 +404,6 @@ class MainViewModel(
         name: String,
         address: String,
         postal_address: String,
-        user_login: String
     ) {
         viewModelScope.launch {
             _isLoading.value = true
@@ -348,7 +413,7 @@ class MainViewModel(
                         name = name,
                         address = address,
                         postal_address = postal_address,
-                        user_login = user_login
+                        user_login = userLogin
                     )
                 )
                 _addWarehouseSuccess.value = true
@@ -360,6 +425,16 @@ class MainViewModel(
             }
         }
     }
+
+    val warehousesNames: StateFlow<Map<String, String>> = _warehouses
+        .map { warehouses ->
+            warehouses.associate { it.warehouseId to it.name }
+        }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = emptyMap()
+        )
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 

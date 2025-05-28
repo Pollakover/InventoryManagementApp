@@ -30,13 +30,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.inventorymanagementapp.NoResults
-import com.example.inventorymanagementapp.QueryError
+import com.example.inventorymanagementapp.R
 import com.example.inventorymanagementapp.database.suppliers.Supplier
 import com.example.inventorymanagementapp.screens.dialogs.NewSupplierScreen
 import com.example.inventorymanagementapp.ui.theme.*
@@ -44,12 +44,11 @@ import com.example.inventorymanagementapp.viewModels.MainViewModel
 
 @Composable
 fun SuppliersScreen(viewModel: MainViewModel) {
-    val userLogin = "test1"
     val suppliers by viewModel._suppliers.collectAsState()
     val clickOnAddButton = remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
-        viewModel.loadSuppliers(userLogin)
+        viewModel.loadSuppliers()
     }
 
     if (clickOnAddButton.value) {
@@ -105,14 +104,20 @@ fun SuppliersScreen(viewModel: MainViewModel) {
                         Text(text = "Ошибка загрузки", color = MaterialTheme.colorScheme.error)
                     }
                 } else {
-                    LazyColumn(
-                        verticalArrangement = Arrangement.spacedBy(20.dp),
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        items(suppliers) { supplier ->
-                            SupplierRow(supplier)
+                    if (suppliers.isEmpty()) {
+                        EmptySuppliersList()
+                    }
+                    else {
+                        LazyColumn(
+                            verticalArrangement = Arrangement.spacedBy(20.dp),
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            items(suppliers) { supplier ->
+                                SupplierRow(supplier)
+                            }
                         }
                     }
+
                 }
             }
         }
@@ -120,23 +125,63 @@ fun SuppliersScreen(viewModel: MainViewModel) {
 }
 
 @Composable
-fun SupplierRow(supplier: Supplier){
+fun SupplierRow(supplier: Supplier) {
     Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(10.dp)) {
-        Text(supplier.name, style = CustomTextStyles.body1_semi_bold, color = MaterialTheme.colorScheme.onSurface)
+        Text(
+            supplier.name,
+            style = CustomTextStyles.body1_semi_bold,
+            color = MaterialTheme.colorScheme.onSurface
+        )
         Row {
-            Text("Номер телефона:", modifier = Modifier.weight(1f), style = CustomTextStyles.body2_medium, color = MaterialTheme.colorScheme.onTertiary)
-            Text(supplier.phone_number, modifier = Modifier.weight(1f), textAlign = TextAlign.End, style = CustomTextStyles.body2_medium, color = MaterialTheme.colorScheme.onPrimary)
+            Text(
+                "Номер телефона:",
+                modifier = Modifier.weight(1f),
+                style = CustomTextStyles.body2_medium,
+                color = MaterialTheme.colorScheme.onTertiary
+            )
+            Text(
+                supplier.phone_number,
+                modifier = Modifier.weight(1f),
+                textAlign = TextAlign.End,
+                style = CustomTextStyles.body2_medium,
+                color = MaterialTheme.colorScheme.onPrimary
+            )
         }
         Row {
-            Text("Тип:", modifier = Modifier.weight(1f), style = CustomTextStyles.body2_medium, color = MaterialTheme.colorScheme.onTertiary)
-            Text(supplier.type, modifier = Modifier.weight(1f), textAlign = TextAlign.End, style = CustomTextStyles.body2_medium, color = if (supplier.type == "Принимает возврат") success_500 else error_500)
+            Text(
+                "Тип:",
+                modifier = Modifier.weight(1f),
+                style = CustomTextStyles.body2_medium,
+                color = MaterialTheme.colorScheme.onTertiary
+            )
+            Text(
+                supplier.type,
+                modifier = Modifier.weight(1f),
+                textAlign = TextAlign.End,
+                style = CustomTextStyles.body2_medium,
+                color = if (supplier.type == "Принимает возврат") success_500 else error_500
+            )
         }
         Row {
-            Text("Поставляемые продукты:", modifier = Modifier.weight(1f), style = CustomTextStyles.body2_medium, color = MaterialTheme.colorScheme.onTertiary)
-            Text(if (supplier.allProducts().isEmpty()) "Нет" else (supplier.allProducts()), modifier = Modifier.weight(1f), textAlign = TextAlign.End, style = CustomTextStyles.body2_medium, color = MaterialTheme.colorScheme.onPrimary)
+            Text(
+                "Поставляемые товары:",
+                modifier = Modifier.weight(1f),
+                style = CustomTextStyles.body2_medium,
+                color = MaterialTheme.colorScheme.onTertiary
+            )
+            Text(
+                if (supplier.allProducts().isEmpty()) "Нет" else (supplier.allProducts()),
+                modifier = Modifier.weight(1f),
+                textAlign = TextAlign.End,
+                style = CustomTextStyles.body2_medium,
+                color = MaterialTheme.colorScheme.onPrimary
+            )
         }
     }
-    HorizontalDivider(modifier = Modifier.padding(0.dp, 20.dp, 0.dp, 0.dp), color = MaterialTheme.colorScheme.background)
+    HorizontalDivider(
+        modifier = Modifier.padding(0.dp, 20.dp, 0.dp, 0.dp),
+        color = MaterialTheme.colorScheme.background
+    )
 }
 
 
@@ -149,9 +194,31 @@ fun PreviewSuppliers() {
 
 @Composable
 fun AddSupplier(state: MutableState<Boolean>, viewModel: MainViewModel) {
-    if(state.value) {
+    if (state.value) {
         Dialog(onDismissRequest = { state.value = false }) {
             NewSupplierScreen(state, viewModel)
         }
+    }
+}
+
+@Composable
+fun EmptySuppliersList() {
+    Column(
+        verticalArrangement = Arrangement.spacedBy(15.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Icon(
+            painter = painterResource(id = R.drawable.suppliers_icon),
+            contentDescription = "Inventory icon",
+            tint = MaterialTheme.colorScheme.primary,
+            modifier = Modifier.size(100.dp)
+        )
+        Text(
+            "Вы пока не добавили поставщиков",
+            color = MaterialTheme.colorScheme.onSecondary,
+            style = CustomTextStyles.body2_regular,
+            textAlign = TextAlign.Center
+        )
     }
 }

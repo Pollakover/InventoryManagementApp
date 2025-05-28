@@ -1,5 +1,6 @@
 package com.example.inventorymanagementapp.database.login
 
+import android.app.Activity.MODE_PRIVATE
 import android.content.Context
 import android.content.Intent
 import android.util.Log
@@ -50,7 +51,7 @@ import com.example.inventorymanagementapp.ui.theme.CustomTextStyles
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-
+import androidx.core.content.edit
 
 
 @Composable
@@ -122,7 +123,11 @@ fun LoginScreen(navController: NavController) {
 
                     BasicTextField(
                         value = login,
-                        onValueChange = { login = it },
+                        onValueChange = { newText ->
+                            if (newText.length <= 25) {
+                                login = newText
+                            }
+                        },
                         modifier = Modifier
                             .fillMaxWidth()
                             .clip(RoundedCornerShape(8.dp))
@@ -157,109 +162,116 @@ fun LoginScreen(navController: NavController) {
                     )
                 }
 
-                    Column(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalArrangement = Arrangement.spacedBy(6.dp)
-                    ) {
-                        Text(
-                            text = "Пароль",
-                            color = MaterialTheme.colorScheme.onBackground,
-                            style = CustomTextStyles.body2_medium
-                        )
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalArrangement = Arrangement.spacedBy(6.dp)
+                ) {
+                    Text(
+                        text = "Пароль",
+                        color = MaterialTheme.colorScheme.onBackground,
+                        style = CustomTextStyles.body2_medium
+                    )
 
-                        BasicTextField(
-                            value = password,
-                            onValueChange = { password = it },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clip(RoundedCornerShape(8.dp))
-                                .border(
-                                    1.dp,
-                                    color = MaterialTheme.colorScheme.primary,
-                                    shape = RoundedCornerShape(8.dp)
-                                )
-                                .padding(14.dp, 10.dp, 14.dp, 10.dp),
-                            textStyle = TextStyle(
-                                color = MaterialTheme.colorScheme.onSurface,
-                                fontSize = 16.sp,
-                                lineHeight = 24.sp,
-                                fontWeight = FontWeight.Normal
-                            ),
-                            cursorBrush = SolidColor(MaterialTheme.colorScheme.onSurface),
-                            decorationBox = { innerTextField ->
-                                Box(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    contentAlignment = Alignment.CenterStart
-                                ) {
-                                    if (password.isEmpty()) {
-                                        Text(
-                                            text = "Введите пароль",
-                                            color = MaterialTheme.colorScheme.onSecondary,
-                                            style = CustomTextStyles.body1_regular
-                                        )
-                                    }
-                                    innerTextField()
-                                }
+                    BasicTextField(
+                        value = password,
+                        onValueChange = { newText ->
+                            if (newText.length <= 25) {
+                                password = newText
                             }
-                        )
-                    }
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clip(RoundedCornerShape(8.dp))
+                            .border(
+                                1.dp,
+                                color = MaterialTheme.colorScheme.primary,
+                                shape = RoundedCornerShape(8.dp)
+                            )
+                            .padding(14.dp, 10.dp, 14.dp, 10.dp),
+                        textStyle = TextStyle(
+                            color = MaterialTheme.colorScheme.onSurface,
+                            fontSize = 16.sp,
+                            lineHeight = 24.sp,
+                            fontWeight = FontWeight.Normal
+                        ),
+                        cursorBrush = SolidColor(MaterialTheme.colorScheme.onSurface),
+                        decorationBox = { innerTextField ->
+                            Box(
+                                modifier = Modifier.fillMaxWidth(),
+                                contentAlignment = Alignment.CenterStart
+                            ) {
+                                if (password.isEmpty()) {
+                                    Text(
+                                        text = "Введите пароль",
+                                        color = MaterialTheme.colorScheme.onSecondary,
+                                        style = CustomTextStyles.body1_regular
+                                    )
+                                }
+                                innerTextField()
+                            }
+                        }
+                    )
+                }
 
                 val context = LocalContext.current
                 Button(
-                        onClick = {
-                            if(login.isNotEmpty() && password.isNotEmpty()) {
-                                loginUser(login, password, context)
-                            } else {
-                                Toast.makeText(context, "Заполните все поля", Toast.LENGTH_LONG).show()
-                            }
-                        },
-                        shape = RoundedCornerShape(8.dp),
+                    onClick = {
+                        if (checkFields(context, login, password)) {
+                            loginUser(login, password, context)
+                        }
+                    },
+                    shape = RoundedCornerShape(8.dp),
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = primary_500,
+                        contentColor = white
+                    )
+                ) {
+                    Text(
+                        "Войти",
+                        color = white,
+                        style = CustomTextStyles.body1_medium,
                         modifier = Modifier
-                            .fillMaxWidth(),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = primary_500,
-                            contentColor = white
-                        )
-                    ) {
-                        Text(
-                            "Войти",
-                            color = white,
-                            style = CustomTextStyles.body1_medium,
-                            modifier = Modifier
-                                .padding(5.dp)
-                        )
-                    }
+                            .padding(5.dp)
+                    )
+                }
 
-                    Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                        Text(
-                            text = "У вас нет аккаунта?",
-                            color = MaterialTheme.colorScheme.onSecondary,
-                            style = CustomTextStyles.body2_regular
-                        )
-                        Text(
-                            text = "Зарегистрируйтесь",
-                            color = primary_500,
-                            style = CustomTextStyles.body2_medium,
-                            modifier = Modifier.clickable {
-                                navController.navigate(Screen.SignupScreen.route) {
-                                    popUpTo(navController.graph.startDestinationId)
-                                    launchSingleTop = true
-                                }
+                Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                    Text(
+                        text = "У вас нет аккаунта?",
+                        color = MaterialTheme.colorScheme.onSecondary,
+                        style = CustomTextStyles.body2_regular
+                    )
+                    Text(
+                        text = "Зарегистрируйтесь",
+                        color = primary_500,
+                        style = CustomTextStyles.body2_medium,
+                        modifier = Modifier.clickable {
+                            navController.navigate(Screen.SignupScreen.route) {
+                                popUpTo(navController.graph.startDestinationId)
+                                launchSingleTop = true
                             }
-                        )
-                    }
+                        }
+                    )
                 }
             }
         }
     }
+}
 
 private fun loginUser(login: String, password: String, context: Context) {
     val call = ApiClient.authApi.login(LoginRequest(login, password))
     call.enqueue(object : Callback<AuthResponse> {
         override fun onResponse(call: Call<AuthResponse>, response: Response<AuthResponse>) {
             if (response.isSuccessful) {
-                val intent = Intent(context, MainActivity::class.java)
-                intent.putExtra("USER_LOGIN", login)
+                // Сохраняем только логин пользователя
+                saveUserLogin(context, login)
+
+                val intent = Intent(context, MainActivity::class.java).apply {
+                    putExtra("USER_LOGIN", login)
+                    flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                }
                 context.startActivity(intent)
                 Toast.makeText(context, "Успешный вход!", Toast.LENGTH_SHORT).show()
             } else {
@@ -274,9 +286,29 @@ private fun loginUser(login: String, password: String, context: Context) {
     })
 }
 
+private fun saveUserLogin(context: Context, login: String) {
+    context.getSharedPreferences("user_preferences", MODE_PRIVATE).edit {
+        putString("user_login", login)
+    }
+}
+
 @Preview(showBackground = true)
 @Composable
 fun PreviewLoginScreen() {
     val navController = rememberNavController()
     LoginScreen(navController)
+}
+
+fun checkFields(
+    context: Context,
+    login: String,
+    password: String
+
+): Boolean {
+    // Проверка на пустые поля
+    if (login.isBlank() || password.isBlank()) {
+        Toast.makeText(context, "Заполните все поля", Toast.LENGTH_SHORT).show()
+        return false
+    }
+    return true
 }

@@ -20,14 +20,17 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun StatusDropdownMenu(
-    selectedStatus: String,
-    onStatusSelected: (String) -> Unit,
-    modifier: Modifier = Modifier
+fun DropdownMenuOrders(
+    selectedField: String,
+    onFieldSelected: (String) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val categories = listOf("В пути", "Доставлен", "Отменен", "Задерживается")
     var expanded by remember { mutableStateOf(false) }
@@ -41,7 +44,7 @@ fun StatusDropdownMenu(
             .border(1.dp, MaterialTheme.colorScheme.primary, RoundedCornerShape(8.dp))
     ) {
         TextField(
-            value = selectedStatus,
+            value = selectedField,
             onValueChange = {},
             readOnly = true,
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
@@ -57,13 +60,26 @@ fun StatusDropdownMenu(
         ExposedDropdownMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false },
-            modifier = Modifier.background(MaterialTheme.colorScheme.surface)
+            shape = RoundedCornerShape(8.dp),
+            modifier = Modifier
+                .border(1.dp, MaterialTheme.colorScheme.primary, RoundedCornerShape(8.dp))
+                .background(MaterialTheme.colorScheme.background)
         ) {
             categories.forEach { status ->
                 DropdownMenuItem(
-                    text = { Text(status) },
+                    text = {
+                        Text(
+                            text = status,
+                            style = TextStyle(
+                                color = MaterialTheme.colorScheme.onSurface,
+                                fontSize = 16.sp,
+                                lineHeight = 24.sp,
+                                fontWeight = FontWeight.Normal
+                            ),
+                        )
+                    },
                     onClick = {
-                        onStatusSelected(status)
+                        onFieldSelected(status)
                         expanded = false
                     }
                 )

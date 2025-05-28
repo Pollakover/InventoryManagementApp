@@ -1,6 +1,5 @@
 package com.example.inventorymanagementapp.database.login
 
-
 data class LoginRequest(
     val login: String,
     val password: String
@@ -14,4 +13,14 @@ data class RegisterRequest(
 
 data class AuthResponse(
     val token: String
+)
+
+data class GetUserByLoginRequest(
+    val login: String
+)
+
+data class UserResponse(
+    val login: String,
+    val username: String,
+    val email: String?
 )

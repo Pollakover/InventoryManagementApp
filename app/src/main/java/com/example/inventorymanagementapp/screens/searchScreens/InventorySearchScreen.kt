@@ -45,7 +45,7 @@ import com.example.inventorymanagementapp.viewModels.MainViewModel
 
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
-fun InventorySearchScreen(viewModel: MainViewModel, sharedPreferences: SharedPreferences) {
+fun InventorySearchScreen(viewModel: MainViewModel) {
 
     val products by viewModel.products.collectAsState()
     var isFocused by remember { mutableStateOf(false) }
@@ -59,7 +59,7 @@ fun InventorySearchScreen(viewModel: MainViewModel, sharedPreferences: SharedPre
             .padding(22.dp)
             .fillMaxSize(),
     ) {
-        if(searchText.text.isBlank()){
+        if (searchText.text.isBlank()) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth(),
@@ -87,9 +87,9 @@ fun InventorySearchScreen(viewModel: MainViewModel, sharedPreferences: SharedPre
                     )
                 }
             }
-            Column{
+            Column {
                 searchHistory.forEach { item ->
-                    if(item.text != "") {
+                    if (item.text != "") {
                         TextButton(
                             shape = RoundedCornerShape(8.dp),
                             modifier = Modifier.fillMaxWidth(),
@@ -112,22 +112,19 @@ fun InventorySearchScreen(viewModel: MainViewModel, sharedPreferences: SharedPre
             }
 
         } else {
-            if(isSearching){
+            if (isSearching) {
                 Box(modifier = Modifier.fillMaxSize()) {
                     CircularProgressIndicator(
                         modifier = Modifier.align(Alignment.Center)
                     )
                 }
             } else {
-                if(viewModel.error) {
+                if (viewModel.error) {
                     QueryError(viewModel)
-                }
-
-                else {
-                    if(products.isEmpty()) {
+                } else {
+                    if (products.isEmpty()) {
                         NoResults()
-                    }
-                    else {
+                    } else {
                         LazyColumn(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -164,8 +161,8 @@ fun SearchResultRow(product: Product, mainViewModel: MainViewModel) {
                     .size(30.dp)
                     .clip(RoundedCornerShape(8.dp)),
                 contentScale = ContentScale.Crop,
-                placeholder = painterResource(R.drawable.icon), // необязательный плейсхолдер
-                error = painterResource(R.drawable.icon) // необязательная ошибка загрузки
+                placeholder = painterResource(R.drawable.icon),
+                error = painterResource(R.drawable.icon)
             )
             Text(
                 text = product.name,
