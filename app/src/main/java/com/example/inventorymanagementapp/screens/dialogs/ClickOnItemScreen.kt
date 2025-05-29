@@ -310,14 +310,6 @@ fun ClickOnItemScreen(product: Product) {
                                                 )
                                             }
                                         }
-//                                        HorizontalDivider(
-//                                            modifier = Modifier.padding(
-//                                                0.dp,
-//                                                0.dp,
-//                                                0.dp,
-//                                                0.dp
-//                                            ), color = MaterialTheme.colorScheme.primary
-//                                        )
                                     }
                                 }
                             }

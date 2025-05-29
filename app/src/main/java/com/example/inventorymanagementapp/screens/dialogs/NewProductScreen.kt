@@ -47,7 +47,9 @@ import com.example.inventorymanagementapp.ui.theme.*
 import android.content.Context
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import coil.compose.AsyncImage
 import com.example.inventorymanagementapp.DropdownMenuInventory
 import com.example.inventorymanagementapp.viewModels.MainViewModel
 
@@ -63,7 +65,9 @@ fun NewProductScreen(state: MutableState<Boolean>, viewModel: MainViewModel) {
     var supplier by remember { mutableStateOf("") }
     var warehouse by remember { mutableStateOf("") }
 
-    var image = "https://i.imgur.com/YfB6HcL.png"
+    var image by remember { mutableStateOf(TextFieldValue("")) }
+ //   var image by remember { mutableStateOf("") }
+    //var image = "https://i.imgur.com/YfB6HcL.png"
 
     val userSuppliers by viewModel.suppliersNames.collectAsState()
     val userWarehouses by viewModel.warehousesNames.collectAsState()
@@ -106,11 +110,15 @@ fun NewProductScreen(state: MutableState<Boolean>, viewModel: MainViewModel) {
                         }
                 )
                 {
-                    Icon(
-                        painter = painterResource(R.drawable.upload_file_icon),
-                        contentDescription = "Menu",
-                        tint = MaterialTheme.colorScheme.onPrimary,
-                        modifier = Modifier.size(80.dp)
+                    AsyncImage(
+                        model = image.text,
+                        contentDescription = "Product image",
+                        modifier = Modifier
+                            .size(80.dp)
+                            .clip(RoundedCornerShape(8.dp)),
+                        contentScale = ContentScale.Crop,
+                        placeholder = painterResource(R.drawable.upload_file_icon),
+                        error = painterResource(R.drawable.upload_file_icon)
                     )
                 }
                 Column(
@@ -337,6 +345,47 @@ fun NewProductScreen(state: MutableState<Boolean>, viewModel: MainViewModel) {
                     verticalArrangement = Arrangement.spacedBy(6.dp)
                 ) {
                     Text(
+                        text = "Изображение (необязательно)",
+                        color = MaterialTheme.colorScheme.onBackground,
+                        style = CustomTextStyles.body2_medium
+                    )
+                    BasicTextField(
+                        value = image,
+                        onValueChange = { image = it },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clip(RoundedCornerShape(8.dp))
+                            .border(
+                                1.dp,
+                                color = MaterialTheme.colorScheme.primary,
+                                RoundedCornerShape(8.dp)
+                            )
+                            .padding(14.dp, 10.dp, 14.dp, 10.dp),
+                        textStyle = TextStyle(
+                            color = MaterialTheme.colorScheme.onSurface,
+                            fontSize = 16.sp,
+                            lineHeight = 24.sp,
+                            fontWeight = FontWeight.Normal
+                        ),
+                        cursorBrush = SolidColor(MaterialTheme.colorScheme.onSurface),
+                        decorationBox = { innerTextField ->
+                            if (image.text.isEmpty()) {
+                                Text(
+                                    text = "Введите ссылку на изображение",
+                                    color = MaterialTheme.colorScheme.onSecondary,
+                                    style = CustomTextStyles.body1_regular
+                                )
+                            }
+                            innerTextField()
+                        }
+                    )
+                }
+
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalArrangement = Arrangement.spacedBy(6.dp)
+                ) {
+                    Text(
                         text = "Поставщик",
                         color = MaterialTheme.colorScheme.onBackground,
                         style = CustomTextStyles.body2_medium
@@ -403,7 +452,7 @@ fun NewProductScreen(state: MutableState<Boolean>, viewModel: MainViewModel) {
                                     price = price.text.toDouble(),
                                     supplier = supplier,
                                     warehouse = warehouse,
-                                    image_data = image,
+                                    image_data = image.text,
                                     amount = amount.text.toInt()
                                 )
                                 state.value = false
