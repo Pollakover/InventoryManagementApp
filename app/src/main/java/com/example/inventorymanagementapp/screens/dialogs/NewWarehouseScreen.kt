@@ -241,14 +241,6 @@ fun NewWarehouseScreen(state: MutableState<Boolean>, viewModel: MainViewModel) {
     }
 }
 
-
-//@Preview(showBackground = true)
-//@Composable
-//fun PreviewNewWarehouse() {
-//    val clickOnAddButton = remember { mutableStateOf(false) }
-//    NewWarehouseScreen(clickOnAddButton)
-//}
-
 fun checkWarehouseFields(
     context: Context,
     name: TextFieldValue,

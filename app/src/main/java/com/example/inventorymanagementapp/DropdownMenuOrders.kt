@@ -87,10 +87,3 @@ fun DropdownMenuOrders(
         }
     }
 }
-
-
-//@Preview(showBackground = true)
-//@Composable
-//fun PreviewNewProduct1() {
-//    Demo_ExposedDropdownMenuBox()
-//}

@@ -1,6 +1,5 @@
 package com.example.inventorymanagementapp.database.login
 
-//import android.content.ContentValues.TAG
 import android.content.Context
 import android.util.Log
 import android.widget.Toast

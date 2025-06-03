@@ -18,7 +18,6 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
@@ -61,13 +60,9 @@ fun NewProductScreen(state: MutableState<Boolean>, viewModel: MainViewModel) {
     var amount by remember { mutableStateOf(TextFieldValue("")) }
     var amount_sold by remember { mutableStateOf(TextFieldValue("")) }
     var category by remember { mutableStateOf(TextFieldValue("")) }
-
+    var image by remember { mutableStateOf(TextFieldValue("")) }
     var supplier by remember { mutableStateOf("") }
     var warehouse by remember { mutableStateOf("") }
-
-    var image by remember { mutableStateOf(TextFieldValue("")) }
- //   var image by remember { mutableStateOf("") }
-    //var image = "https://i.imgur.com/YfB6HcL.png"
 
     val userSuppliers by viewModel.suppliersNames.collectAsState()
     val userWarehouses by viewModel.warehousesNames.collectAsState()
@@ -148,12 +143,12 @@ fun NewProductScreen(state: MutableState<Boolean>, viewModel: MainViewModel) {
                             )
                             .padding(14.dp, 10.dp, 14.dp, 10.dp),
                         textStyle = TextStyle(
-                            color = MaterialTheme.colorScheme.onSurface, // Используем onSurface для основного текста
+                            color = MaterialTheme.colorScheme.onSurface,
                             fontSize = 16.sp,
                             lineHeight = 24.sp,
                             fontWeight = FontWeight.Normal
                         ),
-                        cursorBrush = SolidColor(MaterialTheme.colorScheme.onSurface), // Цвет курсора
+                        cursorBrush = SolidColor(MaterialTheme.colorScheme.onSurface),
                         decorationBox = { innerTextField ->
                             Box(
                                 modifier = Modifier.fillMaxWidth(),
@@ -198,7 +193,7 @@ fun NewProductScreen(state: MutableState<Boolean>, viewModel: MainViewModel) {
                             )
                             .padding(14.dp, 10.dp, 14.dp, 10.dp),
                         textStyle = TextStyle(
-                            color = MaterialTheme.colorScheme.onSurface, // Используем onSurface для основного текста
+                            color = MaterialTheme.colorScheme.onSurface,
                             fontSize = 16.sp,
                             lineHeight = 24.sp,
                             fontWeight = FontWeight.Normal
@@ -239,7 +234,7 @@ fun NewProductScreen(state: MutableState<Boolean>, viewModel: MainViewModel) {
                             )
                             .padding(14.dp, 10.dp, 14.dp, 10.dp),
                         textStyle = TextStyle(
-                            color = MaterialTheme.colorScheme.onSurface, // Используем onSurface для основного текста
+                            color = MaterialTheme.colorScheme.onSurface,
                             fontSize = 16.sp,
                             lineHeight = 24.sp,
                             fontWeight = FontWeight.Normal
@@ -280,7 +275,7 @@ fun NewProductScreen(state: MutableState<Boolean>, viewModel: MainViewModel) {
                             )
                             .padding(14.dp, 10.dp, 14.dp, 10.dp),
                         textStyle = TextStyle(
-                            color = MaterialTheme.colorScheme.onSurface, // Используем onSurface для основного текста
+                            color = MaterialTheme.colorScheme.onSurface,
                             fontSize = 16.sp,
                             lineHeight = 24.sp,
                             fontWeight = FontWeight.Normal
@@ -321,7 +316,7 @@ fun NewProductScreen(state: MutableState<Boolean>, viewModel: MainViewModel) {
                             )
                             .padding(14.dp, 10.dp, 14.dp, 10.dp),
                         textStyle = TextStyle(
-                            color = MaterialTheme.colorScheme.onSurface, // Используем onSurface для основного текста
+                            color = MaterialTheme.colorScheme.onSurface,
                             fontSize = 16.sp,
                             lineHeight = 24.sp,
                             fontWeight = FontWeight.Normal
@@ -350,8 +345,13 @@ fun NewProductScreen(state: MutableState<Boolean>, viewModel: MainViewModel) {
                         style = CustomTextStyles.body2_medium
                     )
                     BasicTextField(
+                        singleLine = true,
                         value = image,
-                        onValueChange = { image = it },
+                        onValueChange = { newText ->
+                            if (newText.text.length <= 100) {
+                                image = newText
+                            }
+                        },
                         modifier = Modifier
                             .fillMaxWidth()
                             .clip(RoundedCornerShape(8.dp))
@@ -485,7 +485,6 @@ fun checkFields(
     supplier: String,
     warehouse: String,
 ): Boolean {
-    // Проверка на пустые поля
     if (productName.text.isBlank() ||
         price.text.isBlank() ||
         amount.text.isBlank() ||
@@ -498,11 +497,10 @@ fun checkFields(
         return false
     }
 
-    // Безопасное преобразование и проверка числовых значений
     return try {
         val amountValue = amount.text.toInt()
         val amountSoldValue = amount_sold.text.toInt()
-        val priceValue = price.text.toDouble() // Используем toDouble для цены
+        val priceValue = price.text.toDouble()
 
         when {
             amountValue < 0 -> {

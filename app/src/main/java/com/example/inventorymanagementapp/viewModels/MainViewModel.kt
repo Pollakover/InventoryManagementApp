@@ -66,7 +66,7 @@ class MainViewModel(
     private fun loadSearchHistory() {
         val history = sharedPreferences.getStringSet("search_history", emptySet())
             ?.map { TextFieldValue(it) }
-            ?.sortedByDescending { it.text } // Сортировка, если вдруг порядок нарушен
+            ?.sortedByDescending { it.text }
             ?: emptyList()
         _searchHistory.value = history
     }
@@ -75,25 +75,24 @@ class MainViewModel(
     fun saveSearchQuery(query: TextFieldValue) {
         val history = _searchHistory.value.toMutableList()
 
-        // Удаляем запрос, если он уже есть в истории (чтобы избежать дублирования)
         history.remove(query)
-        history.add(0, query) // Добавляем в начало списка
+        history.add(0, query)
 
-        // Ограничиваем размер истории
+
         if (history.size > 11) {
-            history.removeAt(history.lastIndex) // Удаляем самый старый элемент
+            history.removeAt(history.lastIndex)
         }
 
         _searchHistory.value = history
-        sharedPreferences.edit()
-            .putStringSet("search_history", history.map { it.text }.toSet())
-            .apply()
+        sharedPreferences.edit {
+            putStringSet("search_history", history.map { it.text }.toSet())
+        }
     }
 
     // Очищает историю поиска
     fun clearSearchHistory() {
-        sharedPreferences.edit().remove("search_history").apply()
-        _searchHistory.value = emptyList() // Обновляем UI
+        sharedPreferences.edit { remove("search_history") }
+        _searchHistory.value = emptyList()
     }
 
     //Состояние кнопки поиска
@@ -447,129 +446,3 @@ val suppliersNames: StateFlow<Map<String, String>> = _suppliers
         _searchText.value = TextFieldValue("")
     }
 }
-
-
-//Products placeholder
-//val testProduct = Product(
-//    name = "Кофе Нескафе Gold растворимый 190г",
-//    price = 649.99,
-//    amount = 5,
-//    expiryDate = "10.09.25",
-//    amountSold = 123,
-//    image = R.drawable.test
-//)
-//
-//val testProduct1 = Product(
-//    name = "Яйцо куриное Окское",
-//    price = 119.99,
-//    amount = 22,
-//    expiryDate = "10.09.25",
-//    amountSold = 43,
-//    image = R.drawable.eggs
-//)
-//
-//val testProduct2 = Product(
-//    name = "Шампунь Шаума Men",
-//    price = 249.99,
-//    amount = 0,
-//    expiryDate = "11.12.25",
-//    amountSold = 123,
-//    image = R.drawable.shampoo
-//)
-//
-//private val allProducts = listOf(testProduct, testProduct1, testProduct2)
-
-
-//Suppliers placeholder
-//val supplier1 = Supplier(
-//    name = "Ronald Martin",
-//    phoneNumber = "7687764556",
-//    type = "Принимает возврат",
-//    suppliedProducts = listOf()
-//)
-//
-//val supplier2 = Supplier(
-//    name = "Tom Homan",
-//    phoneNumber = "9867545368",
-//    type = "Не принимает возврат",
-//    suppliedProducts = listOf()
-//)
-//
-//val supplier3 = Supplier(
-//    name = "Fainden Juke",
-//    phoneNumber = "9567545769",
-//    type = "Принимает возврат",
-//    suppliedProducts = listOf()
-//)
-//
-//val supplier4 = Supplier(
-//    name = "Dender Luke",
-//    phoneNumber = "9567545769",
-//    type = "Принимает возврат",
-//    suppliedProducts = listOf()
-//)
-//
-//private val allSuppliers = listOf(supplier1, supplier2, supplier3, supplier4)
-
-
-
-
-//Orders placeholder
-//val order1 = Order(
-//    name = "№ 38762682-0172",
-//    products = listOf(),
-//    deliveryDate = "12.03.25",
-//    status = OrderStatus.RECIEVED
-//)
-//
-//val order2 = Order(
-//    name = "№ 38762682-0173",
-//    products = listOf(),
-//    deliveryDate = "25.03.25",
-//    status = OrderStatus.IN_TRANSIT
-//)
-//
-//val order3 = Order(
-//    name = "№ 38762682-0174",
-//    products = listOf(),
-//    deliveryDate = "19.04.25",
-//    status = OrderStatus.CANCELED
-//)
-
-//val order4 = Order(
-//    name = "№ 38762682-0175",
-//    products = listOf(
-//        testProduct,
-//        testProduct1
-//    ),
-//    deliveryDate = "13.01.25",
-//    status = OrderStatus.LATE
-//)
-
-//private val allOrders = listOf(order1, order2, order3)
-
-
-
-//Warehouses placeholder
-//val warehouse1 = Warehouse(
-//    name = "Склад 1",
-//    address = "г. Москва, ул. Покровка, 27, стр. 6",
-//    postalCode = "044-653578",
-//    color = Color(0xFF553BE5),
-//)
-//
-//val warehouse2 = Warehouse(
-//    name = "Склад 2",
-//    address = "г. Москва, ул. Покровка, 27, стр. 6",
-//    postalCode = "044-653578",
-//    color = Color(0xFF22697B),
-//)
-//
-//val warehouse3 = Warehouse(
-//    name = "Склад 3",
-//    address = "г. Москва, ул. Покровка, 27, стр. 6",
-//    postalCode = "044-653578",
-//    color = Color(0xFFEFDB69),
-//)
-//
-//private val allWarehouses = listOf(warehouse1, warehouse2, warehouse3)

@@ -9,7 +9,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -107,7 +106,6 @@ class MainActivity : ComponentActivity() {
             val mainViewModel: MainViewModel = viewModel(
                 factory = object : ViewModelProvider.Factory {
                     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                        //val sharedPreferences = sharedPreferences
                         return MainViewModel(sharedPreferences, userLogin) as T
                     }
                 }
@@ -119,7 +117,6 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.primary
                 )
                 {
-                    //Demo_ExposedDropdownMenuBox()
                     MainScreen(mainViewModel, sharedPreferences, userLogin)
                 }
             }
@@ -188,7 +185,6 @@ fun MainScreen(
                                         .size(80.dp)
                                         .clip(RoundedCornerShape(8.dp))
                                         .background(MaterialTheme.colorScheme.surface),
-                                    //.border(1.dp, color = MaterialTheme.colorScheme.primary, RoundedCornerShape(50)),
                                     contentDescription = "Logo"
                                 )
                                 Spacer(modifier = Modifier.weight(1f))
@@ -711,12 +707,10 @@ fun TopSearchBar(viewModel: MainViewModel) {
 }
 
 fun logout(context: Context) {
-    // Очищаем сохраненный логин
     context.getSharedPreferences("user_preferences", MODE_PRIVATE).edit {
         remove("user_login")
     }
 
-    // Переходим на экран входа
     val intent = Intent(context, LoginActivity::class.java).apply {
         flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
     }

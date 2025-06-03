@@ -10,4 +10,3 @@ data class Order(
     val product: String,
     val price: Double
 )
-

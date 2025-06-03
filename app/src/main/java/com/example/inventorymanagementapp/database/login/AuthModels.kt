@@ -21,6 +21,5 @@ data class GetUserByLoginRequest(
 
 data class UserResponse(
     val login: String,
-    val username: String,
     val email: String?
 )

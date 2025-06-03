@@ -167,8 +167,8 @@ fun ProductRow(product: Product) {
                         .size(80.dp)
                         .clip(RoundedCornerShape(8.dp)),
                     contentScale = ContentScale.Crop,
-                    placeholder = painterResource(R.drawable.icon), // необязательный плейсхолдер
-                    error = painterResource(R.drawable.icon) // необязательная ошибка загрузки
+                    placeholder = painterResource(R.drawable.icon),
+                    error = painterResource(R.drawable.icon)
                 )
 
             }

@@ -16,7 +16,6 @@ class LoginActivity : ComponentActivity() {
         val isDarkMode = sharedPreferences.getBoolean("dark_mode", false)
         val savedLogin = sharedPreferences.getString("user_login", null)
 
-        // Если есть сохраненный логин, сразу переходим в MainActivity
         if (!savedLogin.isNullOrEmpty()) {
             val intent = Intent(this, MainActivity::class.java).apply {
                 putExtra("USER_LOGIN", savedLogin)
@@ -24,7 +23,7 @@ class LoginActivity : ComponentActivity() {
             }
             startActivity(intent)
             finish()
-            return  // Важно: завершаем выполнение onCreate
+            return
         }
 
         setContent {

@@ -95,7 +95,7 @@ fun NewOrderScreen(state: MutableState<Boolean>, viewModel: MainViewModel) {
                             )
                             .padding(14.dp, 10.dp, 14.dp, 10.dp),
                         textStyle = TextStyle(
-                            color = MaterialTheme.colorScheme.onSurface, // Используем onSurface для основного текста
+                            color = MaterialTheme.colorScheme.onSurface,
                             fontSize = 16.sp,
                             lineHeight = 24.sp,
                             fontWeight = FontWeight.Normal
@@ -136,7 +136,7 @@ fun NewOrderScreen(state: MutableState<Boolean>, viewModel: MainViewModel) {
                             )
                             .padding(14.dp, 10.dp, 14.dp, 10.dp),
                         textStyle = TextStyle(
-                            color = MaterialTheme.colorScheme.onSurface, // Используем onSurface для основного текста
+                            color = MaterialTheme.colorScheme.onSurface,
                             fontSize = 16.sp,
                             lineHeight = 24.sp,
                             fontWeight = FontWeight.Normal
@@ -177,7 +177,7 @@ fun NewOrderScreen(state: MutableState<Boolean>, viewModel: MainViewModel) {
                             )
                             .padding(14.dp, 10.dp, 14.dp, 10.dp),
                         textStyle = TextStyle(
-                            color = MaterialTheme.colorScheme.onSurface, // Используем onSurface для основного текста
+                            color = MaterialTheme.colorScheme.onSurface,
                             fontSize = 16.sp,
                             lineHeight = 24.sp,
                             fontWeight = FontWeight.Normal
@@ -218,7 +218,7 @@ fun NewOrderScreen(state: MutableState<Boolean>, viewModel: MainViewModel) {
                             )
                             .padding(14.dp, 10.dp, 14.dp, 10.dp),
                         textStyle = TextStyle(
-                            color = MaterialTheme.colorScheme.onSurface, // Используем onSurface для основного текста
+                            color = MaterialTheme.colorScheme.onSurface,
                             fontSize = 16.sp,
                             lineHeight = 24.sp,
                             fontWeight = FontWeight.Normal
@@ -305,21 +305,12 @@ fun NewOrderScreen(state: MutableState<Boolean>, viewModel: MainViewModel) {
     }
 }
 
-
-//@Preview(showBackground = true)
-//@Composable
-//fun PreviewNewOrder() {
-//    val clickOnAddButton = remember { mutableStateOf(false) }
-//    NewOrderScreen(clickOnAddButton)
-//}
-
 fun checkFields(
     context: Context,
     price: TextFieldValue,
     amount: TextFieldValue,
     delivery_date: TextFieldValue
 ): Boolean {
-    // Проверка на пустые поля
     if (
         price.text.isBlank() ||
         amount.text.isBlank() ||
@@ -329,10 +320,9 @@ fun checkFields(
         return false
     }
 
-    // Безопасное преобразование и проверка числовых значений
     return try {
         val amountValue = amount.text.toInt()
-        val priceValue = price.text.toDouble() // Используем toDouble для цены
+        val priceValue = price.text.toDouble()
 
         when {
             amountValue <= 0 -> {

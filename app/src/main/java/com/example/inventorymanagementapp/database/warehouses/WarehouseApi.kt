@@ -1,6 +1,5 @@
 package com.example.inventorymanagementapp.database.warehouses
 
-import com.example.inventorymanagementapp.database.suppliers.AddSupplierRequest
 import retrofit2.http.Body
 import retrofit2.http.POST
 

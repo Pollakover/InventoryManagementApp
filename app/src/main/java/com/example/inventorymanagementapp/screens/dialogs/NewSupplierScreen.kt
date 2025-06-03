@@ -244,14 +244,6 @@ fun NewSupplierScreen(state: MutableState<Boolean>, viewModel: MainViewModel) {
     }
 }
 
-
-//@Preview(showBackground = true)
-//@Composable
-//fun PreviewNewSupplier() {
-//    val clickOnAddButton = remember { mutableStateOf(false) }
-//    NewSupplierScreen(clickOnAddButton)
-//}
-
 @Composable
 fun SingleChoiceSegmentedButton(
     selectedIndex: Int,
@@ -294,7 +286,6 @@ fun checkFields(
     phone_number: TextFieldValue,
 
     ): Boolean {
-    // Проверка на пустые поля
     if (name.text.isBlank() || phone_number.text.isBlank()) {
         Toast.makeText(context, "Заполните все поля", Toast.LENGTH_SHORT).show()
         return false

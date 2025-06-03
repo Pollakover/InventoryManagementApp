@@ -175,10 +175,3 @@ fun SearchResultRow(product: Product, mainViewModel: MainViewModel) {
 
     }
 }
-
-//@Preview(showBackground = true)
-//@Composable
-//fun PreviewSearch() {
-//    val mainViewModel = viewModel<MainViewModel>()
-//    InventorySearchScreen(mainViewModel)
-//}
